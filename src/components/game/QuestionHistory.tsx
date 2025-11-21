@@ -26,35 +26,38 @@ export function QuestionHistory({ history, questionCount }: QuestionHistoryProps
             </p>
           ) : (
             <div className="space-y-3">
-              {history.map((item, index) => (
-                <div
-                  key={index}
-                  className="brutal-border bg-background p-3 xl:p-4 space-y-2"
-                >
-                  <div className="flex items-start gap-2">
-                    <span className="font-black text-secondary min-w-8">
-                      Q{index + 1}:
-                    </span>
-                    <p className="font-bold text-foreground flex-1">
-                      {item.question}
-                    </p>
+              {[...history].reverse().map((item, reverseIndex) => {
+                const index = history.length - 1 - reverseIndex;
+                return (
+                  <div
+                    key={index}
+                    className="brutal-border bg-background p-3 xl:p-4 space-y-2"
+                  >
+                    <div className="flex items-start gap-2">
+                      <span className="font-black text-secondary min-w-8">
+                        Q{index + 1}:
+                      </span>
+                      <p className="font-bold text-foreground flex-1">
+                        {item.question}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 pl-10">
+                      <span className="font-black text-accent">A:</span>
+                      <span
+                        className={`font-black px-3 py-1 brutal-border text-sm ${
+                          item.answer === 'Yes'
+                            ? 'bg-accent text-accent-foreground'
+                            : item.answer === 'No'
+                              ? 'bg-secondary text-secondary-foreground'
+                              : 'bg-muted text-foreground'
+                        }`}
+                      >
+                        {item.answer.toUpperCase()}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 pl-10">
-                    <span className="font-black text-accent">A:</span>
-                    <span
-                      className={`font-black px-3 py-1 brutal-border text-sm ${
-                        item.answer === 'Yes'
-                          ? 'bg-accent text-accent-foreground'
-                          : item.answer === 'No'
-                            ? 'bg-secondary text-secondary-foreground'
-                            : 'bg-muted text-foreground'
-                      }`}
-                    >
-                      {item.answer.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </ScrollArea>

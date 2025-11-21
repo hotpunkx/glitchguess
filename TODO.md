@@ -27,8 +27,13 @@
   - [x] 6.2 Test all game modes
   - [x] 6.3 Test responsive design
 
+## Recent Updates
+- [x] Updated QuestionHistory to show latest question on top (reversed order)
+- [x] All lint checks passing
+
 ## Notes
 - Using Large Language Model API for AI functionality
 - Neubrutalism design: Black/White base with Hot Pink/Electric Lime accents
 - Mobile-first responsive design
 - CSS-based confetti instead of library due to installation issues
+- Question history displays in reverse chronological order (newest first)
