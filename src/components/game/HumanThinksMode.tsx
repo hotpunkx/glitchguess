@@ -78,14 +78,12 @@ export function HumanThinksMode({ onGameEnd }: HumanThinksModeProps) {
             GET READY!
           </h2>
 
-          <div className="brutal-border-thick bg-card p-6 xl:p-8 shadow-brutal-pink">
+          <div className="brutal-border-thick bg-card p-6 xl:p-8 shadow-brutal-pink space-y-4">
             <p className="text-lg xl:text-2xl font-bold text-foreground leading-relaxed max-sm:text-base">
-              Perfect! Think of any <span className="text-secondary">object</span>,{' '}
-              <span className="text-accent">person</span>,{' '}
-              <span className="text-secondary">animal</span>,{' '}
-              <span className="text-accent">movie</span>, or{' '}
-              <span className="text-secondary">place</span>. Don't tell me what it is. I'll
-              ask up to 20 yes/no questions.
+              Perfect! Think of something from the <span className="text-secondary">fair game categories</span> shown on the home screen. Don't tell me what it is. I'll ask up to 20 yes/no questions.
+            </p>
+            <p className="text-sm xl:text-base font-bold text-accent max-sm:text-xs">
+              💡 Remember: Choose from Animals, Food & Drinks, Movies & TV Shows, Video Games, Sports & Athletes, Countries & Cities, Musicians & Bands, Famous Books, Vehicles, Famous Landmarks, Famous Artists, or Common Objects!
             </p>
           </div>
 

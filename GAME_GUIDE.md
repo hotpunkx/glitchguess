@@ -7,18 +7,37 @@ GLITCHGUESS is an interactive 20 questions guessing game featuring AI-powered ga
 ## 🎯 Game Modes
 
 ### Mode 1: I Think of Something – AI Guesses
-1. Think of any object, person, animal, movie, or place (keep it secret!)
+1. Think of something from the **fair game categories** (keep it secret!)
 2. The AI will ask you up to 20 yes/no questions
 3. Answer with "Yes", "No", or "Sometimes"
 4. The AI will try to guess what you're thinking of
 5. Can the AI figure it out before 20 questions?
 
 ### Mode 2: AI Thinks of Something – I Guess
-1. The AI secretly picks something
+1. The AI secretly picks something from the **fair game categories**
 2. You ask yes/no questions (up to 20)
 3. The AI responds with "Yes", "No", or "Sometimes"
 4. Make your guess at any time!
 5. Can you figure out what the AI is thinking?
+
+## 🎲 Fair Game Categories
+
+To ensure a fair and fun game, choose from these categories:
+
+- 🐾 **Animals** - Lion, Dolphin, Eagle, etc.
+- 🍎 **Food & Drinks** - Pizza, Coffee, Sushi, etc.
+- 🎬 **Movies & TV Shows** - Titanic, Breaking Bad, etc.
+- 🎮 **Video Games** - Minecraft, Mario, etc.
+- 🏆 **Sports & Athletes** - Soccer, Michael Jordan, etc.
+- 🌍 **Countries & Cities** - Paris, Japan, New York, etc.
+- 🎵 **Musicians & Bands** - Beatles, Taylor Swift, etc.
+- 📚 **Famous Books** - Harry Potter, 1984, etc.
+- 🚗 **Vehicles** - Ferrari, Bicycle, Airplane, etc.
+- 🏛️ **Famous Landmarks** - Eiffel Tower, Statue of Liberty, etc.
+- 🎨 **Famous Artists** - Picasso, Van Gogh, etc.
+- 🔧 **Common Objects** - Chair, Phone, Book, etc.
+
+**Why these categories?** They ensure the answer is well-known and guessable within 20 questions!
 
 ## 🎨 Design Features
 
@@ -37,10 +56,12 @@ GLITCHGUESS is an interactive 20 questions guessing game featuring AI-powered ga
 
 ## 💡 Tips for Success
 
+- **Choose from Fair Categories**: Always pick something from the 12 fair game categories
 - **Be Strategic**: Ask broad questions first, then narrow down
 - **Use "Sometimes"**: When the answer isn't clear-cut
-- **Think Creatively**: The AI can think of unusual things!
+- **Think Creatively**: The AI can think of unusual things within the categories!
 - **Review History**: Check previous Q&A to avoid repeating questions
+- **Avoid Obscure Items**: Don't pick something too specific or unknown
 
 ## 🎉 Victory Conditions
 

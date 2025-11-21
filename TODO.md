@@ -29,6 +29,9 @@
 
 ## Recent Updates
 - [x] Updated QuestionHistory to show latest question on top (reversed order)
+- [x] Added fair game categories list on home screen (12 categories)
+- [x] Updated AI service to follow fair game category rules
+- [x] Updated HumanThinksMode instruction to reference categories
 - [x] All lint checks passing
 
 ## Notes
@@ -37,3 +40,7 @@
 - Mobile-first responsive design
 - CSS-based confetti instead of library due to installation issues
 - Question history displays in reverse chronological order (newest first)
+- Fair game categories ensure items are guessable within 20 questions:
+  * Animals, Food & Drinks, Movies & TV Shows, Video Games
+  * Sports & Athletes, Countries & Cities, Musicians & Bands
+  * Famous Books, Vehicles, Famous Landmarks, Famous Artists, Common Objects

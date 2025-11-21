@@ -80,7 +80,21 @@ export async function generateAIQuestion(
       role: 'user',
       parts: [
         {
-          text: `You are playing a 20 questions guessing game. You need to guess what object, person, animal, movie, or place the human is thinking of by asking yes/no questions.
+          text: `You are playing a 20 questions guessing game. You need to guess what the human is thinking of by asking yes/no questions.
+
+IMPORTANT: The answer must be from one of these fair game categories:
+- Animals (e.g., Lion, Dolphin, Eagle)
+- Food & Drinks (e.g., Pizza, Coffee, Sushi)
+- Movies & TV Shows (e.g., Titanic, Breaking Bad)
+- Video Games (e.g., Minecraft, Mario)
+- Sports & Athletes (e.g., Soccer, Michael Jordan)
+- Countries & Cities (e.g., Paris, Japan, New York)
+- Musicians & Bands (e.g., Beatles, Taylor Swift)
+- Famous Books (e.g., Harry Potter, 1984)
+- Vehicles (e.g., Ferrari, Bicycle, Airplane)
+- Famous Landmarks (e.g., Eiffel Tower, Statue of Liberty)
+- Famous Artists (e.g., Picasso, Van Gogh)
+- Common Objects (e.g., Chair, Phone, Book)
 
 ${historyText ? `Previous conversation:\n${historyText}\n\n` : ''}
 
@@ -125,7 +139,21 @@ export async function generateSecretWord(): Promise<string> {
       role: 'user',
       parts: [
         {
-          text: 'Think of ONE random object, person, animal, movie, or place for a guessing game. Be creative and interesting. Output ONLY the word or short phrase (2-4 words max), nothing else.',
+          text: `Think of ONE thing for a 20 questions guessing game. Choose from these fair game categories:
+- Animals (e.g., Lion, Dolphin, Eagle)
+- Food & Drinks (e.g., Pizza, Coffee, Sushi)
+- Movies & TV Shows (e.g., Titanic, Breaking Bad)
+- Video Games (e.g., Minecraft, Mario)
+- Sports & Athletes (e.g., Soccer, Michael Jordan)
+- Countries & Cities (e.g., Paris, Japan, New York)
+- Musicians & Bands (e.g., Beatles, Taylor Swift)
+- Famous Books (e.g., Harry Potter, 1984)
+- Vehicles (e.g., Ferrari, Bicycle, Airplane)
+- Famous Landmarks (e.g., Eiffel Tower, Statue of Liberty)
+- Famous Artists (e.g., Picasso, Van Gogh)
+- Common Objects (e.g., Chair, Phone, Book)
+
+Choose something well-known and guessable within 20 questions. Output ONLY the word or short phrase (2-4 words max), nothing else.`,
         },
       ],
     },

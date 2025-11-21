@@ -28,9 +28,59 @@ export function StartScreen({ onSelectMode }: StartScreenProps) {
           </Button>
         </div>
 
-        <div className="text-center">
+        <div className="text-center space-y-4">
           <p className="text-base xl:text-xl font-bold text-muted-foreground max-sm:text-sm">
             20 QUESTIONS. YES/NO ANSWERS. CAN YOU WIN?
+          </p>
+        </div>
+
+        <div className="brutal-border bg-card p-4 xl:p-6 shadow-brutal">
+          <h2 className="text-xl xl:text-2xl font-black text-foreground mb-3 max-sm:text-lg">
+            ⚡ FAIR GAME CATEGORIES
+          </h2>
+          <p className="text-sm xl:text-base font-bold text-muted-foreground mb-4 max-sm:text-xs">
+            For a fair game, choose something from these categories:
+          </p>
+          <div className="grid grid-cols-2 gap-2 xl:gap-3">
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🐾 Animals</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🍎 Food & Drinks</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🎬 Movies & TV Shows</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🎮 Video Games</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🏆 Sports & Athletes</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🌍 Countries & Cities</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🎵 Musicians & Bands</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">📚 Famous Books</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🚗 Vehicles</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🏛️ Famous Landmarks</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🎨 Famous Artists</span>
+            </div>
+            <div className="brutal-border bg-background p-2 xl:p-3">
+              <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🔧 Common Objects</span>
+            </div>
+          </div>
+          <p className="text-xs xl:text-sm font-bold text-accent mt-4 max-sm:text-[10px]">
+            💡 Tip: Avoid overly specific or obscure items that can't be guessed in 20 questions!
           </p>
         </div>
       </div>
