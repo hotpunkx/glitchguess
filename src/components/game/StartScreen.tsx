@@ -22,7 +22,7 @@ export function StartScreen({ onSelectMode }: StartScreenProps) {
 
           <Button
             onClick={() => onSelectMode('ai-thinks')}
-            className="w-full h-auto py-6 xl:py-8 text-xl xl:text-3xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-accent text-accent-foreground max-sm:text-lg max-sm:py-5"
+            className="w-full h-auto py-6 xl:py-8 text-xl xl:text-3xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground max-sm:text-lg max-sm:py-5"
           >
             AI THINKS OF SOMETHING – I GUESS
           </Button>
