@@ -45,6 +45,8 @@
   - [x] generateAIGuess: "final guess" format with clear output
   - [x] generateSecretWord: concrete examples, strict output format
   - [x] answerQuestion: strict one-word responses
+- [x] Added Footer with attribution: "With ❤️ by IamIsPra in LK"
+- [x] Footer styled with GLITCHGUESS Neubrutalism aesthetic
 - [x] All lint checks passing
 
 ## Notes

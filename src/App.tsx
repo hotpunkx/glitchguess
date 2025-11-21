@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import routes from './routes';
+import Footer from '@/components/common/Footer';
 
 // Uncomment these imports when using miaoda-auth-react for authentication
 // import { AuthProvider, RequireAuth } from 'miaoda-auth-react';
@@ -53,6 +54,7 @@ const App: React.FC = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
+        <Footer />
       </div>
     </Router>
   );
