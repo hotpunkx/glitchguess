@@ -42,7 +42,7 @@ export function QuestionHistory({ history, questionCount }: QuestionHistoryProps
                       </p>
                     </div>
                     <div className="flex items-center gap-2 pl-10">
-                      <span className="font-black text-accent">A:</span>
+                      <span className="font-black text-accent-dark">A:</span>
                       <span
                         className={`font-black px-3 py-1 brutal-border text-sm ${
                           item.answer === 'Yes'

@@ -79,7 +79,7 @@ export function StartScreen({ onSelectMode }: StartScreenProps) {
               <span className="font-black text-secondary text-sm xl:text-base max-sm:text-xs">🔧 Common Objects</span>
             </div>
           </div>
-          <p className="text-xs xl:text-sm font-bold text-accent mt-4 max-sm:text-[10px]">
+          <p className="text-xs xl:text-sm font-bold text-accent-dark mt-4 max-sm:text-[10px]">
             💡 Tip: Avoid overly specific or obscure items that can't be guessed in 20 questions!
           </p>
         </div>

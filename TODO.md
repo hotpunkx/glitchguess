@@ -37,6 +37,8 @@
 - [x] Implemented fuzzy matching for spelling mistakes (Levenshtein distance)
 - [x] Added question format normalization (removes "Is it", "?", etc.)
 - [x] Added "Give Up & See Answer" button in AI Thinks Mode
+- [x] Fixed green text contrast issues on white backgrounds
+- [x] Added accent-dark color (dark green) for better readability
 - [x] All lint checks passing
 
 ## Notes
@@ -56,3 +58,8 @@
   * Allows 3 character differences for words >10 chars
   * Normalizes input by removing "Is it", "It is", "It's", and "?" formatting
 - Give Up feature allows users to end game early and see the answer
+- Color accessibility:
+  * accent-dark (dark green) used for text on white backgrounds
+  * Ensures WCAG contrast compliance for readability
+  * Light mode: hsl(75 80% 25%) - dark olive green
+  * Dark mode: hsl(75 100% 70%) - bright lime green

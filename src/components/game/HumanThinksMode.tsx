@@ -82,7 +82,7 @@ export function HumanThinksMode({ onGameEnd }: HumanThinksModeProps) {
             <p className="text-lg xl:text-2xl font-bold text-foreground leading-relaxed max-sm:text-base">
               Perfect! Think of something from the <span className="text-secondary">fair game categories</span> shown on the home screen. Don't tell me what it is. I'll ask up to 20 yes/no questions.
             </p>
-            <p className="text-sm xl:text-base font-bold text-accent max-sm:text-xs">
+            <p className="text-sm xl:text-base font-bold text-accent-dark max-sm:text-xs">
               💡 Remember: Choose from Animals, Food & Drinks, Movies & TV Shows, Video Games, Sports & Athletes, Countries & Cities, Musicians & Bands, Famous Books, Vehicles, Famous Landmarks, Famous Artists, or Common Objects!
             </p>
           </div>
