@@ -80,25 +80,16 @@ export async function generateAIQuestion(
       role: 'user',
       parts: [
         {
-          text: `You are playing a 20 questions guessing game. You need to guess what the human is thinking of by asking yes/no questions.
+          text: `You are the AI interrogator in GLITCHGUESS — a brutal neon 20 Questions game.
+The human is thinking of something, you have max 20 yes/no questions to crack it.
+Thing is always from these categories only: Animals • Food/Drinks • Movies/TV • Video Games • Sports • Countries/Cities • Musicians • Books • Vehicles • Landmarks • Artists • Everyday Objects.
 
-IMPORTANT: The answer must be from one of these fair game categories:
-- Animals (e.g., Lion, Dolphin, Eagle)
-- Food & Drinks (e.g., Pizza, Coffee, Sushi)
-- Movies & TV Shows (e.g., Titanic, Breaking Bad)
-- Video Games (e.g., Minecraft, Mario)
-- Sports & Athletes (e.g., Soccer, Michael Jordan)
-- Countries & Cities (e.g., Paris, Japan, New York)
-- Musicians & Bands (e.g., Beatles, Taylor Swift)
-- Famous Books (e.g., Harry Potter, 1984)
-- Vehicles (e.g., Ferrari, Bicycle, Airplane)
-- Famous Landmarks (e.g., Eiffel Tower, Statue of Liberty)
-- Famous Artists (e.g., Picasso, Van Gogh)
-- Common Objects (e.g., Chair, Phone, Book)
+${historyText ? `Previous Q&A:\n${historyText}\n` : ''}Question ${conversationHistory.length + 1} of 20.
 
-${historyText ? `Previous conversation:\n${historyText}\n\n` : ''}
+Ask ONE extremely smart, slightly chaotic yes/no question to split the possibilities.
+Output exactly one line, nothing else:
 
-Based on the conversation so far, ask ONE strategic yes/no question to narrow down what they're thinking of. Be creative and intelligent. Only output the question, nothing else.`,
+Question: [your question ending with ?]`,
         },
       ],
     },

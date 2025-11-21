@@ -40,10 +40,15 @@
 - [x] Fixed green text contrast issues on white backgrounds
 - [x] Added accent-dark color (dark green) for better readability
 - [x] Question field now detects correct answers and ends game with victory
+- [x] Updated AI question prompt to be more chaotic and brutal (GLITCHGUESS style)
 - [x] All lint checks passing
 
 ## Notes
 - Using Large Language Model API for AI functionality
+- AI Personality: "Brutal neon interrogator" style matching GLITCHGUESS aesthetic
+  * Asks "extremely smart, slightly chaotic" yes/no questions
+  * Uses aggressive, confident tone
+  * Focuses on splitting possibilities efficiently
 - Neubrutalism design: Black/White base with Hot Pink/Electric Lime accents
 - Mobile-first responsive design
 - CSS-based confetti instead of library due to installation issues
