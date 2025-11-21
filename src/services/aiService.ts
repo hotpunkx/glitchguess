@@ -110,12 +110,16 @@ export async function generateAIGuess(
       role: 'user',
       parts: [
         {
-          text: `You are playing a 20 questions guessing game. Based on the following conversation, make your best guess about what the human is thinking of.
+          text: `You are the AI in GLITCHGUESS - 20 questions secret word guessing game. After up to 20 questions, it's time for your final guess.
+The secret thing is real and belongs to one of these categories: Animals • Food/Drinks • Movies/TV • Video Games • Sports • Countries/Cities • Musicians • Books • Vehicles • Landmarks • Artists • Everyday Objects.
 
-Previous conversation:
+Full conversation so far:
 ${historyText}
 
-Make ONE specific guess. Format your response as: "Is it [your guess]?"`,
+Now make your single best, most specific guess.
+Output exactly one line, nothing else, no quotes, no explanation:
+
+My final guess: [the exact thing]`,
         },
       ],
     },
@@ -130,21 +134,15 @@ export async function generateSecretWord(): Promise<string> {
       role: 'user',
       parts: [
         {
-          text: `Think of ONE thing for a 20 questions guessing game. Choose from these fair game categories:
-- Animals (e.g., Lion, Dolphin, Eagle)
-- Food & Drinks (e.g., Pizza, Coffee, Sushi)
-- Movies & TV Shows (e.g., Titanic, Breaking Bad)
-- Video Games (e.g., Minecraft, Mario)
-- Sports & Athletes (e.g., Soccer, Michael Jordan)
-- Countries & Cities (e.g., Paris, Japan, New York)
-- Musicians & Bands (e.g., Beatles, Taylor Swift)
-- Famous Books (e.g., Harry Potter, 1984)
-- Vehicles (e.g., Ferrari, Bicycle, Airplane)
-- Famous Landmarks (e.g., Eiffel Tower, Statue of Liberty)
-- Famous Artists (e.g., Picasso, Van Gogh)
-- Common Objects (e.g., Chair, Phone, Book)
+          text: `You are the AI in GLITCHGUESS - 20 questions secret word guessing game and must now secretly choose what the human will guess.
+Pick ONE famous, concrete, guessable thing from ONLY these categories:
+Animals | Food & Drinks | Movies/TV Shows | Video Games | Sports/Athletes | Countries/Cities | Musicians/Bands | Famous Books | Vehicles | Landmarks | Famous Artists | Common Objects
 
-Choose something well-known and guessable within 20 questions. Output ONLY the word or short phrase (2-4 words max), nothing else.`,
+Good examples: Panda · Coca-Cola · Avengers: Endgame · Super Mario · Cristiano Ronaldo · Egypt · Queen · Dune · Helicopter · Taj Mahal · Michelangelo · Laptop
+
+Never abstract, obscure, or made-up things.
+
+Output ONLY the thing (1–2 words max), nothing else at all — no quotes, no category, no text before or after.`,
         },
       ],
     },
@@ -159,11 +157,20 @@ export async function answerQuestion(secretWord: string, question: string): Prom
       role: 'user',
       parts: [
         {
-          text: `You are thinking of: "${secretWord}"
+          text: `You are the AI in GLITCHGUESS - 20 questions secret word guessing game. You are secretly thinking of exactly this:
+"${secretWord}"
 
-The player asks: "${question}"
+The human just asked: "${question}"
 
-Answer with ONLY one word: "Yes", "No", or "Sometimes" (if the answer is ambiguous or depends on context). Nothing else.`,
+You must answer with literally ONE word and nothing else — no punctuation, no explanation, no emojis:
+
+- Yes → if clearly true
+- No → if clearly false  
+- Sometimes → only if it genuinely depends (extremely rare)
+
+Valid outputs: Yes   No   Sometimes
+
+Respond with only one of those three words.`,
         },
       ],
     },
