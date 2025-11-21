@@ -39,6 +39,7 @@
 - [x] Added "Give Up & See Answer" button in AI Thinks Mode
 - [x] Fixed green text contrast issues on white backgrounds
 - [x] Added accent-dark color (dark green) for better readability
+- [x] Question field now detects correct answers and ends game with victory
 - [x] All lint checks passing
 
 ## Notes
@@ -57,7 +58,13 @@
   * Allows 2 character differences for words 6-10 chars
   * Allows 3 character differences for words >10 chars
   * Normalizes input by removing "Is it", "It is", "It's", and "?" formatting
+  * Works in both guess field and question field for AI Thinks Mode
 - Give Up feature allows users to end game early and see the answer
+- Smart answer detection in AI Thinks Mode:
+  * Question field automatically detects if user typed the correct answer
+  * Works with questions like "Is it a Lion?" or direct answers like "Lion"
+  * Uses same fuzzy matching as guess field for consistency
+  * Immediately ends game with victory if correct answer detected
 - Color accessibility:
   * accent-dark (dark green) used for text on white backgrounds
   * Ensures WCAG contrast compliance for readability

@@ -101,6 +101,15 @@ export function AIThinksMode({ onGameEnd }: AIThinksModeProps) {
   const handleAskQuestion = async () => {
     if (!currentQuestion.trim() || questionCount >= 20) return;
 
+    // Check if the question contains the correct answer
+    const isCorrect = isGuessCorrect(currentQuestion, secretWord);
+    
+    if (isCorrect) {
+      // User guessed correctly in the question field
+      onGameEnd(true, secretWord, questionCount + 1);
+      return;
+    }
+
     setIsAnswering(true);
     try {
       const answer = await answerQuestion(secretWord, currentQuestion);
