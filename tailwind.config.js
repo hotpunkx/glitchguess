@@ -96,7 +96,11 @@ export default {
             },
             boxShadow: {
                 card: 'var(--shadow-card)',
-                hover: 'var(--shadow-hover)'
+                hover: 'var(--shadow-hover)',
+                brutal: 'var(--shadow-brutal)',
+                'brutal-lg': 'var(--shadow-brutal-lg)',
+                'brutal-pink': 'var(--shadow-brutal-pink)',
+                'brutal-lime': 'var(--shadow-brutal-lime)'
             },
             keyframes: {
                 'accordion-down': {
