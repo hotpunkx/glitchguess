@@ -20,6 +20,11 @@ GLITCHGUESS is an interactive 20 questions guessing game featuring AI-powered ga
 4. Make your guess at any time!
 5. Can you figure out what the AI is thinking?
 
+**Smart Guessing Features:**
+- ✅ **Flexible Format**: You can guess "Lion" or "Is it a Lion?" - both work!
+- ✅ **Spelling Forgiveness**: Minor spelling mistakes are automatically corrected
+- ✅ **Give Up Option**: Stuck? Use the "Give Up & See Answer" button anytime
+
 ## 🎲 Fair Game Categories
 
 To ensure a fair and fun game, choose from these categories:
@@ -62,6 +67,9 @@ To ensure a fair and fun game, choose from these categories:
 - **Think Creatively**: The AI can think of unusual things within the categories!
 - **Review History**: Check previous Q&A to avoid repeating questions
 - **Avoid Obscure Items**: Don't pick something too specific or unknown
+- **Don't Worry About Spelling**: The game forgives minor spelling mistakes
+- **Flexible Guessing**: You can guess "Lion" or ask "Is it a Lion?" - both work!
+- **Use Give Up Wisely**: If you're truly stuck, use the Give Up button to see the answer
 
 ## 🎉 Victory Conditions
 

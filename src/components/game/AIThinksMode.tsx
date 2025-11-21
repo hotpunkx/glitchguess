@@ -4,10 +4,72 @@ import { Input } from '@/components/ui/input';
 import { QuestionHistory } from './QuestionHistory';
 import { Answer, QuestionAnswer } from '@/types/game';
 import { generateSecretWord, answerQuestion } from '@/services/aiService';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Flag } from 'lucide-react';
 
 interface AIThinksModeProps {
   onGameEnd: (isWon: boolean, correctAnswer: string, questionCount?: number) => void;
+}
+
+// Calculate Levenshtein distance for fuzzy matching
+function levenshteinDistance(str1: string, str2: string): number {
+  const len1 = str1.length;
+  const len2 = str2.length;
+  const matrix: number[][] = [];
+
+  for (let i = 0; i <= len1; i++) {
+    matrix[i] = [i];
+  }
+
+  for (let j = 0; j <= len2; j++) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= len1; i++) {
+    for (let j = 1; j <= len2; j++) {
+      const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
+  }
+
+  return matrix[len1][len2];
+}
+
+// Normalize and clean user input
+function normalizeGuess(input: string): string {
+  let normalized = input.toLowerCase().trim();
+  
+  // Remove question formatting
+  normalized = normalized.replace(/^is it\s+/i, '');
+  normalized = normalized.replace(/^it is\s+/i, '');
+  normalized = normalized.replace(/^it's\s+/i, '');
+  normalized = normalized.replace(/\?+$/g, '');
+  normalized = normalized.trim();
+  
+  return normalized;
+}
+
+// Check if guess matches with fuzzy matching
+function isGuessCorrect(guess: string, answer: string): boolean {
+  const normalizedGuess = normalizeGuess(guess);
+  const normalizedAnswer = answer.toLowerCase().trim();
+  
+  // Exact match
+  if (normalizedGuess === normalizedAnswer) {
+    return true;
+  }
+  
+  // Calculate similarity threshold based on length
+  const maxLength = Math.max(normalizedGuess.length, normalizedAnswer.length);
+  const distance = levenshteinDistance(normalizedGuess, normalizedAnswer);
+  
+  // Allow 1-2 character differences for shorter words, more for longer
+  const threshold = maxLength <= 5 ? 1 : maxLength <= 10 ? 2 : 3;
+  
+  return distance <= threshold;
 }
 
 export function AIThinksMode({ onGameEnd }: AIThinksModeProps) {
@@ -61,14 +123,14 @@ export function AIThinksMode({ onGameEnd }: AIThinksModeProps) {
   const handleMakeGuess = () => {
     if (!currentGuess.trim()) return;
 
-    const isCorrect =
-      currentGuess.toLowerCase().trim() === secretWord.toLowerCase().trim();
+    const isCorrect = isGuessCorrect(currentGuess, secretWord);
 
     if (isCorrect) {
       onGameEnd(true, secretWord, questionCount + 1);
     } else {
+      const normalizedGuess = normalizeGuess(currentGuess);
       const newHistory: QuestionAnswer = {
-        question: `Is it ${currentGuess}?`,
+        question: `Is it ${normalizedGuess}?`,
         answer: 'No',
         asker: 'human',
       };
@@ -80,6 +142,10 @@ export function AIThinksMode({ onGameEnd }: AIThinksModeProps) {
         onGameEnd(false, secretWord, questionCount + 1);
       }
     }
+  };
+
+  const handleGiveUp = () => {
+    onGameEnd(false, secretWord, questionCount);
   };
 
   if (isLoading) {
@@ -148,6 +214,15 @@ export function AIThinksMode({ onGameEnd }: AIThinksModeProps) {
               GUESS
             </Button>
           </div>
+
+          <Button
+            onClick={handleGiveUp}
+            variant="outline"
+            className="w-full h-12 xl:h-14 text-base xl:text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all max-sm:h-10 max-sm:text-sm"
+          >
+            <Flag className="mr-2" size={20} />
+            GIVE UP & SEE ANSWER
+          </Button>
         </div>
       </div>
 

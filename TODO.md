@@ -34,6 +34,9 @@
 - [x] Updated HumanThinksMode instruction to reference categories
 - [x] Added white text hover effect to "AI THINKS OF SOMETHING" button
 - [x] Added white text hover effect to "PLAY AGAIN" button
+- [x] Implemented fuzzy matching for spelling mistakes (Levenshtein distance)
+- [x] Added question format normalization (removes "Is it", "?", etc.)
+- [x] Added "Give Up & See Answer" button in AI Thinks Mode
 - [x] All lint checks passing
 
 ## Notes
@@ -46,3 +49,10 @@
   * Animals, Food & Drinks, Movies & TV Shows, Video Games
   * Sports & Athletes, Countries & Cities, Musicians & Bands
   * Famous Books, Vehicles, Famous Landmarks, Famous Artists, Common Objects
+- Fuzzy matching algorithm:
+  * Uses Levenshtein distance to handle spelling mistakes
+  * Allows 1 character difference for words ≤5 chars
+  * Allows 2 character differences for words 6-10 chars
+  * Allows 3 character differences for words >10 chars
+  * Normalizes input by removing "Is it", "It is", "It's", and "?" formatting
+- Give Up feature allows users to end game early and see the answer
