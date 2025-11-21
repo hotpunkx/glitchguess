@@ -126,7 +126,7 @@ export function EndScreen({
         <div className="space-y-3 xl:space-y-4">
           <Button
             onClick={onPlayAgain}
-            className="w-full h-auto py-6 xl:py-8 text-xl xl:text-3xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-accent text-accent-foreground max-sm:text-lg max-sm:py-5"
+            className="w-full h-auto py-6 xl:py-8 text-xl xl:text-3xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground max-sm:text-lg max-sm:py-5"
           >
             PLAY AGAIN
           </Button>

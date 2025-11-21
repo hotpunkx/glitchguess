@@ -32,6 +32,8 @@
 - [x] Added fair game categories list on home screen (12 categories)
 - [x] Updated AI service to follow fair game category rules
 - [x] Updated HumanThinksMode instruction to reference categories
+- [x] Added white text hover effect to "AI THINKS OF SOMETHING" button
+- [x] Added white text hover effect to "PLAY AGAIN" button
 - [x] All lint checks passing
 
 ## Notes
