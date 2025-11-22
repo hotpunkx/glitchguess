@@ -55,11 +55,14 @@ export function HumanThinksMode({ onGameEnd }: HumanThinksModeProps) {
     setHistory([...history, newHistory]);
     setQuestionCount(questionCount + 1);
 
-    if (currentQuestion.toLowerCase().startsWith('is it')) {
-      if (answer === 'Yes') {
-        onGameEnd(true, currentQuestion.replace(/^is it\s+/i, '').replace(/\?$/, ''), questionCount + 1);
-        return;
-      }
+    // Check if this is a final guess (not a regular question)
+    const isFinalGuess = currentQuestion.toLowerCase().includes('my final guess:');
+    
+    if (isFinalGuess && answer === 'Yes') {
+      // Extract the guessed answer from "My final guess: X" format
+      const guessedAnswer = currentQuestion.replace(/^.*my final guess:\s*/i, '').replace(/\?$/, '').trim();
+      onGameEnd(true, guessedAnswer, questionCount + 1);
+      return;
     }
 
     if (questionCount + 1 >= 20) {

@@ -1,5 +1,22 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - Critical Bug Fix: AI Victory Logic
+
+### Fixed
+- **CRITICAL BUG**: AI was automatically declaring victory on regular "is it" questions
+  - **Problem**: When AI asked "Is it edible?" and human answered "Yes", the app incorrectly declared AI victory
+  - **Root Cause**: Code couldn't distinguish between regular questions and final guesses
+  - **Solution**: Now only declares victory when AI makes a "My final guess:" statement and human confirms
+  - **Impact**: Game now works correctly - human must confirm final guess before AI wins
+
+### Technical Details
+- File: `src/components/game/HumanThinksMode.tsx` (lines 48-74)
+- Changed victory detection from `startsWith('is it')` to `includes('my final guess:')`
+- Added proper extraction of guessed answer from final guess format
+- Regular questions now never trigger automatic victory
+
+---
+
 ## 2025-11-22 - Footer & AI Prompt Updates
 
 ### Added
@@ -17,10 +34,10 @@
   - Emphasizes clarity and unambiguous yes/no responses
 
 ### Documentation Updates
-- Updated `TODO.md` with footer implementation
+- Updated `TODO.md` with footer implementation and bug fix
 - Updated `AI_PERSONALITY.md` with new prompt wording
 - Updated `PROMPT_QUICK_REFERENCE.md` with revised generateAIQuestion section
-- Created `CHANGELOG.md` for tracking changes
+- Updated `CHANGELOG.md` for tracking changes
 
 ### Technical Details
 - File: `src/components/common/Footer.tsx` - Complete rewrite

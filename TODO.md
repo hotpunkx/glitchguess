@@ -47,6 +47,10 @@
   - [x] answerQuestion: strict one-word responses
 - [x] Added Footer with attribution: "With ❤️ by IamIsPra in LK"
 - [x] Footer styled with GLITCHGUESS Neubrutalism aesthetic
+- [x] Fixed critical bug: AI auto-winning on regular "is it" questions
+  - [x] Now only declares victory on "My final guess:" statements
+  - [x] Regular questions no longer trigger automatic victory
+  - [x] Human must confirm final guess before AI wins
 - [x] All lint checks passing
 
 ## Notes
