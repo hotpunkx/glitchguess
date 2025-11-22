@@ -104,14 +104,31 @@ export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThink
     }
   }, []);
 
+  // Fallback words in case AI service fails
+  const getRandomFallbackWord = () => {
+    const fallbackWords = [
+      'Pizza', 'Elephant', 'Titanic', 'Guitar', 'Basketball',
+      'Paris', 'Beethoven', 'Smartphone', 'Ferrari', 'Statue of Liberty',
+      'Harry Potter', 'Minecraft', 'Coca-Cola', 'Tiger', 'Sushi',
+      'The Beatles', 'Mount Everest', 'Bicycle', 'Leonardo da Vinci', 'Coffee'
+    ];
+    return fallbackWords[Math.floor(Math.random() * fallbackWords.length)];
+  };
+
   const initializeGame = async () => {
     setIsLoading(true);
     try {
       const word = await generateSecretWord();
-      setSecretWord(word);
+      // Validate that we got a proper response
+      if (!word || word.trim().length === 0) {
+        console.warn('Empty secret word received, using fallback');
+        setSecretWord(getRandomFallbackWord());
+      } else {
+        setSecretWord(word);
+      }
     } catch (error) {
       console.error('Error generating secret word:', error);
-      setSecretWord('Eiffel Tower');
+      setSecretWord(getRandomFallbackWord());
     } finally {
       setIsLoading(false);
     }

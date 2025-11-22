@@ -1,5 +1,31 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - Eiffel Tower Repetition Fix
+
+### Fixed
+- **AI Secret Word Variety**: Fixed repetitive "Eiffel Tower" selections
+  - Replaced hardcoded "Eiffel Tower" fallback with random selection from 20 diverse words
+  - Fallback words cover all game categories (Animals, Food, Movies, Games, Sports, etc.)
+  - Added validation for empty AI responses
+  - Improved error logging and debugging
+  - File: `src/components/game/AIThinksMode.tsx`
+
+### Fallback Words
+Pizza, Elephant, Titanic, Guitar, Basketball, Paris, Beethoven, Smartphone, Ferrari, Statue of Liberty, Harry Potter, Minecraft, Coca-Cola, Tiger, Sushi, The Beatles, Mount Everest, Bicycle, Leonardo da Vinci, Coffee
+
+### Impact
+- **Before**: 100% "Eiffel Tower" when API fails
+- **After**: 5% chance per word (20 options), much more variety
+- Better user experience even when AI service has issues
+
+### Technical Details
+- Added `getRandomFallbackWord()` function
+- Random selection using `Math.floor(Math.random() * fallbackWords.length)`
+- Empty response validation: `if (!word || word.trim().length === 0)`
+- All lint checks passing (81 files)
+
+---
+
 ## 2025-11-22 - UI Polish & Spacing Improvements
 
 ### Fixed

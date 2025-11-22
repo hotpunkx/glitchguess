@@ -94,6 +94,12 @@
   - [x] Added top margin to GLITCHGUESS title (mt-16 mobile, xl:mt-20 desktop)
   - [x] Fixed theme toggle button overlap with title
   - [x] Improved visual consistency across all buttons
+- [x] Fixed Eiffel Tower Repetition Issue
+  - [x] Replaced hardcoded "Eiffel Tower" fallback with random selection
+  - [x] Created list of 20 diverse fallback words covering all categories
+  - [x] Added validation for empty AI responses
+  - [x] Improved error logging and debugging
+  - [x] Much better variety when AI service fails
 - [x] All lint checks passing
 
 ## Notes
