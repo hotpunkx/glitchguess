@@ -1,5 +1,61 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - Theme Switcher & Game State Persistence
+
+### Added
+- **Theme Switcher**: Light/Dark mode toggle
+  - Fixed position in top right corner (always visible)
+  - Sun (☀️) icon for light mode, Moon (🌙) icon for dark mode
+  - Persists theme preference in localStorage
+  - Smooth transitions between themes
+  - Works on all pages (home, game, how-to-play)
+  - Styled with Neubrutalism aesthetic (brutal border, shadow effects)
+  - File: `src/components/common/ThemeToggle.tsx`
+
+- **Game State Persistence**: Auto-save functionality
+  - Automatically saves game progress to localStorage
+  - Restores game state on page refresh
+  - Shows "⚡ CONTINUE GAME" button when saved game exists
+  - Displays which mode was being played (I Think / AI Thinks)
+  - 24-hour expiration for saved games
+  - Clears saved state on game end or new game start
+  - Supports both game modes with full state restoration:
+    - Question history
+    - Question count
+    - Current question (Human Thinks mode)
+    - Secret word (AI Thinks mode)
+    - Instruction screen state
+  - File: `src/hooks/use-game-storage.ts`
+
+### Changed
+- **App.tsx**: Added ThemeToggle component at root level
+- **GamePage.tsx**: Integrated useGameStorage hook
+  - Added initialState prop passing to game mode components
+  - Added onStateChange callback for auto-saving
+  - Added onContinueGame handler for resuming saved games
+- **StartScreen.tsx**: Added Continue Game button
+  - Shows when saved game exists
+  - Displays saved game mode
+  - Positioned above mode selection buttons
+- **HumanThinksMode.tsx**: Added state persistence support
+  - Accepts initialState prop for restoration
+  - Calls onStateChange callback on state updates
+  - Restores question history, count, and current question
+- **AIThinksMode.tsx**: Added state persistence support
+  - Accepts initialState prop for restoration
+  - Calls onStateChange callback on state updates
+  - Restores question history, count, and secret word
+
+### Technical Details
+- Uses localStorage with key `glitchguess-game-state`
+- Theme stored with key `glitchguess-theme`
+- State includes timestamp for expiration checking
+- Only saves state during active gameplay (not on start/end screens)
+- Graceful error handling for corrupted localStorage data
+- All lint checks passing (81 files)
+
+---
+
 ## 2025-11-22 - How to Play Page
 
 ### Added

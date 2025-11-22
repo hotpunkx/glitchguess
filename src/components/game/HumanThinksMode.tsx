@@ -4,20 +4,38 @@ import { QuestionHistory } from './QuestionHistory';
 import { Answer, QuestionAnswer } from '@/types/game';
 import { generateAIQuestion, generateAIGuess } from '@/services/aiService';
 import { Loader2 } from 'lucide-react';
+import { SavedGameState } from '@/hooks/use-game-storage';
 
 interface HumanThinksModeProps {
   onGameEnd: (isWon: boolean, correctAnswer?: string, questionCount?: number) => void;
+  onStateChange?: (state: Partial<SavedGameState>) => void;
+  initialState?: SavedGameState | null;
 }
 
-export function HumanThinksMode({ onGameEnd }: HumanThinksModeProps) {
-  const [history, setHistory] = useState<QuestionAnswer[]>([]);
-  const [questionCount, setQuestionCount] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState('');
+export function HumanThinksMode({ onGameEnd, onStateChange, initialState }: HumanThinksModeProps) {
+  const [history, setHistory] = useState<QuestionAnswer[]>(initialState?.history || []);
+  const [questionCount, setQuestionCount] = useState(initialState?.questionCount || 0);
+  const [currentQuestion, setCurrentQuestion] = useState(initialState?.currentQuestion || '');
   const [isLoading, setIsLoading] = useState(false);
-  const [showInstruction, setShowInstruction] = useState(true);
+  const [showInstruction, setShowInstruction] = useState(initialState?.showInstruction ?? true);
+
+  // Save state whenever it changes
+  useEffect(() => {
+    if (onStateChange && !showInstruction) {
+      onStateChange({
+        gameMode: 'human-thinks',
+        currentMode: 'human-thinks',
+        questionCount,
+        history,
+        currentQuestion,
+        showInstruction,
+        isWon: false,
+      });
+    }
+  }, [history, questionCount, currentQuestion, showInstruction, onStateChange]);
 
   useEffect(() => {
-    if (!showInstruction && questionCount === 0) {
+    if (!showInstruction && questionCount === 0 && !currentQuestion) {
       askNextQuestion();
     }
   }, [showInstruction]);
@@ -52,8 +70,11 @@ export function HumanThinksMode({ onGameEnd }: HumanThinksModeProps) {
       asker: 'ai',
     };
 
-    setHistory([...history, newHistory]);
-    setQuestionCount(questionCount + 1);
+    const updatedHistory = [...history, newHistory];
+    const updatedCount = questionCount + 1;
+    
+    setHistory(updatedHistory);
+    setQuestionCount(updatedCount);
 
     // Check if this is a final guess (not a regular question)
     const isFinalGuess = currentQuestion.toLowerCase().includes('my final guess:');
@@ -61,12 +82,12 @@ export function HumanThinksMode({ onGameEnd }: HumanThinksModeProps) {
     if (isFinalGuess && answer === 'Yes') {
       // Extract the guessed answer from "My final guess: X" format
       const guessedAnswer = currentQuestion.replace(/^.*my final guess:\s*/i, '').replace(/\?$/, '').trim();
-      onGameEnd(true, guessedAnswer, questionCount + 1);
+      onGameEnd(true, guessedAnswer, updatedCount);
       return;
     }
 
-    if (questionCount + 1 >= 20) {
-      onGameEnd(false, undefined, questionCount + 1);
+    if (updatedCount >= 20) {
+      onGameEnd(false, undefined, updatedCount);
       return;
     }
 

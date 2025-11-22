@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 interface StartScreenProps {
   onSelectMode: (mode: 'human-thinks' | 'ai-thinks') => void;
+  onContinueGame?: () => void;
+  savedGameMode?: 'human-thinks' | 'ai-thinks';
 }
 
-export function StartScreen({ onSelectMode }: StartScreenProps) {
+export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: StartScreenProps) {
   const navigate = useNavigate();
 
   return (
@@ -26,6 +28,20 @@ export function StartScreen({ onSelectMode }: StartScreenProps) {
         </div>
 
         <div className="space-y-4 xl:space-y-6">
+          {onContinueGame && (
+            <Button
+              onClick={onContinueGame}
+              className="w-full h-auto py-6 xl:py-8 text-xl xl:text-3xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground max-sm:text-lg max-sm:py-5"
+            >
+              ⚡ CONTINUE GAME
+              {savedGameMode && (
+                <span className="block text-sm xl:text-base font-bold mt-2 max-sm:text-xs">
+                  ({savedGameMode === 'human-thinks' ? 'I Think Mode' : 'AI Thinks Mode'})
+                </span>
+              )}
+            </Button>
+          )}
+
           <Button
             onClick={() => onSelectMode('human-thinks')}
             className="w-full h-auto py-6 xl:py-8 text-xl xl:text-3xl font-black brutal-border-thick shadow-brutal-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-secondary text-secondary-foreground max-sm:text-lg max-sm:py-5"

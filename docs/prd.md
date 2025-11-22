@@ -1,5 +1,6 @@
-# 20 Questions Game Requirements Document
-\n## 1. Game Overview\n
+# 20 Questions Game Requirements Document\n
+## 1. Game Overview
+
 ### 1.1 Game Name
 \nGLITCHGUESS
 
@@ -14,7 +15,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Real-time question history tracking
 - Dramatic reveal and celebration screens
 - Mobile-friendly responsive design
-- How to Play instructional page
+- How to Play instructional page\n- Browser local session storage for game state persistence
+- Theme switcher for visual customization
 
 ## 2. Gameplay Mechanics
 
@@ -23,31 +25,28 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Display bold title: 'GLITCHGUESS'
 - Show 'How to Play' link/button in top corner leading to instructional page
 - Show category selection section with instruction: 'Choose a category for a fair game:'
-- Category options displayed as large clickable cards:
-  + Animals
+- Category options displayed as large clickable cards:\n  + Animals
   + Objects
   + People (Famous)
   + Movies
   + Places
-- Two large action buttons (enabled after category selection):
-  + 'I think of something – AI guesses' (Human thinks mode)
+- Two large action buttons (enabled after category selection):\n  + 'I think of something – AI guesses' (Human thinks mode)
   + 'AI thinks of something – I guess' (AI thinks mode)
 
 ### 2.2 How to Play Page
 
 - Display page title: 'HOW TO PLAY'
-- Game overview section explaining the core concept:\n  + This is a 20 questions guessing game between you and AI
+- Game overview section explaining the core concept:
+  + This is a 20 questions guessing game between you and AI
   + Choose a category to keep the game fair and fun
-  + Take turns thinking of something and guessing\n- Mode explanations:
-  + **Human Thinks Mode**: You think of something in the chosen category, AI asks up to 20 yes/no questions to guess it
-  + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses
+  + Take turns thinking of something and guessing
+- Mode explanations:
+  + **Human Thinks Mode**: You think of something in the chosen category, AI asks up to 20 yes/no questions to guess it\n  + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses
 - Game rules:
   + Maximum 20 questions per round
-  + Answer with Yes/No/Sometimes
-  + All answers must be within the selected category
+  + Answer with Yes/No/Sometimes\n  + All answers must be within the selected category
   + Make your final guess anytime during the game
-- 'Back to Home' button to return to start screen
-- Maintain Neubrutalism design theme throughout the page
+- 'Back to Home' button to return to start screen\n- Maintain Neubrutalism design theme throughout the page
 
 ### 2.3 Human Thinks Mode
 
@@ -56,17 +55,18 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - No text input required (human keeps answer in mind)
 - AI generates intelligent yes/no questions based on selected category and previous answers
 - Three response buttons: Yes / No / Sometimes
-- AI makes educated guesses based on accumulated information and category constraints\n
-### 2.4 AI Thinks Mode
-\n- Display selected category at top of screen
-- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)
+- AI makes educated guesses based on accumulated information and category constraints
+\n### 2.4 AI Thinks Mode
+
+- Display selected category at top of screen\n- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)
 - Human types and submits yes/no questions
 - AI responds with Yes/No/Sometimes based on its secret answer
 - Human can make guesses at any time
 
 ### 2.5 Game Progress Display
 
-- Question counter showing current question number out of 20\n- Question history panel displaying all previous Q&A pairs in chronological order
+- Question counter showing current question number out of 20
+- Question history panel displaying all previous Q&A pairs in chronological order
 - Clear visual distinction between questions and answers
 
 ### 2.6 End Game Conditions
@@ -74,13 +74,12 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - AI/Human guesses correctly before 20 questions
 - 20 questions reached without correct guess
 
-### 2.7 End Screen\n
-- Victory message: 'I got it in X questions!' (if guessed correctly)
+### 2.7 End Screen
+\n- Victory message: 'I got it in X questions!' (if guessed correctly)
 - Surrender message: 'I surrender! What was it?' (if 20 questions reached)
 - Display confetti animation on victory
 - Reveal the correct answer
-- Large 'Play Again' button to restart
-
+- Large 'Play Again' button to restart\n
 ## 3. Design Style
 
 ### 3.1 Visual Aesthetic
@@ -90,7 +89,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 ### 3.2 Color Scheme
 
 - Base colors: Pure black (#000000) and pure white (#FFFFFF) for extreme contrast
-- Accent colors: Hot pink (#FF006E) and electric lime (#CCFF00) for aggressive neon highlights\n
+- Accent colors: Hot pink (#FF006E) and electric lime (#CCFF00) for aggressive neon highlights
+- Theme switcher allows users to toggle between different color schemes while maintaining Neubrutalism aesthetic\n
 ### 3.3 Visual Details
 
 - Typography: Oversized bold sans-serif fonts (Inter or system fonts with font-weight 900)
@@ -101,6 +101,7 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Buttons: Large, chunky buttons with high contrast and bold labels
 - Category cards: Distinct visual style with neon borders and hover effects
 - How to Play page: Same Neubrutalism aesthetic with bold headings, neon accents, and chunky text blocks
+- Theme switcher: Fixed position button in top right corner, visible on all pages, with bold icon and smooth transition effects
 
 ### 3.4 Responsive Design
 \n- Fully mobile-friendly and responsive across all screen sizes
@@ -121,6 +122,21 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 
 - Immediate AI response after each human answer
 - Smooth transitions between game states
-- Confetti animation on victory\n- Question history auto-scroll to latest entry
+- Confetti animation on victory
+- Question history auto-scroll to latest entry
 - Allow users to share the results with friends, generate dynamic unique url (avoid caching the og image by social medias) and dynamic og image to share the results
 - Navigation between home page and How to Play page with smooth transitions
+
+### 4.3 Session Persistence
+
+- Implement browser local storage to save game state automatically
+- Store current game mode, selected category, question history, question count, and AI's secret answer (if applicable)
+- Restore game state when page is accidentally refreshed
+- Clear session data when game ends or user starts a new game
+
+### 4.4 Theme Switcher
+
+- Fixed position theme switcher button always visible in top right corner across all pages
+- Allow users to toggle between different color themes\n- Save theme preference in browser local storage
+- Apply theme changes instantly with smooth transitions
+- Maintain Neubrutalism design principles across all theme variations

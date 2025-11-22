@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 
 import routes from './routes';
 import Footer from '@/components/common/Footer';
+import { ThemeToggle } from '@/components/common/ThemeToggle';
 
 // Uncomment these imports when using miaoda-auth-react for authentication
 // import { AuthProvider, RequireAuth } from 'miaoda-auth-react';
@@ -41,6 +42,7 @@ const App: React.FC = () => {
 */}
   return (
     <Router>
+      <ThemeToggle />
       <div className="flex flex-col min-h-screen">
         <main className="flex-grow">
           <Routes>

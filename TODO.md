@@ -58,6 +58,25 @@
   - [x] All bg-accent buttons now show white text on hover
   - [x] Improved visual feedback and consistency
 - [x] Added "How to Play" page
+  - [x] Created comprehensive tutorial page at /how-to-play
+  - [x] Added HOW TO PLAY button on home screen
+  - [x] Implemented navigation between home and tutorial
+  - [x] Styled with GLITCHGUESS Neubrutalism aesthetic
+  - [x] Fully responsive design
+- [x] Added Theme Switcher (Light/Dark Mode)
+  - [x] Created ThemeToggle component with sun/moon icons
+  - [x] Fixed position in top right corner (always visible)
+  - [x] Persists theme preference in localStorage
+  - [x] Smooth transitions between themes
+  - [x] Works on all pages
+- [x] Added Game State Persistence (Auto-Save)
+  - [x] Created useGameStorage hook for localStorage management
+  - [x] Saves game state automatically during gameplay
+  - [x] Restores game on page refresh
+  - [x] Shows "CONTINUE GAME" button when saved game exists
+  - [x] Clears saved state on game end or new game
+  - [x] 24-hour expiration for saved games
+  - [x] Supports both Human Thinks and AI Thinks modes
   - [x] Created comprehensive tutorial page with game rules
   - [x] Explained both game modes with step-by-step instructions
   - [x] Added winning conditions and pro tips

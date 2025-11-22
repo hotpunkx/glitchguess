@@ -5,9 +5,12 @@ import { QuestionHistory } from './QuestionHistory';
 import { Answer, QuestionAnswer } from '@/types/game';
 import { generateSecretWord, answerQuestion } from '@/services/aiService';
 import { Loader2, Flag } from 'lucide-react';
+import { SavedGameState } from '@/hooks/use-game-storage';
 
 interface AIThinksModeProps {
   onGameEnd: (isWon: boolean, correctAnswer: string, questionCount?: number) => void;
+  onStateChange?: (state: Partial<SavedGameState>) => void;
+  initialState?: SavedGameState | null;
 }
 
 // Calculate Levenshtein distance for fuzzy matching
@@ -72,17 +75,33 @@ function isGuessCorrect(guess: string, answer: string): boolean {
   return distance <= threshold;
 }
 
-export function AIThinksMode({ onGameEnd }: AIThinksModeProps) {
-  const [history, setHistory] = useState<QuestionAnswer[]>([]);
-  const [questionCount, setQuestionCount] = useState(0);
-  const [secretWord, setSecretWord] = useState('');
+export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThinksModeProps) {
+  const [history, setHistory] = useState<QuestionAnswer[]>(initialState?.history || []);
+  const [questionCount, setQuestionCount] = useState(initialState?.questionCount || 0);
+  const [secretWord, setSecretWord] = useState(initialState?.secretWord || '');
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [currentGuess, setCurrentGuess] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!initialState?.secretWord);
   const [isAnswering, setIsAnswering] = useState(false);
 
+  // Save state whenever it changes
   useEffect(() => {
-    initializeGame();
+    if (onStateChange && secretWord) {
+      onStateChange({
+        gameMode: 'ai-thinks',
+        currentMode: 'ai-thinks',
+        questionCount,
+        history,
+        secretWord,
+        isWon: false,
+      });
+    }
+  }, [history, questionCount, secretWord, onStateChange]);
+
+  useEffect(() => {
+    if (!initialState?.secretWord) {
+      initializeGame();
+    }
   }, []);
 
   const initializeGame = async () => {
@@ -119,8 +138,11 @@ export function AIThinksMode({ onGameEnd }: AIThinksModeProps) {
         asker: 'human',
       };
 
-      setHistory([...history, newHistory]);
-      setQuestionCount(questionCount + 1);
+      const updatedHistory = [...history, newHistory];
+      const updatedCount = questionCount + 1;
+      
+      setHistory(updatedHistory);
+      setQuestionCount(updatedCount);
       setCurrentQuestion('');
     } catch (error) {
       console.error('Error answering question:', error);
@@ -143,12 +165,15 @@ export function AIThinksMode({ onGameEnd }: AIThinksModeProps) {
         answer: 'No',
         asker: 'human',
       };
-      setHistory([...history, newHistory]);
-      setQuestionCount(questionCount + 1);
+      const updatedHistory = [...history, newHistory];
+      const updatedCount = questionCount + 1;
+      
+      setHistory(updatedHistory);
+      setQuestionCount(updatedCount);
       setCurrentGuess('');
 
-      if (questionCount + 1 >= 20) {
-        onGameEnd(false, secretWord, questionCount + 1);
+      if (updatedCount >= 20) {
+        onGameEnd(false, secretWord, updatedCount);
       }
     }
   };
