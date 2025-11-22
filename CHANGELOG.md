@@ -1,5 +1,30 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - UX Improvements: Duplicate Questions & Button Hover States
+
+### Changed
+- **AI Question Generation**: Added duplicate question prevention
+  - AI now explicitly instructed: "Never ask the same question twice"
+  - Checks conversation history before generating new questions
+  - Improves game flow and user experience
+  - File: `src/services/aiService.ts` (line 92)
+
+### Fixed
+- **Button Hover States**: Fixed white text on hover for all green (accent) buttons
+  - "I'M READY!" button in HumanThinksMode
+  - "YES" button in HumanThinksMode
+  - "AI THINKS OF SOMETHING" button (already had fix)
+  - "PLAY AGAIN" button (already had fix)
+  - Improved visual feedback and consistency across all green buttons
+  - Files: `src/components/game/HumanThinksMode.tsx` (lines 95, 126)
+
+### Technical Details
+- All buttons with `bg-accent` now include `hover:text-white` class
+- AI prompt updated to prevent repetitive questioning
+- All lint checks passing (78 files)
+
+---
+
 ## 2025-11-22 - Critical Bug Fix: AI Victory Logic
 
 ### Fixed

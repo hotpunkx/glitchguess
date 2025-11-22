@@ -89,6 +89,8 @@ ${historyText ? `Previous Q&A:\n${historyText}\n` : ''}Question ${conversationHi
 Ask ONE extremely smart, yes/no question to split the possibilities. Ask direct questions to get yes or no as answers.
 For example: is it edible? Is it a place? these questions has direct yes or no answers.
 
+CRITICAL: Never ask the same question twice. Check the previous Q&A history and ask a completely different question.
+
 Output exactly one line, nothing else:
 
 Question: [your question ending with ?]`,

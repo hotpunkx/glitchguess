@@ -51,6 +51,12 @@
   - [x] Now only declares victory on "My final guess:" statements
   - [x] Regular questions no longer trigger automatic victory
   - [x] Human must confirm final guess before AI wins
+- [x] Added duplicate question prevention in AI prompts
+  - [x] AI now explicitly instructed to never ask same question twice
+  - [x] Checks conversation history before asking new questions
+- [x] Fixed hover text color on all green (accent) buttons
+  - [x] All bg-accent buttons now show white text on hover
+  - [x] Improved visual feedback and consistency
 - [x] All lint checks passing
 
 ## Notes

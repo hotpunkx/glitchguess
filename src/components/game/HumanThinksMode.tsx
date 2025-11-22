@@ -92,7 +92,7 @@ export function HumanThinksMode({ onGameEnd }: HumanThinksModeProps) {
 
           <Button
             onClick={() => setShowInstruction(false)}
-            className="w-full h-auto py-6 xl:py-8 text-xl xl:text-2xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-accent text-accent-foreground max-sm:text-lg max-sm:py-5"
+            className="w-full h-auto py-6 xl:py-8 text-xl xl:text-2xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground max-sm:text-lg max-sm:py-5"
           >
             I'M READY!
           </Button>
@@ -123,7 +123,7 @@ export function HumanThinksMode({ onGameEnd }: HumanThinksModeProps) {
           <div className="grid grid-cols-3 gap-3 xl:gap-4">
             <Button
               onClick={() => handleAnswer('Yes')}
-              className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-accent text-accent-foreground max-sm:text-base max-sm:py-3"
+              className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground max-sm:text-base max-sm:py-3"
             >
               YES
             </Button>

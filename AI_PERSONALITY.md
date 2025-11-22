@@ -58,6 +58,8 @@ Question [N] of 20.
 Ask ONE extremely smart, yes/no question to split the possibilities. Ask direct questions to get yes or no as answers.
 For example: is it edible? Is it a place? these questions has direct yes or no answers.
 
+CRITICAL: Never ask the same question twice. Check the previous Q&A history and ask a completely different question.
+
 Output exactly one line, nothing else:
 
 Question: [your question ending with ?]
@@ -98,7 +100,15 @@ Question: [your question ending with ?]
 - "split the possibilities" guides information theory approach
 - Examples provided: "is it edible? Is it a place?" - shows what direct yes/no questions look like
 
-#### 6. Output Format
+#### 6. Duplicate Prevention
+**"CRITICAL: Never ask the same question twice. Check the previous Q&A history and ask a completely different question."**
+- Prevents repetitive questioning
+- Uses "CRITICAL" to emphasize importance
+- Explicitly instructs to check history
+- Improves user experience by avoiding redundancy
+- Ensures efficient use of 20-question limit
+
+#### 7. Output Format
 **"Output exactly one line, nothing else:"**
 **"Question: [your question ending with ?]"**
 - Strict format enforcement
