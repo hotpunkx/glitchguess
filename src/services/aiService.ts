@@ -86,7 +86,9 @@ Thing is always from these categories only: Animals • Food/Drinks • Movies/T
 
 ${historyText ? `Previous Q&A:\n${historyText}\n` : ''}Question ${conversationHistory.length + 1} of 20.
 
-Ask ONE extremely smart, slightly chaotic yes/no question to split the possibilities.
+Ask ONE extremely smart, yes/no question to split the possibilities. Ask direct questions to get yes or no as answers.
+For example: is it edible? Is it a place? these questions has direct yes or no answers.
+
 Output exactly one line, nothing else:
 
 Question: [your question ending with ?]`,

@@ -41,7 +41,7 @@
 - [x] Added accent-dark color (dark green) for better readability
 - [x] Question field now detects correct answers and ends game with victory
 - [x] Updated all AI prompts to GLITCHGUESS style (brutal neon personality)
-  - [x] generateAIQuestion: "brutal neon interrogator" style
+  - [x] generateAIQuestion: Direct yes/no questions with examples
   - [x] generateAIGuess: "final guess" format with clear output
   - [x] generateSecretWord: concrete examples, strict output format
   - [x] answerQuestion: strict one-word responses
