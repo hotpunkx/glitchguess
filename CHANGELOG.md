@@ -1,5 +1,25 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - Mobile Button Text Size Fix
+
+### Fixed
+- **Mobile Button Overflow**: Fixed button text overflow on small screens
+  - Reduced mobile font size from `text-lg` to `text-sm` for main action buttons
+  - Affected buttons:
+    - "I THINK OF SOMETHING – AI GUESSES"
+    - "AI THINKS OF SOMETHING – I GUESS"
+    - "⚡ CONTINUE GAME"
+  - Text now fits properly within button width on mobile devices (< 640px)
+  - Improved readability and professional appearance on small screens
+  - File: `src/components/game/StartScreen.tsx`
+
+### Technical Details
+- Changed `max-sm:text-lg` (18px) to `max-sm:text-sm` (14px)
+- Desktop and tablet sizes remain unchanged
+- All lint checks passing (81 files)
+
+---
+
 ## 2025-11-22 - Theme Switcher & Game State Persistence
 
 ### Added

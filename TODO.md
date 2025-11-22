@@ -81,6 +81,12 @@
   - [x] Explained both game modes with step-by-step instructions
   - [x] Added winning conditions and pro tips
   - [x] Styled with GLITCHGUESS Neubrutalism aesthetic
+- [x] Fixed mobile button text overflow
+  - [x] Reduced font size from text-lg to text-sm on mobile screens
+  - [x] Fixed "I THINK OF SOMETHING – AI GUESSES" button
+  - [x] Fixed "AI THINKS OF SOMETHING – I GUESS" button
+  - [x] Fixed "⚡ CONTINUE GAME" button
+  - [x] Text now fits properly within button width on small screens
   - [x] Added "HOW TO PLAY" button on home screen
   - [x] Implemented navigation between home and how-to-play pages
 - [x] All lint checks passing
