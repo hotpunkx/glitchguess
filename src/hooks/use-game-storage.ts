@@ -17,6 +17,23 @@ export interface SavedGameState {
 const STORAGE_KEY = 'glitchguess-game-state';
 const MAX_AGE = 24 * 60 * 60 * 1000; // 24 hours
 
+// Simple encoding/decoding to prevent users from seeing the secret word in DevTools
+const encodeSecret = (text: string): string => {
+  try {
+    return btoa(encodeURIComponent(text));
+  } catch {
+    return text;
+  }
+};
+
+const decodeSecret = (encoded: string): string => {
+  try {
+    return decodeURIComponent(atob(encoded));
+  } catch {
+    return encoded;
+  }
+};
+
 export function useGameStorage() {
   const [savedState, setSavedState] = useState<SavedGameState | null>(null);
 
@@ -30,6 +47,10 @@ export function useGameStorage() {
         // Check if saved state is not too old
         const age = Date.now() - parsed.timestamp;
         if (age < MAX_AGE && parsed.gameMode !== 'start' && parsed.gameMode !== 'end') {
+          // Decode secret word if it exists
+          if (parsed.secretWord) {
+            parsed.secretWord = decodeSecret(parsed.secretWord);
+          }
           setSavedState(parsed);
         } else {
           // Clear old state
@@ -51,7 +72,7 @@ export function useGameStorage() {
         isWon: state.isWon || false,
         correctAnswer: state.correctAnswer,
         history: state.history || [],
-        secretWord: state.secretWord,
+        secretWord: state.secretWord ? encodeSecret(state.secretWord) : undefined,
         currentQuestion: state.currentQuestion,
         showInstruction: state.showInstruction,
         timestamp: Date.now(),

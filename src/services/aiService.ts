@@ -142,8 +142,9 @@ export async function generateSecretWord(): Promise<string> {
 Pick ONE famous, concrete, guessable thing from ONLY these categories:
 Animals | Food & Drinks | Movies/TV Shows | Video Games | Sports/Athletes | Countries/Cities | Musicians/Bands | Famous Books | Vehicles | Landmarks | Famous Artists | Common Objects
 
-Good examples: Panda · Coca-Cola · Avengers: Endgame · Super Mario · Cristiano Ronaldo · Egypt · Queen · Dune · Helicopter · Taj Mahal · Michelangelo · Laptop
+Good examples: Panda · Coca-Cola · Titanic · Super Mario · Cristiano Ronaldo · Egypt · The Beatles · Harry Potter · Helicopter · Statue of Liberty · Michelangelo · Smartphone
 
+IMPORTANT: Choose randomly and vary your selections. Don't repeat the same answers.
 Never abstract, obscure, or made-up things.
 
 Output ONLY the thing (1–2 words max), nothing else at all — no quotes, no category, no text before or after.`,
@@ -152,7 +153,14 @@ Output ONLY the thing (1–2 words max), nothing else at all — no quotes, no c
     },
   ];
 
-  return await callLLM(messages);
+  const response = await callLLM(messages);
+  // Clean up response: remove HTML entities, extra whitespace, quotes, etc.
+  return response
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&[a-z]+;/gi, ' ')
+    .replace(/["""'']/g, '')
+    .trim()
+    .replace(/\s+/g, ' ');
 }
 
 export async function answerQuestion(secretWord: string, question: string): Promise<string> {

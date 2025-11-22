@@ -100,6 +100,13 @@
   - [x] Added validation for empty AI responses
   - [x] Improved error logging and debugging
   - [x] Much better variety when AI service fails
+- [x] Secret Word Security & AI Improvements
+  - [x] Implemented Base64 encoding for secret word in localStorage
+  - [x] Secret word no longer visible in DevTools (prevents cheating)
+  - [x] Improved AI prompt to reduce "Eiffel Tower" repetition
+  - [x] Added response cleaning (removes &nbsp; and HTML entities)
+  - [x] Better variety in AI word selection
+  - [x] Clean, properly formatted responses
 - [x] All lint checks passing
 
 ## Notes

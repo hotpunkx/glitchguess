@@ -1,5 +1,45 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - Secret Word Security & AI Improvements
+
+### Fixed
+- **Secret Word Security**: Encoded secret word in localStorage to prevent cheating
+  - Implemented Base64 encoding for secret word storage
+  - Secret word no longer visible in plain text in DevTools
+  - Encode before saving, decode when loading
+  - Prevents casual cheating while maintaining game functionality
+  - File: `src/hooks/use-game-storage.ts`
+
+- **AI Word Generation Quality**: Improved variety and response cleaning
+  - Removed "Taj Mahal" from examples (too similar to Eiffel Tower)
+  - Added better variety: "Titanic", "The Beatles", "Harry Potter", "Statue of Liberty"
+  - Added explicit instruction: "Choose randomly and vary your selections"
+  - Implemented response cleaning to remove HTML entities (`&nbsp;`, etc.)
+  - Remove quotes and normalize whitespace
+  - File: `src/services/aiService.ts`
+
+### Security Details
+- **Encoding**: Base64 with URI encoding (`btoa(encodeURIComponent(text))`)
+- **Decoding**: Reverse process (`decodeURIComponent(atob(encoded))`)
+- **Error Handling**: Graceful fallback if encoding/decoding fails
+- **Level**: Casual game obfuscation (sufficient for deterring cheating)
+
+### AI Improvements
+- Better prompt with variety instructions
+- Response cleaning pipeline:
+  1. Remove `&nbsp;` HTML entities
+  2. Remove other HTML entities
+  3. Remove all quote types
+  4. Trim whitespace
+  5. Normalize multiple spaces
+
+### Impact
+- **Security**: Secret word no longer visible in DevTools
+- **AI Quality**: Better variety, no HTML entities, clean responses
+- **User Experience**: Maintains game integrity, more engaging gameplay
+
+---
+
 ## 2025-11-22 - Eiffel Tower Repetition Fix
 
 ### Fixed
