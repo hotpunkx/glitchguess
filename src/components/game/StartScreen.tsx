@@ -14,13 +14,13 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
       <div className="w-full max-w-2xl space-y-8 xl:space-y-12">
         <div className="space-y-4">
-          <h1 className="text-5xl xl:text-8xl font-black text-center text-foreground animate-glitch max-sm:text-4xl">
+          <h1 className="text-5xl xl:text-8xl font-black text-center text-foreground animate-glitch max-sm:text-4xl mt-16 xl:mt-20">
             GLITCHGUESS
           </h1>
           <div className="flex justify-center">
             <Button
               onClick={() => navigate('/how-to-play')}
-              className="h-auto py-3 px-6 xl:py-4 xl:px-8 text-sm xl:text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-card text-foreground max-sm:text-xs max-sm:py-2 max-sm:px-4"
+              className="h-auto py-3 px-6 xl:py-4 xl:px-8 text-sm xl:text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-card text-foreground max-sm:text-xs max-sm:py-2 max-sm:px-4"
             >
               ❓ HOW TO PLAY
             </Button>

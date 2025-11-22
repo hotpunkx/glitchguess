@@ -1,5 +1,25 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - UI Polish & Spacing Improvements
+
+### Fixed
+- **HOW TO PLAY Button Hover**: Added white text color on hover for consistency
+  - Button now shows white text when hovered, matching other buttons
+  - Improved visual feedback and user experience
+  
+- **Title Spacing**: Added top margin to GLITCHGUESS title
+  - Added `mt-16` (mobile) and `xl:mt-20` (desktop) to prevent overlap with theme toggle button
+  - Title now has proper spacing from top of screen
+  - Theme toggle button no longer overlaps with title text
+  - File: `src/components/game/StartScreen.tsx`
+
+### Technical Details
+- Added `hover:text-white` to HOW TO PLAY button
+- Added `mt-16 xl:mt-20` to h1 title element
+- All lint checks passing (81 files)
+
+---
+
 ## 2025-11-22 - Mobile Button Text Size Fix
 
 ### Fixed

@@ -89,6 +89,11 @@
   - [x] Text now fits properly within button width on small screens
   - [x] Added "HOW TO PLAY" button on home screen
   - [x] Implemented navigation between home and how-to-play pages
+- [x] UI Polish & Spacing Improvements
+  - [x] Added white text hover to "HOW TO PLAY" button
+  - [x] Added top margin to GLITCHGUESS title (mt-16 mobile, xl:mt-20 desktop)
+  - [x] Fixed theme toggle button overlap with title
+  - [x] Improved visual consistency across all buttons
 - [x] All lint checks passing
 
 ## Notes
