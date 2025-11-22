@@ -1,16 +1,29 @@
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface StartScreenProps {
   onSelectMode: (mode: 'human-thinks' | 'ai-thinks') => void;
 }
 
 export function StartScreen({ onSelectMode }: StartScreenProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
       <div className="w-full max-w-2xl space-y-8 xl:space-y-12">
-        <h1 className="text-5xl xl:text-8xl font-black text-center text-foreground animate-glitch max-sm:text-4xl">
-          GLITCHGUESS
-        </h1>
+        <div className="space-y-4">
+          <h1 className="text-5xl xl:text-8xl font-black text-center text-foreground animate-glitch max-sm:text-4xl">
+            GLITCHGUESS
+          </h1>
+          <div className="flex justify-center">
+            <Button
+              onClick={() => navigate('/how-to-play')}
+              className="h-auto py-3 px-6 xl:py-4 xl:px-8 text-sm xl:text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-card text-foreground max-sm:text-xs max-sm:py-2 max-sm:px-4"
+            >
+              ❓ HOW TO PLAY
+            </Button>
+          </div>
+        </div>
 
         <div className="space-y-4 xl:space-y-6">
           <Button

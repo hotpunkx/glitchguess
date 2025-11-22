@@ -1,5 +1,41 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - How to Play Page
+
+### Added
+- **How to Play Page**: Created comprehensive tutorial page at `/how-to-play`
+  - Detailed explanation of game basics and objectives
+  - Step-by-step instructions for both game modes:
+    - Mode 1: I Think – AI Guesses
+    - Mode 2: AI Thinks – I Guess
+  - Clear winning conditions for both players
+  - Pro tips section with strategic advice
+  - Fair game categories reference
+  - Styled with GLITCHGUESS Neubrutalism aesthetic (brutal borders, neon colors, bold typography)
+  - Fully responsive design for mobile and desktop
+  - File: `src/pages/HowToPlayPage.tsx`
+
+- **Navigation Button**: Added "HOW TO PLAY" button on home screen
+  - Positioned below the title, above game mode buttons
+  - Uses question mark emoji (❓) for visual clarity
+  - Styled with brutal border and shadow effects
+  - Navigates to `/how-to-play` route
+  - File: `src/components/game/StartScreen.tsx` (lines 18-25)
+
+### Changed
+- **Routing**: Updated routes configuration to include How to Play page
+  - Added `/how-to-play` route
+  - File: `src/routes.tsx`
+
+### Technical Details
+- Uses React Router's `useNavigate` hook for navigation
+- Maintains consistent Neubrutalism design system
+- All semantic color tokens used (bg-accent, text-foreground, etc.)
+- Responsive typography with mobile-first approach
+- All lint checks passing (79 files)
+
+---
+
 ## 2025-11-22 - UX Improvements: Duplicate Questions & Button Hover States
 
 ### Changed

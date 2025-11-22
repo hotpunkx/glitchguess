@@ -57,6 +57,13 @@
 - [x] Fixed hover text color on all green (accent) buttons
   - [x] All bg-accent buttons now show white text on hover
   - [x] Improved visual feedback and consistency
+- [x] Added "How to Play" page
+  - [x] Created comprehensive tutorial page with game rules
+  - [x] Explained both game modes with step-by-step instructions
+  - [x] Added winning conditions and pro tips
+  - [x] Styled with GLITCHGUESS Neubrutalism aesthetic
+  - [x] Added "HOW TO PLAY" button on home screen
+  - [x] Implemented navigation between home and how-to-play pages
 - [x] All lint checks passing
 
 ## Notes
