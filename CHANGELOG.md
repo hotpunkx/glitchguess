@@ -1,5 +1,21 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - Analytics Integration
+
+### Added
+- **Simple Analytics**: Privacy-friendly analytics tracking
+  - Added Simple Analytics script to index.html
+  - `data-collect-dnt="true"` respects Do Not Track preferences
+  - Async loading for no performance impact
+  - Privacy-focused analytics (no cookies, GDPR compliant)
+
+### Technical Details
+- Script URL: `https://scripts.simpleanalyticscdn.com/latest.js`
+- Attributes: `data-collect-dnt="true"` and `async`
+- Location: Before closing `</body>` tag in index.html
+
+---
+
 ## 2025-11-22 - AI Caching & Randomization Fix
 
 ### Fixed
