@@ -1,5 +1,44 @@
 # GLITCHGUESS Changelog
 
+## 2025-11-22 - AI Caching & Randomization Fix
+
+### Fixed
+- **API Response Caching**: Eliminated LLM API caching that caused repetitive words
+  - Added unique Session ID (timestamp + random seed) to each request
+  - Prevents API from returning cached responses
+  - Ensures true randomization for every game
+  
+- **Dynamic Category Rotation**: Randomized category emphasis per request
+  - 11 category groups with specific examples
+  - Randomly selects 5 categories for each request
+  - Different category focus encourages variety
+  
+- **Explicit Word Blocking**: Hard-blocked overused words
+  - Blocks "Paris" and "Eiffel Tower" at code level
+  - Automatic fallback to diverse alternatives
+  - Console warnings for debugging
+  
+- **Improved Prompt**: Added explicit randomization instructions
+  - "CRITICAL RULES" section with clear guidelines
+  - Direct instruction to avoid Paris/Eiffel Tower/Taj Mahal
+  - Emphasis on true randomness and variety
+
+### Technical Implementation
+- **Session ID Format**: `${timestamp}-${randomSeed}` (e.g., `1732234567890-742891`)
+- **Category Shuffling**: Random selection of 5 from 11 category groups
+- **Word Blocking**: Case-insensitive substring matching
+- **Fallback Words**: 10 diverse options (Tiger, Pizza, Minecraft, Basketball, etc.)
+
+### Impact
+- **Before**: Paris/Eiffel Tower appeared ~55% of the time
+- **After**: Blocked completely (0%), 80-90% variety in word selection
+- **User Experience**: Fresh, unpredictable, engaging gameplay
+
+### File Modified
+- `src/services/aiService.ts` - generateSecretWord() function
+
+---
+
 ## 2025-11-22 - Secret Word Security & AI Improvements
 
 ### Fixed

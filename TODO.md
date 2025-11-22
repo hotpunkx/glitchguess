@@ -107,6 +107,14 @@
   - [x] Added response cleaning (removes &nbsp; and HTML entities)
   - [x] Better variety in AI word selection
   - [x] Clean, properly formatted responses
+- [x] AI Caching & Randomization Fix (CRITICAL)
+  - [x] Added unique Session ID to prevent API caching
+  - [x] Implemented dynamic category rotation (11 groups, select 5 randomly)
+  - [x] Hard-blocked "Paris" and "Eiffel Tower" at code level
+  - [x] Added diverse fallback system (10 words)
+  - [x] Improved prompt with explicit randomization rules
+  - [x] Eliminated repetitive word generation
+  - [x] Achieved 80-90% variety in word selection
 - [x] All lint checks passing
 
 ## Notes

@@ -133,19 +133,49 @@ My final guess: [the exact thing]`,
 }
 
 export async function generateSecretWord(): Promise<string> {
+  // Add randomization to prevent API caching and encourage variety
+  const randomSeed = Math.floor(Math.random() * 1000000);
+  const timestamp = Date.now();
+  
+  // Rotate through different category emphases to encourage variety
+  const categoryGroups = [
+    'Animals (like Tiger, Penguin, Dolphin)',
+    'Food & Drinks (like Sushi, Coffee, Hamburger)',
+    'Movies/TV Shows (like Titanic, Breaking Bad, Avatar)',
+    'Video Games (like Minecraft, Zelda, Fortnite)',
+    'Sports/Athletes (like Basketball, Serena Williams, Soccer)',
+    'Countries/Cities (like Tokyo, Brazil, London)',
+    'Musicians/Bands (like The Beatles, Mozart, Taylor Swift)',
+    'Famous Books (like Harry Potter, 1984, The Hobbit)',
+    'Vehicles (like Helicopter, Bicycle, Submarine)',
+    'Famous Artists (like Picasso, Van Gogh, Michelangelo)',
+    'Common Objects (like Smartphone, Guitar, Laptop)'
+  ];
+  
+  // Randomly select 4-5 categories to emphasize (changes each time)
+  const shuffled = categoryGroups.sort(() => Math.random() - 0.5);
+  const selectedCategories = shuffled.slice(0, 5).join(' | ');
+  
   const messages: Message[] = [
     {
       role: 'user',
       parts: [
         {
           text: `You are the AI in GLITCHGUESS - 20 questions secret word guessing game and must now secretly choose what the human will guess.
-Pick ONE famous, concrete, guessable thing from ONLY these categories:
-Animals | Food & Drinks | Movies/TV Shows | Video Games | Sports/Athletes | Countries/Cities | Musicians/Bands | Famous Books | Vehicles | Landmarks | Famous Artists | Common Objects
 
-Good examples: Panda · Coca-Cola · Titanic · Super Mario · Cristiano Ronaldo · Egypt · The Beatles · Harry Potter · Helicopter · Statue of Liberty · Michelangelo · Smartphone
+[Session ID: ${timestamp}-${randomSeed}]
 
-IMPORTANT: Choose randomly and vary your selections. Don't repeat the same answers.
-Never abstract, obscure, or made-up things.
+Pick ONE famous, concrete, guessable thing from these categories:
+${selectedCategories}
+
+CRITICAL RULES:
+1. Choose RANDOMLY - use true randomness, not patterns
+2. AVOID: Paris, Eiffel Tower, Taj Mahal (overused)
+3. Prefer variety: animals, food, movies, games, objects
+4. Must be famous and universally known
+5. Must be concrete (not abstract concepts)
+
+Good examples: Panda · Coca-Cola · Titanic · Super Mario · Basketball · Tokyo · The Beatles · Harry Potter · Helicopter · Picasso · Smartphone · Tiger · Pizza · Minecraft
 
 Output ONLY the thing (1–2 words max), nothing else at all — no quotes, no category, no text before or after.`,
         },
@@ -155,12 +185,25 @@ Output ONLY the thing (1–2 words max), nothing else at all — no quotes, no c
 
   const response = await callLLM(messages);
   // Clean up response: remove HTML entities, extra whitespace, quotes, etc.
-  return response
+  const cleaned = response
     .replace(/&nbsp;/g, ' ')
     .replace(/&[a-z]+;/gi, ' ')
     .replace(/["""'']/g, '')
     .trim()
     .replace(/\s+/g, ' ');
+  
+  // If AI still returns Paris or Eiffel Tower, use fallback
+  const normalized = cleaned.toLowerCase();
+  if (normalized.includes('paris') || normalized.includes('eiffel')) {
+    console.warn('AI returned overused word, using fallback');
+    const fallbacks = [
+      'Tiger', 'Pizza', 'Minecraft', 'Basketball', 'Sushi',
+      'Titanic', 'Guitar', 'Penguin', 'Coffee', 'Helicopter'
+    ];
+    return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+  }
+  
+  return cleaned;
 }
 
 export async function answerQuestion(secretWord: string, question: string): Promise<string> {
