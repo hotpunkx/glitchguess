@@ -174,12 +174,22 @@ export async function getMultiplayerQuestions(gameId: string): Promise<Multiplay
 }
 
 // Update secret word
-export async function updateSecretWord(gameId: string, secretWord: string): Promise<void> {
+export async function updateSecretWord(
+  gameId: string, 
+  secretWord: string, 
+  setterPlayer: 'player1' | 'player2'
+): Promise<void> {
+  // The player who sets the word is the thinker/answerer
+  // The other player is the questioner
+  const questioner = setterPlayer === 'player1' ? 'player2' : 'player1';
+  
   const { error } = await supabase
     .from('multiplayer_games')
     .update({ 
       secret_word: secretWord,
-      game_status: 'active'
+      game_status: 'active',
+      current_thinker: setterPlayer,
+      current_questioner: questioner
     })
     .eq('id', gameId);
 

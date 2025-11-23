@@ -31,8 +31,9 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
   const [isAnswering, setIsAnswering] = useState(false);
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
 
-  const isThinker = game.current_thinker === playerNumber;
-  const isGuesser = !isThinker;
+  // Determine roles based on who is the questioner
+  const isQuestioner = game.current_questioner === playerNumber;
+  const isAnswerer = !isQuestioner;
 
   useEffect(() => {
     loadQuestions();
@@ -45,7 +46,7 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
         const newQ: QuestionAnswer = {
           question: question.question_text,
           answer: question.answer as Answer,
-          asker: isGuesser ? 'human' : 'ai',
+          asker: isQuestioner ? 'human' : 'ai',
         };
         setHistory(prev => [...prev, newQ]);
         setPendingQuestion(null);
@@ -57,15 +58,15 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
 
   useEffect(() => {
     // If thinker and no secret word set, show input
-    if (isThinker && !game.secret_word) {
+    if (isAnswerer && !game.secret_word) {
       setShowSecretInput(true);
     }
 
     // If guesser and thinker has set word, start asking
-    if (isGuesser && game.secret_word && history.length === 0) {
+    if (isQuestioner && game.secret_word && history.length === 0) {
       askNextQuestion();
     }
-  }, [game.secret_word, isThinker, isGuesser]);
+  }, [game.secret_word, isAnswerer, isQuestioner]);
 
   const loadQuestions = async () => {
     try {
@@ -79,7 +80,7 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
           formattedHistory.push({
             question: q.question_text,
             answer: q.answer as Answer,
-            asker: isGuesser ? 'human' : 'ai',
+            asker: isQuestioner ? 'human' : 'ai',
           });
         }
       }
@@ -97,7 +98,7 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
     }
 
     try {
-      await updateSecretWord(game.id, secretWord.trim());
+      await updateSecretWord(game.id, secretWord.trim(), playerNumber);
       setShowSecretInput(false);
       toast.success('Secret word set! Waiting for opponent to guess...');
     } catch (error) {
@@ -173,7 +174,7 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
   };
 
   // Thinker waiting to set secret word
-  if (isThinker && showSecretInput) {
+  if (isAnswerer && showSecretInput) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
         <Toaster position="top-center" />
@@ -214,7 +215,7 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
   }
 
   // Thinker waiting for guesser
-  if (isThinker && !showSecretInput) {
+  if (isAnswerer && !showSecretInput) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background gap-6">
         <Toaster position="top-center" />
@@ -274,7 +275,7 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
   }
 
   // Guesser view
-  if (isGuesser) {
+  if (isQuestioner) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background gap-6">
         <Toaster position="top-center" />

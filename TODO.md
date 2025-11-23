@@ -162,6 +162,11 @@
   - [x] Added secret word input field for Player 1 after Player 2 joins
   - [x] Complete validation and error handling for secret word
   - [x] "START GAME" button with loading states
+  - [x] Implemented flexible role assignment - either player can set word
+  - [x] Added current_questioner field to database
+  - [x] Updated role logic: word setter = answerer, other = questioner
+  - [x] Both players can set secret word after joining
+  - [x] Clear UI messaging about role assignment
 - [x] All lint checks passing
 
 ## Notes

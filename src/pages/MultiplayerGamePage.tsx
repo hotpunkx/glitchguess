@@ -189,9 +189,14 @@ export default function MultiplayerGamePage() {
       return;
     }
 
+    if (!playerNumber) {
+      toast.error('Player role not determined');
+      return;
+    }
+
     setIsSettingWord(true);
     try {
-      await updateSecretWord(game!.id, secretWord.trim());
+      await updateSecretWord(game!.id, secretWord.trim(), playerNumber);
       toast.success('Secret word set! Game starting...');
       // Game will update via real-time subscription
     } catch (error: any) {
@@ -239,8 +244,13 @@ export default function MultiplayerGamePage() {
     return null;
   }
 
-  // Waiting for player 2 to join
-  if (game.game_status === 'waiting' && playerNumber === 'player1') {
+  // Waiting screen - both players can set secret word
+  if (game.game_status === 'waiting' && playerNumber) {
+    const isPlayer1 = playerNumber === 'player1';
+    const currentPlayerName = isPlayer1 ? game.player1_name : game.player2_name;
+    const opponentName = isPlayer1 ? game.player2_name : game.player1_name;
+    const bothPlayersJoined = game.player1_name && game.player2_name;
+
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
         <Toaster position="top-center" />
@@ -249,67 +259,74 @@ export default function MultiplayerGamePage() {
           <Card className="border-4 border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <CardHeader>
               <CardTitle className="text-3xl xl:text-5xl font-black text-center">
-                {game.player2_name ? '✅ OPPONENT JOINED!' : '⏳ WAITING FOR OPPONENT'}
+                {bothPlayersJoined ? '🎮 READY TO START!' : '⏳ WAITING FOR OPPONENT'}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="text-center space-y-4">
                 <p className="text-xl font-bold">
-                  Hi, {game.player1_name}!
+                  Hi, {currentPlayerName}!
                 </p>
                 
-                {!game.player2_name ? (
+                {!bothPlayersJoined ? (
                   <>
-                    <p className="text-lg text-muted-foreground font-bold">
-                      Share this link with your friend to start playing
-                    </p>
+                    {isPlayer1 && (
+                      <>
+                        <p className="text-lg text-muted-foreground font-bold">
+                          Share this link with your friend to start playing
+                        </p>
 
-                    <div className="brutal-border bg-muted p-4 space-y-3">
-                      <div className="flex flex-col items-center gap-2">
-                        <span className="text-4xl font-black tracking-wider">
-                          {game.game_code}
-                        </span>
-                        <span className="text-sm text-muted-foreground font-mono break-all px-2">
-                          {window.location.origin}/play/{game.game_code}
-                        </span>
-                      </div>
-                      
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={handleCopyLink}
-                          className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
-                        >
-                          <Copy className="mr-2" size={20} />
-                          COPY LINK
-                        </Button>
-                        <Button
-                          onClick={handleShare}
-                          className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
-                        >
-                          <Share2 className="mr-2" size={20} />
-                          SHARE
-                        </Button>
-                      </div>
-                    </div>
+                        <div className="brutal-border bg-muted p-4 space-y-3">
+                          <div className="flex flex-col items-center gap-2">
+                            <span className="text-4xl font-black tracking-wider">
+                              {game.game_code}
+                            </span>
+                            <span className="text-sm text-muted-foreground font-mono break-all px-2">
+                              {window.location.origin}/play/{game.game_code}
+                            </span>
+                          </div>
+                          
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={handleCopyLink}
+                              className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                            >
+                              <Copy className="mr-2" size={20} />
+                              COPY LINK
+                            </Button>
+                            <Button
+                              onClick={handleShare}
+                              className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                            >
+                              <Share2 className="mr-2" size={20} />
+                              SHARE
+                            </Button>
+                          </div>
+                        </div>
+                      </>
+                    )}
 
                     <div className="animate-pulse">
                       <Loader2 className="animate-spin mx-auto" size={32} />
                       <p className="text-sm font-bold text-muted-foreground mt-2">
-                        Waiting for player to join...
+                        Waiting for {isPlayer1 ? 'player 2' : game.player1_name} to join...
                       </p>
                     </div>
                   </>
                 ) : (
                   <>
                     <p className="text-lg text-accent font-black">
-                      {game.player2_name} is ready to play! 🎮
+                      {opponentName} is ready to play! 🎮
                     </p>
                     <p className="text-md text-muted-foreground font-bold">
-                      Enter your secret word to start the game
+                      Either player can set the secret word to start
                     </p>
                     <div className="brutal-border bg-accent/10 p-4 mb-4">
                       <p className="text-sm font-bold">
                         Players: {game.player1_name} vs {game.player2_name}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        💡 Whoever sets the word will answer questions
                       </p>
                     </div>
 
@@ -338,7 +355,7 @@ export default function MultiplayerGamePage() {
                         disabled={isSettingWord || !secretWord.trim()}
                         className="w-full h-auto py-6 text-xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
                       >
-                        {isSettingWord ? 'STARTING GAME...' : 'START GAME'}
+                        {isSettingWord ? 'STARTING GAME...' : 'I\'LL SET THE WORD'}
                       </Button>
                     </div>
                   </>
