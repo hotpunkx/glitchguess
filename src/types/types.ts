@@ -29,3 +29,32 @@ export interface GameQuestion {
 export interface GameSessionWithQuestions extends GameSession {
   questions: GameQuestion[];
 }
+
+// Multiplayer game types
+export interface MultiplayerGame {
+  id: string;
+  game_code: string;
+  player1_name: string;
+  player2_name: string | null;
+  player1_session: string;
+  player2_session: string | null;
+  current_thinker: 'player1' | 'player2';
+  game_status: 'waiting' | 'active' | 'ended';
+  secret_word: string | null;
+  question_count: number;
+  is_won: boolean;
+  player1_rematch: boolean;
+  player2_rematch: boolean;
+  created_at: string;
+  started_at: string | null;
+  ended_at: string | null;
+}
+
+export interface MultiplayerQuestion {
+  id: string;
+  game_id: string;
+  question_number: number;
+  question_text: string;
+  answer: string;
+  created_at: string;
+}

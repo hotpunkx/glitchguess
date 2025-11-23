@@ -55,6 +55,13 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
           >
             AI THINKS OF SOMETHING – I GUESS
           </Button>
+
+          <Button
+            onClick={() => navigate('/multiplayer/create')}
+            className="w-full h-auto py-6 xl:py-8 text-xl xl:text-3xl font-black brutal-border-thick shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-primary text-primary-foreground max-sm:text-sm max-sm:py-5"
+          >
+            👥 1v1 MULTIPLAYER
+          </Button>
         </div>
 
         <div className="text-center space-y-4">
