@@ -155,6 +155,10 @@
   - [x] Short URLs for sharing (/play/CODE instead of long UUID URLs)
   - [x] Player 2 waiting screen after joining
   - [x] 60% shorter shareable links
+  - [x] Fixed Player 2 join screen - always shows name input field
+  - [x] Added toast notification for Player 1 when Player 2 joins
+  - [x] Updated waiting room UI to show opponent status
+  - [x] Improved join flow with clear feedback for both players
 - [x] All lint checks passing
 
 ## Notes

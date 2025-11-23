@@ -46,6 +46,18 @@ export default function MultiplayerGamePage() {
     // Subscribe to game updates
     const unsubscribe = subscribeToGame(game.id, (updatedGame) => {
       console.log('Game updated:', updatedGame);
+      
+      // Notify Player 1 when Player 2 joins
+      if (
+        playerNumber === 'player1' &&
+        !game.player2_name &&
+        updatedGame.player2_name
+      ) {
+        toast.success(`${updatedGame.player2_name} joined the game! 🎮`, {
+          duration: 4000,
+        });
+      }
+      
       setGame(updatedGame);
       
       // Check if both players requested rematch
@@ -59,7 +71,7 @@ export default function MultiplayerGamePage() {
     });
 
     return unsubscribe;
-  }, [game?.id]);
+  }, [game?.id, game?.player2_name, playerNumber]);
 
   const loadGame = async () => {
     setIsLoading(true);
@@ -86,11 +98,17 @@ export default function MultiplayerGamePage() {
       if (session === gameData.player1_session) {
         setPlayerNumber('player1');
         console.log('This is player 1');
-      } else if (session === gameData.player2_session) {
+      } else if (session === gameData.player2_session && gameData.player2_session) {
         setPlayerNumber('player2');
         console.log('This is player 2');
       } else {
+        // New player or session mismatch
         console.log('This is a new player (not player 1 or 2)');
+        // If game is waiting and no player2, this is a potential player 2
+        if (gameData.game_status === 'waiting' && !gameData.player2_name) {
+          console.log('Showing join screen for potential player 2');
+          setPlayerNumber(null);
+        }
       }
 
       setIsLoading(false);
@@ -120,7 +138,10 @@ export default function MultiplayerGamePage() {
 
       await joinMultiplayerGame(game!.game_code, playerName.trim(), playerSession);
       setPlayerNumber('player2');
-      toast.success('Joined game!');
+      toast.success('Joined game! Waiting for host to start...');
+      
+      // Reload game data to get updated state
+      await loadGame();
     } catch (error: any) {
       console.error('Error joining game:', error);
       toast.error(error.message || 'Failed to join game');
@@ -201,7 +222,7 @@ export default function MultiplayerGamePage() {
           <Card className="border-4 border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <CardHeader>
               <CardTitle className="text-3xl xl:text-5xl font-black text-center">
-                ⏳ WAITING FOR OPPONENT
+                {game.player2_name ? '✅ OPPONENT JOINED!' : '⏳ WAITING FOR OPPONENT'}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -209,44 +230,63 @@ export default function MultiplayerGamePage() {
                 <p className="text-xl font-bold">
                   Hi, {game.player1_name}!
                 </p>
-                <p className="text-lg text-muted-foreground font-bold">
-                  Share this link with your friend to start playing
-                </p>
+                
+                {!game.player2_name ? (
+                  <>
+                    <p className="text-lg text-muted-foreground font-bold">
+                      Share this link with your friend to start playing
+                    </p>
 
-                <div className="brutal-border bg-muted p-4 space-y-3">
-                  <div className="flex flex-col items-center gap-2">
-                    <span className="text-4xl font-black tracking-wider">
-                      {game.game_code}
-                    </span>
-                    <span className="text-sm text-muted-foreground font-mono break-all px-2">
-                      {window.location.origin}/play/{game.game_code}
-                    </span>
-                  </div>
-                  
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={handleCopyLink}
-                      className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
-                    >
-                      <Copy className="mr-2" size={20} />
-                      COPY LINK
-                    </Button>
-                    <Button
-                      onClick={handleShare}
-                      className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
-                    >
-                      <Share2 className="mr-2" size={20} />
-                      SHARE
-                    </Button>
-                  </div>
-                </div>
+                    <div className="brutal-border bg-muted p-4 space-y-3">
+                      <div className="flex flex-col items-center gap-2">
+                        <span className="text-4xl font-black tracking-wider">
+                          {game.game_code}
+                        </span>
+                        <span className="text-sm text-muted-foreground font-mono break-all px-2">
+                          {window.location.origin}/play/{game.game_code}
+                        </span>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={handleCopyLink}
+                          className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                        >
+                          <Copy className="mr-2" size={20} />
+                          COPY LINK
+                        </Button>
+                        <Button
+                          onClick={handleShare}
+                          className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                        >
+                          <Share2 className="mr-2" size={20} />
+                          SHARE
+                        </Button>
+                      </div>
+                    </div>
 
-                <div className="animate-pulse">
-                  <Loader2 className="animate-spin mx-auto" size={32} />
-                  <p className="text-sm font-bold text-muted-foreground mt-2">
-                    Waiting for player to join...
-                  </p>
-                </div>
+                    <div className="animate-pulse">
+                      <Loader2 className="animate-spin mx-auto" size={32} />
+                      <p className="text-sm font-bold text-muted-foreground mt-2">
+                        Waiting for player to join...
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-lg text-accent font-black">
+                      {game.player2_name} is ready to play! 🎮
+                    </p>
+                    <p className="text-md text-muted-foreground font-bold">
+                      The game will start automatically once you set your secret word.
+                    </p>
+                    <div className="brutal-border bg-accent/10 p-4">
+                      <p className="text-sm font-bold">
+                        Players: {game.player1_name} vs {game.player2_name}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
 
               <Button
