@@ -201,6 +201,10 @@
     - [x] Show pending question while waiting for answer
     - [x] Display question history for questioner
     - [x] Disable input while waiting for answer
+  - [x] Real-time subscription fix
+    - [x] Subscribe to UPDATE events for questions
+    - [x] Answerer sees questions in real-time
+    - [x] History updates when questions are answered
 - [x] All lint checks passing
 
 ## Notes

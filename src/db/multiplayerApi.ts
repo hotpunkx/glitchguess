@@ -360,6 +360,18 @@ export function subscribeToQuestions(
         callback(payload.new as MultiplayerQuestion);
       }
     )
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'multiplayer_questions',
+        filter: `game_id=eq.${gameId}`,
+      },
+      (payload) => {
+        callback(payload.new as MultiplayerQuestion);
+      }
+    )
     .subscribe();
 
   return () => {
