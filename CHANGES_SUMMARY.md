@@ -78,6 +78,62 @@ OR (after answering):
 
 ---
 
+## Rematch Role Assignment Fix
+
+### Problem
+When a rematch was requested, both players were able to set the secret word. This caused confusion and race conditions.
+
+### Expected Behavior
+In a rematch, roles should switch:
+- **Previous Thinker (Answerer)** → Becomes Questioner
+- **Previous Questioner** → Becomes Thinker (Answerer) and sets the word
+
+### Solution
+Set `word_setter_claimed` field to the new thinker when creating rematch game.
+
+### Files Changed
+- `src/db/multiplayerApi.ts`
+  - Updated `createRematchGame()` function
+  - Added `word_setter_claimed: newThinker` to game creation
+  - Added comments explaining role switching logic
+
+### How It Works
+
+```typescript
+// Switch roles - if player1 was thinking, now player2 thinks
+// The previous questioner becomes the new thinker (answerer)
+const newThinker = oldGame.current_thinker === 'player1' ? 'player2' : 'player1';
+
+// Create new game with switched roles
+// Set word_setter_claimed to the new thinker so only they can set the word
+const { data, error } = await supabase
+  .from('multiplayer_games')
+  .insert({
+    // ... other fields ...
+    current_thinker: newThinker,
+    word_setter_claimed: newThinker,  // ← This prevents both players from setting word
+    game_status: 'active',
+  })
+```
+
+### Example Flow
+
+**Game 1:**
+```
+Player A: Thinker (set word "dolphin")
+Player B: Questioner (asks questions)
+Result: Player B wins
+```
+
+**Rematch (Game 2):**
+```
+Player A: Questioner (asks questions) ← Role switched
+Player B: Thinker (sets word) ← Role switched, word_setter_claimed = player B
+Result: Only Player B can set the word ✓
+```
+
+---
+
 ## Testing Checklist
 
 ### Bug Fix Tests
@@ -93,6 +149,13 @@ OR (after answering):
 - [x] Button correctly ends game with questioner as winner
 - [x] State transitions are smooth
 - [x] Toast notifications appear correctly
+
+### Rematch Tests
+- [x] Roles switch correctly in rematch
+- [x] Only previous questioner can set word in rematch
+- [x] Previous answerer becomes questioner in rematch
+- [x] word_setter_claimed is set correctly
+- [x] No race condition when both players accept rematch
 
 ---
 

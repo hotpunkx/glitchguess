@@ -191,6 +191,10 @@
     - [x] Show "Answer sent! Waiting for next question..." state
     - [x] Add "They Got It!" button for answerer to mark correct guess
     - [x] Button always visible for answerer to end game when opponent guesses correctly
+  - [x] Rematch role assignment fix
+    - [x] Set word_setter_claimed to new thinker (previous questioner)
+    - [x] Only the previous questioner can set word in rematch
+    - [x] Prevents both players from setting word
 - [x] All lint checks passing
 
 ## Notes
