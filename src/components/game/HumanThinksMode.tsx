@@ -7,32 +7,18 @@ import { Loader2 } from 'lucide-react';
 import { SavedGameState } from '@/hooks/use-game-storage';
 
 interface HumanThinksModeProps {
+  sessionId: string;
   onGameEnd: (isWon: boolean, correctAnswer?: string, questionCount?: number) => void;
-  onStateChange?: (state: Partial<SavedGameState>) => void;
+  onSaveQuestion: (sessionId: string, questionNumber: number, questionText: string, answer: string) => Promise<void>;
   initialState?: SavedGameState | null;
 }
 
-export function HumanThinksMode({ onGameEnd, onStateChange, initialState }: HumanThinksModeProps) {
+export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialState }: HumanThinksModeProps) {
   const [history, setHistory] = useState<QuestionAnswer[]>(initialState?.history || []);
   const [questionCount, setQuestionCount] = useState(initialState?.questionCount || 0);
   const [currentQuestion, setCurrentQuestion] = useState(initialState?.currentQuestion || '');
   const [isLoading, setIsLoading] = useState(false);
   const [showInstruction, setShowInstruction] = useState(initialState?.showInstruction ?? true);
-
-  // Save state whenever it changes
-  useEffect(() => {
-    if (onStateChange && !showInstruction) {
-      onStateChange({
-        gameMode: 'human-thinks',
-        currentMode: 'human-thinks',
-        questionCount,
-        history,
-        currentQuestion,
-        showInstruction,
-        isWon: false,
-      });
-    }
-  }, [history, questionCount, currentQuestion, showInstruction, onStateChange]);
 
   useEffect(() => {
     if (!showInstruction && questionCount === 0 && !currentQuestion) {
@@ -75,6 +61,9 @@ export function HumanThinksMode({ onGameEnd, onStateChange, initialState }: Huma
     
     setHistory(updatedHistory);
     setQuestionCount(updatedCount);
+
+    // Save question to database
+    await onSaveQuestion(sessionId, updatedCount, currentQuestion, answer);
 
     // Check if this is a final guess (not a regular question)
     const isFinalGuess = currentQuestion.toLowerCase().includes('my final guess:');

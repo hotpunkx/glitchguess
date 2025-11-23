@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { QuestionAnswer } from '@/types/game';
+import { QuestionAnswer, Answer } from '@/types/game';
 import { createGameSession, addQuestion, endGameSession, getGameSession, getSessionQuestions } from '@/db/api';
 
 export interface SavedGameState {
@@ -56,7 +56,8 @@ export function useGameStorage() {
       const questions = await getSessionQuestions(sessionId);
       const history: QuestionAnswer[] = questions.map(q => ({
         question: q.question_text,
-        answer: q.answer,
+        answer: q.answer as Answer,
+        asker: session.game_type === 'human-thinks' ? 'ai' : 'human',
       }));
 
       // Reconstruct state

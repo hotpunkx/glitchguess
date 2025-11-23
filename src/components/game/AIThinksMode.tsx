@@ -6,10 +6,12 @@ import { Answer, QuestionAnswer } from '@/types/game';
 import { generateSecretWord, answerQuestion } from '@/services/aiService';
 import { Loader2, Flag } from 'lucide-react';
 import { SavedGameState } from '@/hooks/use-game-storage';
+import { supabase } from '@/db/supabase';
 
 interface AIThinksModeProps {
+  sessionId: string;
   onGameEnd: (isWon: boolean, correctAnswer: string, questionCount?: number) => void;
-  onStateChange?: (state: Partial<SavedGameState>) => void;
+  onSaveQuestion: (sessionId: string, questionNumber: number, questionText: string, answer: string) => Promise<void>;
   initialState?: SavedGameState | null;
 }
 
@@ -75,7 +77,7 @@ function isGuessCorrect(guess: string, answer: string): boolean {
   return distance <= threshold;
 }
 
-export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThinksModeProps) {
+export function AIThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialState }: AIThinksModeProps) {
   const [history, setHistory] = useState<QuestionAnswer[]>(initialState?.history || []);
   const [questionCount, setQuestionCount] = useState(initialState?.questionCount || 0);
   const [secretWord, setSecretWord] = useState(initialState?.secretWord || '');
@@ -83,20 +85,6 @@ export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThink
   const [currentGuess, setCurrentGuess] = useState('');
   const [isLoading, setIsLoading] = useState(!initialState?.secretWord);
   const [isAnswering, setIsAnswering] = useState(false);
-
-  // Save state whenever it changes
-  useEffect(() => {
-    if (onStateChange && secretWord) {
-      onStateChange({
-        gameMode: 'ai-thinks',
-        currentMode: 'ai-thinks',
-        questionCount,
-        history,
-        secretWord,
-        isWon: false,
-      });
-    }
-  }, [history, questionCount, secretWord, onStateChange]);
 
   useEffect(() => {
     if (!initialState?.secretWord) {
@@ -108,7 +96,7 @@ export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThink
   const getRandomFallbackWord = () => {
     const fallbackWords = [
       'Pizza', 'Elephant', 'Titanic', 'Guitar', 'Basketball',
-      'Paris', 'Beethoven', 'Smartphone', 'Ferrari', 'Statue of Liberty',
+      'Tokyo', 'Beethoven', 'Smartphone', 'Ferrari', 'Statue of Liberty',
       'Harry Potter', 'Minecraft', 'Coca-Cola', 'Tiger', 'Sushi',
       'The Beatles', 'Mount Everest', 'Bicycle', 'Leonardo da Vinci', 'Coffee'
     ];
@@ -122,15 +110,31 @@ export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThink
       // Validate that we got a proper response
       if (!word || word.trim().length === 0) {
         console.warn('Empty secret word received, using fallback');
-        setSecretWord(getRandomFallbackWord());
+        const fallback = getRandomFallbackWord();
+        setSecretWord(fallback);
+        await updateSecretWord(fallback);
       } else {
         setSecretWord(word);
+        await updateSecretWord(word);
       }
     } catch (error) {
       console.error('Error generating secret word:', error);
-      setSecretWord(getRandomFallbackWord());
+      const fallback = getRandomFallbackWord();
+      setSecretWord(fallback);
+      await updateSecretWord(fallback);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const updateSecretWord = async (word: string) => {
+    try {
+      await supabase
+        .from('game_sessions')
+        .update({ secret_word: word })
+        .eq('id', sessionId);
+    } catch (error) {
+      console.error('Error updating secret word:', error);
     }
   };
 
@@ -142,6 +146,7 @@ export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThink
     
     if (isCorrect) {
       // User guessed correctly in the question field
+      await onSaveQuestion(sessionId, questionCount + 1, currentQuestion, 'Yes');
       onGameEnd(true, secretWord, questionCount + 1);
       return;
     }
@@ -161,6 +166,9 @@ export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThink
       setHistory(updatedHistory);
       setQuestionCount(updatedCount);
       setCurrentQuestion('');
+
+      // Save question to database
+      await onSaveQuestion(sessionId, updatedCount, currentQuestion, answer);
     } catch (error) {
       console.error('Error answering question:', error);
     } finally {
@@ -168,17 +176,19 @@ export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThink
     }
   };
 
-  const handleMakeGuess = () => {
+  const handleMakeGuess = async () => {
     if (!currentGuess.trim()) return;
 
     const isCorrect = isGuessCorrect(currentGuess, secretWord);
+    const normalizedGuess = normalizeGuess(currentGuess);
+    const guessQuestion = `Is it ${normalizedGuess}?`;
 
     if (isCorrect) {
+      await onSaveQuestion(sessionId, questionCount + 1, guessQuestion, 'Yes');
       onGameEnd(true, secretWord, questionCount + 1);
     } else {
-      const normalizedGuess = normalizeGuess(currentGuess);
       const newHistory: QuestionAnswer = {
-        question: `Is it ${normalizedGuess}?`,
+        question: guessQuestion,
         answer: 'No',
         asker: 'human',
       };
@@ -188,6 +198,9 @@ export function AIThinksMode({ onGameEnd, onStateChange, initialState }: AIThink
       setHistory(updatedHistory);
       setQuestionCount(updatedCount);
       setCurrentGuess('');
+
+      // Save question to database
+      await onSaveQuestion(sessionId, updatedCount, guessQuestion, 'No');
 
       if (updatedCount >= 20) {
         onGameEnd(false, secretWord, updatedCount);
