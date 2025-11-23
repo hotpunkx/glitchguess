@@ -33,6 +33,7 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
   const [isLoading, setIsLoading] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
+  const [waitingForNextQuestion, setWaitingForNextQuestion] = useState(false);
 
   // Determine roles based on who is the questioner
   const isQuestioner = game.current_questioner === playerNumber;
@@ -58,6 +59,7 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
       // Update UI state
       if (question.answer === 'pending') {
         setPendingQuestion(question.question_text);
+        setWaitingForNextQuestion(false); // Reset waiting state when new question arrives
       } else {
         const newQ: QuestionAnswer = {
           question: question.question_text,
@@ -185,6 +187,10 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
       // Update the answer
       await updateQuestionAnswer(game.id, questionNumber, answer);
 
+      // Hide question and show waiting state
+      setPendingQuestion(null);
+      setWaitingForNextQuestion(true);
+
       // Check if we've reached 20 questions
       if (questionNumber >= 20) {
         // Answerer wins if questioner couldn't guess in 20 questions
@@ -217,6 +223,17 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
       toast.error('Failed to make guess');
     } finally {
       setIsAnswering(false);
+    }
+  };
+
+  const handleMarkCorrect = async () => {
+    try {
+      // Questioner guessed correctly - end game with questioner as winner
+      await endMultiplayerGame(game.id, true, game.current_questioner!);
+      toast.success('Game ended - opponent guessed correctly!');
+    } catch (error) {
+      console.error('Error marking correct:', error);
+      toast.error('Failed to end game');
     }
   };
 
@@ -277,6 +294,19 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
             </span>
           </div>
 
+          {/* "They Got It!" button - always visible */}
+          <div className="brutal-border bg-accent/10 p-4 text-center">
+            <p className="text-sm font-bold mb-3 text-muted-foreground">
+              Did your opponent guess correctly?
+            </p>
+            <Button
+              onClick={handleMarkCorrect}
+              className="h-auto py-3 px-6 text-base font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-accent text-accent-foreground"
+            >
+              ✅ THEY GOT IT!
+            </Button>
+          </div>
+
           {pendingQuestion ? (
             <div className="brutal-border-thick bg-card p-6 xl:p-8 shadow-brutal-pink">
               {(() => {
@@ -313,6 +343,13 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
                   SOMETIMES
                 </Button>
               </div>
+            </div>
+          ) : waitingForNextQuestion ? (
+            <div className="brutal-border-thick bg-card p-6 text-center">
+              <Loader2 className="animate-spin mx-auto mb-4" size={32} />
+              <p className="text-xl font-black">
+                Answer sent! Waiting for next question...
+              </p>
             </div>
           ) : (
             <div className="brutal-border-thick bg-card p-6 text-center">

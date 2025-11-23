@@ -186,6 +186,11 @@
       - [x] Added is_guess field to database
       - [x] Use is_guess flag instead of text detection
       - [x] Regular questions no longer treated as guesses
+  - [x] UX Improvements for answerer
+    - [x] Hide question after answering
+    - [x] Show "Answer sent! Waiting for next question..." state
+    - [x] Add "They Got It!" button for answerer to mark correct guess
+    - [x] Button always visible for answerer to end game when opponent guesses correctly
 - [x] All lint checks passing
 
 ## Notes
