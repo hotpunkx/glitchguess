@@ -8,48 +8,69 @@ import { Toaster } from 'sonner';
 import { useGameStorage } from '@/hooks/use-game-storage';
 
 export default function GamePage() {
-  const { savedState, saveGameState, clearGameState, hasSavedGame } = useGameStorage();
+  const { 
+    savedState, 
+    isLoading,
+    createNewSession, 
+    saveQuestion,
+    endSession,
+    clearGameState, 
+    hasSavedGame 
+  } = useGameStorage();
   
   const [gameMode, setGameMode] = useState<GameMode>('start');
   const [currentMode, setCurrentMode] = useState<'human-thinks' | 'ai-thinks'>('human-thinks');
   const [questionCount, setQuestionCount] = useState(0);
   const [isWon, setIsWon] = useState(false);
   const [correctAnswer, setCorrectAnswer] = useState<string>();
-  const [initialState, setInitialState] = useState<typeof savedState>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   // Load saved state on mount
   useEffect(() => {
     if (savedState && hasSavedGame) {
-      setInitialState(savedState);
+      setSessionId(savedState.sessionId);
     }
   }, [savedState, hasSavedGame]);
 
-  const handleSelectMode = (mode: 'human-thinks' | 'ai-thinks') => {
+  const handleSelectMode = async (mode: 'human-thinks' | 'ai-thinks') => {
     setCurrentMode(mode);
     setGameMode(mode);
     setQuestionCount(0);
     setIsWon(false);
     setCorrectAnswer(undefined);
-    setInitialState(null);
     clearGameState();
-  };
-
-  const handleContinueGame = () => {
-    if (initialState) {
-      setGameMode(initialState.gameMode);
-      setCurrentMode(initialState.currentMode);
-      setQuestionCount(initialState.questionCount);
-      setIsWon(initialState.isWon);
-      setCorrectAnswer(initialState.correctAnswer);
+    
+    // Create new session in database (secret word will be set later in AI mode)
+    try {
+      const newSessionId = await createNewSession(mode);
+      setSessionId(newSessionId);
+    } catch (error) {
+      console.error('Failed to create session:', error);
     }
   };
 
-  const handleGameEnd = (won: boolean, answer?: string, count?: number) => {
+  const handleContinueGame = () => {
+    if (savedState) {
+      setGameMode(savedState.gameMode);
+      setCurrentMode(savedState.currentMode);
+      setQuestionCount(savedState.questionCount);
+      setIsWon(savedState.isWon);
+      setCorrectAnswer(savedState.correctAnswer);
+      setSessionId(savedState.sessionId);
+    }
+  };
+
+  const handleGameEnd = async (won: boolean, answer?: string, count?: number) => {
     setIsWon(won);
     setCorrectAnswer(answer);
-    setQuestionCount(count || 0);
+    const finalCount = count || 0;
+    setQuestionCount(finalCount);
     setGameMode('end');
-    clearGameState();
+    
+    // End session in database
+    if (sessionId) {
+      await endSession(sessionId, won, finalCount);
+    }
   };
 
   const handlePlayAgain = () => {
@@ -57,9 +78,17 @@ export default function GamePage() {
     setQuestionCount(0);
     setIsWon(false);
     setCorrectAnswer(undefined);
-    setInitialState(null);
+    setSessionId(null);
     clearGameState();
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-2xl font-black">LOADING...</div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -68,21 +97,23 @@ export default function GamePage() {
         <StartScreen 
           onSelectMode={handleSelectMode}
           onContinueGame={hasSavedGame ? handleContinueGame : undefined}
-          savedGameMode={initialState?.currentMode}
+          savedGameMode={savedState?.currentMode}
         />
       )}
-      {gameMode === 'human-thinks' && (
+      {gameMode === 'human-thinks' && sessionId && (
         <HumanThinksMode 
+          sessionId={sessionId}
           onGameEnd={handleGameEnd}
-          onStateChange={saveGameState}
-          initialState={initialState}
+          onSaveQuestion={saveQuestion}
+          initialState={savedState}
         />
       )}
-      {gameMode === 'ai-thinks' && (
+      {gameMode === 'ai-thinks' && sessionId && (
         <AIThinksMode 
+          sessionId={sessionId}
           onGameEnd={handleGameEnd}
-          onStateChange={saveGameState}
-          initialState={initialState}
+          onSaveQuestion={saveQuestion}
+          initialState={savedState}
         />
       )}
       {gameMode === 'end' && (

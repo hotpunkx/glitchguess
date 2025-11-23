@@ -17,36 +17,37 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Mobile-friendly responsive design
 - How to Play instructional page\n- Browser local session storage for game state persistence
 - Theme switcher for visual customization
-
+- Database-backed session management with unique session IDs
+- Admin dashboard for game data review\n
 ## 2. Gameplay Mechanics
 
-### 2.1 Start Screen
-
+### 2.1 Start Screen\n
 - Display bold title: 'GLITCHGUESS'
 - Show 'How to Play' link/button in top corner leading to instructional page
 - Show category selection section with instruction: 'Choose a category for a fair game:'
-- Category options displayed as large clickable cards:\n  + Animals
+- Category options displayed as large clickable cards:
+  + Animals
   + Objects
   + People (Famous)
   + Movies
-  + Places
-- Two large action buttons (enabled after category selection):\n  + 'I think of something – AI guesses' (Human thinks mode)
-  + 'AI thinks of something – I guess' (AI thinks mode)
+  + Places\n- Two large action buttons (enabled after category selection):
+  + 'I think of something – AI guesses' (Human thinks mode)\n  + 'AI thinks of something – I guess' (AI thinks mode)
 
-### 2.2 How to Play Page
-
-- Display page title: 'HOW TO PLAY'
-- Game overview section explaining the core concept:
+### 2.2 How to Play Page\n
+- Display page title: 'HOW TO PLAY'\n- Game overview section explaining the core concept:
   + This is a 20 questions guessing game between you and AI
   + Choose a category to keep the game fair and fun
   + Take turns thinking of something and guessing
 - Mode explanations:
-  + **Human Thinks Mode**: You think of something in the chosen category, AI asks up to 20 yes/no questions to guess it\n  + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses
+  + **Human Thinks Mode**: You think of something in the chosen category, AI asks up to 20 yes/no questions to guess it
+  + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses
 - Game rules:
   + Maximum 20 questions per round
-  + Answer with Yes/No/Sometimes\n  + All answers must be within the selected category
+  + Answer with Yes/No/Sometimes
+  + All answers must be within the selected category
   + Make your final guess anytime during the game
-- 'Back to Home' button to return to start screen\n- Maintain Neubrutalism design theme throughout the page
+- 'Back to Home' button to return to start screen
+- Maintain Neubrutalism design theme throughout the page
 
 ### 2.3 Human Thinks Mode
 
@@ -56,30 +57,31 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - AI generates intelligent yes/no questions based on selected category and previous answers
 - Three response buttons: Yes / No / Sometimes
 - AI makes educated guesses based on accumulated information and category constraints
-\n### 2.4 AI Thinks Mode
 
-- Display selected category at top of screen\n- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)
+### 2.4 AI Thinks Mode
+
+- Display selected category at top of screen
+- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)
 - Human types and submits yes/no questions
 - AI responds with Yes/No/Sometimes based on its secret answer
 - Human can make guesses at any time
 
 ### 2.5 Game Progress Display
-
-- Question counter showing current question number out of 20
+\n- Question counter showing current question number out of 20
 - Question history panel displaying all previous Q&A pairs in chronological order
-- Clear visual distinction between questions and answers
-
+- Clear visual distinction between questions and answers\n
 ### 2.6 End Game Conditions
-
-- AI/Human guesses correctly before 20 questions
+\n- AI/Human guesses correctly before 20 questions
 - 20 questions reached without correct guess
 
 ### 2.7 End Screen
-\n- Victory message: 'I got it in X questions!' (if guessed correctly)
+
+- Victory message: 'I got it in X questions!' (if guessed correctly)
 - Surrender message: 'I surrender! What was it?' (if 20 questions reached)
 - Display confetti animation on victory
 - Reveal the correct answer
-- Large 'Play Again' button to restart\n
+- Large 'Play Again' button to restart
+
 ## 3. Design Style
 
 ### 3.1 Visual Aesthetic
@@ -89,9 +91,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 ### 3.2 Color Scheme
 
 - Base colors: Pure black (#000000) and pure white (#FFFFFF) for extreme contrast
-- Accent colors: Hot pink (#FF006E) and electric lime (#CCFF00) for aggressive neon highlights
-- Theme switcher allows users to toggle between different color schemes while maintaining Neubrutalism aesthetic\n
-### 3.3 Visual Details
+- Accent colors: Hot pink (#FF006E) and electric lime (#CCFF00) for aggressive neon highlights\n- Theme switcher allows users to toggle between different color schemes while maintaining Neubrutalism aesthetic
+\n### 3.3 Visual Details
 
 - Typography: Oversized bold sans-serif fonts (Inter or system fonts with font-weight 900)
 - Borders: Thick irregular borders with intentional asymmetry
@@ -104,7 +105,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Theme switcher: Fixed position button in top right corner, visible on all pages, with bold icon and smooth transition effects
 
 ### 3.4 Responsive Design
-\n- Fully mobile-friendly and responsive across all screen sizes
+
+- Fully mobile-friendly and responsive across all screen sizes
 - Touch-optimized button sizes for mobile devices
 - Adaptive layout maintaining Neubrutalism aesthetic on all viewports
 
@@ -113,30 +115,47 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 ### 4.1 AI Integration
 
 - Use Large Language Model for:
-  + Generating intelligent questions in Human Thinks mode strictly within selected category
-  + Creating creative/absurd secret answers in AI Thinks mode strictly within selected category\n  + Making educated guesses based on answer patterns and category constraints
+  + Generating intelligent questions in Human Thinks mode strictly within selected category\n  + Creating creative/absurd secret answers in AI Thinks mode strictly within selected category
+  + Making educated guesses based on answer patterns and category constraints
   + Responding to human questions in AI Thinks mode
 - AI must strictly follow category rules to ensure answers are guessable within 20 questions
+\n### 4.2 Interaction Features
 
-### 4.2 Interaction Features
-
-- Immediate AI response after each human answer
-- Smooth transitions between game states
+- Immediate AI response after each human answer\n- Smooth transitions between game states
 - Confetti animation on victory
 - Question history auto-scroll to latest entry
 - Allow users to share the results with friends, generate dynamic unique url (avoid caching the og image by social medias) and dynamic og image to share the results
-- Navigation between home page and How to Play page with smooth transitions
+- Navigation between home page and How to Play page with smooth transitions\n
+### 4.3 Session Management and Database Storage
 
-### 4.3 Session Persistence
+- Generate a unique session ID for each new game
+- Store session ID in browser local storage
+- Save the following data to database for each session:
+  + Session ID (unique identifier)\n  + Game type (Human thinks mode or AI thinks mode)
+  + Selected category
+  + Secret word (if AI thinks mode)
+  + All questions asked with corresponding answers (Yes/No/Sometimes)
+  + Question order and timestamps
+  + Game outcome (won/lost, number of questions used)
+- Local storage only stores session ID, all other game data retrieved from database
+- Restore game state from database when page is refreshed using session ID
+- Clear local storage session ID when game ends or user starts a new game
 
-- Implement browser local storage to save game state automatically
-- Store current game mode, selected category, question history, question count, and AI's secret answer (if applicable)
-- Restore game state when page is accidentally refreshed
-- Clear session data when game ends or user starts a new game
+### 4.4 Admin Dashboard
 
-### 4.4 Theme Switcher
+- Route: /lokka
+- Authentication required:\n  + Username: mamayilokka
+  + Password: EHDZDWick@261221
+- Dashboard features:
+  + Display list of all game sessions with session IDs
+  + Show game type, category, and outcome for each session
+  + View detailed game data: all questions and answers in chronological order
+  + Display secret word for AI thinks mode games
+  + Filter and search functionality by date, game type, or category
+  + Simple, clean interface consistent with overall design aesthetic
+\n### 4.5 Theme Switcher
 
-- Fixed position theme switcher button always visible in top right corner across all pages
-- Allow users to toggle between different color themes\n- Save theme preference in browser local storage
+- Fixed position theme switcher button always visible in top right corner across all pages\n- Allow users to toggle between different color themes
+- Save theme preference in browser local storage
 - Apply theme changes instantly with smooth transitions
 - Maintain Neubrutalism design principles across all theme variations
