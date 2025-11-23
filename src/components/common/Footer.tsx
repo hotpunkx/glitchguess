@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           <p className="text-white text-sm">
             With ❤️ by{' '}
             <a
-              href="https://github.com/IamIsPra"
+              href="https://x.com/IamIsPra"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent hover:text-white transition-colors font-bold"
