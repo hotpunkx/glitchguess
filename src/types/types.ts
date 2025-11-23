@@ -8,6 +8,12 @@ export interface GameSession {
   question_count: number;
   created_at: string;
   ended_at: string | null;
+  ip_address: string | null;
+  country: string | null;
+  country_code: string | null;
+  region: string | null;
+  city: string | null;
+  timezone: string | null;
 }
 
 export interface GameQuestion {

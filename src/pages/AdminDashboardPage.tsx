@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getAllSessions, getSessionStats } from '@/db/api';
 import type { GameSessionWithQuestions } from '@/types/types';
 import { isAdminAuthenticated, clearAdminAuth } from './AdminLoginPage';
+import { getLocationDisplay, getCountryFlag } from '@/services/geolocationService';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
 
@@ -82,61 +83,100 @@ export default function AdminDashboardPage() {
 
           {/* Stats Cards */}
           {stats && (
-            <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
-              <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <CardHeader>
-                  <CardTitle className="text-sm">TOTAL GAMES</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-black">{stats.total}</div>
-                </CardContent>
-              </Card>
+            <>
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
+                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <CardHeader>
+                    <CardTitle className="text-sm">TOTAL GAMES</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-black">{stats.total}</div>
+                  </CardContent>
+                </Card>
 
-              <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <CardHeader>
-                  <CardTitle className="text-sm">HUMAN THINKS</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-black">{stats.humanThinksMode}</div>
-                </CardContent>
-              </Card>
+                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <CardHeader>
+                    <CardTitle className="text-sm">HUMAN THINKS</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-black">{stats.humanThinksMode}</div>
+                  </CardContent>
+                </Card>
 
-              <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <CardHeader>
-                  <CardTitle className="text-sm">AI THINKS</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-black">{stats.aiThinksMode}</div>
-                </CardContent>
-              </Card>
+                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <CardHeader>
+                    <CardTitle className="text-sm">AI THINKS</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-black">{stats.aiThinksMode}</div>
+                  </CardContent>
+                </Card>
 
-              <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <CardHeader>
-                  <CardTitle className="text-sm">GAMES WON</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-black text-green-600">{stats.won}</div>
-                </CardContent>
-              </Card>
+                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <CardHeader>
+                    <CardTitle className="text-sm">GAMES WON</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-black text-green-600">{stats.won}</div>
+                  </CardContent>
+                </Card>
 
-              <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <CardHeader>
-                  <CardTitle className="text-sm">GAMES LOST</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-black text-red-600">{stats.lost}</div>
-                </CardContent>
-              </Card>
+                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <CardHeader>
+                    <CardTitle className="text-sm">GAMES LOST</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-black text-red-600">{stats.lost}</div>
+                  </CardContent>
+                </Card>
 
-              <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                <CardHeader>
-                  <CardTitle className="text-sm">AVG QUESTIONS</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-black">{stats.avgQuestions}</div>
-                </CardContent>
-              </Card>
-            </div>
+                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <CardHeader>
+                    <CardTitle className="text-sm">AVG QUESTIONS</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-black">{stats.avgQuestions}</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <CardHeader>
+                    <CardTitle className="text-sm">COUNTRIES</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-black">🌍 {stats.uniqueCountries}</div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <CardHeader>
+                    <CardTitle className="text-sm">CITIES</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-black">🏙️ {stats.uniqueCities}</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Top Countries */}
+              {stats.topCountries && stats.topCountries.length > 0 && (
+                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-8">
+                  <CardHeader>
+                    <CardTitle className="text-sm">TOP COUNTRIES</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {stats.topCountries.map((item: any, idx: number) => (
+                        <div key={idx} className="flex justify-between items-center">
+                          <span className="font-bold">{item.country}</span>
+                          <span className="text-muted-foreground">{item.count} games</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </>
           )}
 
           {/* Sessions List */}
@@ -158,15 +198,20 @@ export default function AdminDashboardPage() {
                 >
                   <CardHeader>
                     <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-2">
-                      <div>
+                      <div className="flex-1">
                         <CardTitle className="text-lg font-black uppercase">
                           {session.game_type === 'human-thinks' ? '🧠 HUMAN THINKS' : '🤖 AI THINKS'}
                         </CardTitle>
                         <p className="text-sm text-muted-foreground mt-1">
                           {formatDate(session.created_at)}
                         </p>
+                        {session.country && (
+                          <p className="text-sm font-bold mt-1">
+                            {getCountryFlag(session.country_code || '')} {getLocationDisplay(session)}
+                          </p>
+                        )}
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 flex-wrap">
                         <span className={`px-3 py-1 text-xs font-black border-2 border-foreground ${
                           session.is_won ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
                         }`}>

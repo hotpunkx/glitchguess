@@ -18,7 +18,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - How to Play instructional page\n- Browser local session storage for game state persistence
 - Theme switcher for visual customization
 - Database-backed session management with unique session IDs
-- Admin dashboard for game data review\n
+- Admin dashboard for game data review
+- IP-based geolocation tracking\n
 ## 2. Gameplay Mechanics
 
 ### 2.1 Start Screen\n
@@ -54,31 +55,30 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Display selected category at top of screen
 - Show instruction message: 'Perfect! Think of any [CATEGORY] within the selected category. Don't tell me what it is. I'll ask up to 20 yes/no questions.'
 - No text input required (human keeps answer in mind)
-- AI generates intelligent yes/no questions based on selected category and previous answers
-- Three response buttons: Yes / No / Sometimes
+- AI generates intelligent yes/no questions based on selected category and previous answers\n- Three response buttons: Yes / No / Sometimes
 - AI makes educated guesses based on accumulated information and category constraints
 
 ### 2.4 AI Thinks Mode
 
 - Display selected category at top of screen
-- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)
-- Human types and submits yes/no questions
+- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)\n- Human types and submits yes/no questions
 - AI responds with Yes/No/Sometimes based on its secret answer
 - Human can make guesses at any time
 
 ### 2.5 Game Progress Display
-\n- Question counter showing current question number out of 20
+
+- Question counter showing current question number out of 20
 - Question history panel displaying all previous Q&A pairs in chronological order
-- Clear visual distinction between questions and answers\n
-### 2.6 End Game Conditions
-\n- AI/Human guesses correctly before 20 questions
+- Clear visual distinction between questions and answers
+\n### 2.6 End Game Conditions
+
+- AI/Human guesses correctly before 20 questions
 - 20 questions reached without correct guess
 
 ### 2.7 End Screen
 
 - Victory message: 'I got it in X questions!' (if guessed correctly)
-- Surrender message: 'I surrender! What was it?' (if 20 questions reached)
-- Display confetti animation on victory
+- Surrender message: 'I surrender! What was it?' (if 20 questions reached)\n- Display confetti animation on victory
 - Reveal the correct answer
 - Large 'Play Again' button to restart
 
@@ -91,8 +91,10 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 ### 3.2 Color Scheme
 
 - Base colors: Pure black (#000000) and pure white (#FFFFFF) for extreme contrast
-- Accent colors: Hot pink (#FF006E) and electric lime (#CCFF00) for aggressive neon highlights\n- Theme switcher allows users to toggle between different color schemes while maintaining Neubrutalism aesthetic
-\n### 3.3 Visual Details
+- Accent colors: Hot pink (#FF006E) and electric lime (#CCFF00) for aggressive neon highlights
+- Theme switcher allows users to toggle between different color schemes while maintaining Neubrutalism aesthetic
+
+### 3.3 Visual Details
 
 - Typography: Oversized bold sans-serif fonts (Inter or system fonts with font-weight 900)
 - Borders: Thick irregular borders with intentional asymmetry
@@ -102,58 +104,65 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Buttons: Large, chunky buttons with high contrast and bold labels
 - Category cards: Distinct visual style with neon borders and hover effects
 - How to Play page: Same Neubrutalism aesthetic with bold headings, neon accents, and chunky text blocks
-- Theme switcher: Fixed position button in top right corner, visible on all pages, with bold icon and smooth transition effects
-
-### 3.4 Responsive Design
+- Theme switcher: Fixed position button in top right corner, visible on all pages, with bold icon and smooth transition effects\n\n### 3.4 Responsive Design
 
 - Fully mobile-friendly and responsive across all screen sizes
 - Touch-optimized button sizes for mobile devices
-- Adaptive layout maintaining Neubrutalism aesthetic on all viewports
-
+- Adaptive layout maintaining Neubrutalism aesthetic on all viewports\n
 ## 4. Technical Requirements
 
 ### 4.1 AI Integration
-
-- Use Large Language Model for:
-  + Generating intelligent questions in Human Thinks mode strictly within selected category\n  + Creating creative/absurd secret answers in AI Thinks mode strictly within selected category
+\n- Use Large Language Model for:\n  + Generating intelligent questions in Human Thinks mode strictly within selected category
+  + Creating creative/absurd secret answers in AI Thinks mode strictly within selected category
   + Making educated guesses based on answer patterns and category constraints
   + Responding to human questions in AI Thinks mode
 - AI must strictly follow category rules to ensure answers are guessable within 20 questions
-\n### 4.2 Interaction Features
 
-- Immediate AI response after each human answer\n- Smooth transitions between game states
+### 4.2 Interaction Features
+
+- Immediate AI response after each human answer
+- Smooth transitions between game states
 - Confetti animation on victory
 - Question history auto-scroll to latest entry
 - Allow users to share the results with friends, generate dynamic unique url (avoid caching the og image by social medias) and dynamic og image to share the results
-- Navigation between home page and How to Play page with smooth transitions\n
-### 4.3 Session Management and Database Storage
+- Navigation between home page and How to Play page with smooth transitions
 
+### 4.3 Session Management and Database Storage\n
 - Generate a unique session ID for each new game
-- Store session ID in browser local storage
-- Save the following data to database for each session:
-  + Session ID (unique identifier)\n  + Game type (Human thinks mode or AI thinks mode)
+- Store session ID in browser local storage\n- Save the following data to database for each session:
+  + Session ID (unique identifier)
+  + Game type (Human thinks mode or AI thinks mode)
   + Selected category
   + Secret word (if AI thinks mode)
   + All questions asked with corresponding answers (Yes/No/Sometimes)
   + Question order and timestamps
   + Game outcome (won/lost, number of questions used)
+  + User geolocation data (country, region, city) obtained from IP address
 - Local storage only stores session ID, all other game data retrieved from database
 - Restore game state from database when page is refreshed using session ID
 - Clear local storage session ID when game ends or user starts a new game
 
-### 4.4 Admin Dashboard
+### 4.4 IP Geolocation Tracking
+\n- Capture user's IP address when game session starts
+- Use IP geolocation service to determine user's location:\n  + Country\n  + Region/State
+  + City
+- Store geolocation data in database linked to session ID
+- Handle cases where geolocation data is unavailable or blocked
+- Ensure compliance with privacy regulations\n
+### 4.5 Admin Dashboard
 
 - Route: /lokka
-- Authentication required:\n  + Username: mamayilokka
+- Authentication required:
+  + Username: mamayilokka
   + Password: EHDZDWick@261221
 - Dashboard features:
   + Display list of all game sessions with session IDs
-  + Show game type, category, and outcome for each session
+  + Show game type, category, and outcome for each session\n  + Display user geolocation data (country, region, city) for each session
   + View detailed game data: all questions and answers in chronological order
   + Display secret word for AI thinks mode games
-  + Filter and search functionality by date, game type, or category
+  + Filter and search functionality by date, game type, category, or location
   + Simple, clean interface consistent with overall design aesthetic
-\n### 4.5 Theme Switcher
+\n### 4.6 Theme Switcher
 
 - Fixed position theme switcher button always visible in top right corner across all pages\n- Allow users to toggle between different color themes
 - Save theme preference in browser local storage
