@@ -32,18 +32,20 @@ export default function MultiplayerGamePage() {
 
   useEffect(() => {
     if (!gameId) {
+      console.error('No gameId provided');
       navigate('/');
       return;
     }
 
     loadGame();
-  }, [gameId]);
+  }, [gameId, navigate]);
 
   useEffect(() => {
     if (!game) return;
 
     // Subscribe to game updates
     const unsubscribe = subscribeToGame(game.id, (updatedGame) => {
+      console.log('Game updated:', updatedGame);
       setGame(updatedGame);
       
       // Check if both players requested rematch
@@ -60,11 +62,16 @@ export default function MultiplayerGamePage() {
   }, [game?.id]);
 
   const loadGame = async () => {
+    setIsLoading(true);
     try {
+      console.log('Loading game:', gameId);
       const gameData = await getMultiplayerGame(gameId!);
+      console.log('Game data loaded:', gameData);
+      
       if (!gameData) {
+        console.error('Game not found');
         toast.error('Game not found');
-        navigate('/');
+        setTimeout(() => navigate('/'), 2000);
         return;
       }
 
@@ -72,17 +79,26 @@ export default function MultiplayerGamePage() {
 
       // Determine which player this is
       const session = localStorage.getItem('multiplayer-session');
+      console.log('Player session:', session);
+      console.log('Player1 session:', gameData.player1_session);
+      console.log('Player2 session:', gameData.player2_session);
+      
       if (session === gameData.player1_session) {
         setPlayerNumber('player1');
+        console.log('This is player 1');
       } else if (session === gameData.player2_session) {
         setPlayerNumber('player2');
+        console.log('This is player 2');
+      } else {
+        console.log('This is a new player (not player 1 or 2)');
       }
 
       setIsLoading(false);
     } catch (error) {
       console.error('Error loading game:', error);
       toast.error('Failed to load game');
-      navigate('/');
+      setTimeout(() => navigate('/'), 2000);
+      setIsLoading(false);
     }
   };
 
@@ -317,5 +333,37 @@ export default function MultiplayerGamePage() {
     );
   }
 
-  return null;
+  // Fallback for unknown state or spectator
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+      <Toaster position="top-center" />
+      
+      <div className="w-full max-w-2xl space-y-6">
+        <Card className="border-4 border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+          <CardHeader>
+            <CardTitle className="text-3xl xl:text-5xl font-black text-center">
+              ⚠️ GAME IN PROGRESS
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="text-center space-y-4">
+              <p className="text-lg font-bold text-muted-foreground">
+                This game is already in progress between {game.player1_name} and {game.player2_name || 'another player'}.
+              </p>
+              <p className="text-sm font-bold text-muted-foreground">
+                You cannot join this game as it has already started.
+              </p>
+            </div>
+
+            <Button
+              onClick={() => navigate('/')}
+              className="w-full h-auto py-4 text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+            >
+              BACK TO HOME
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 }
