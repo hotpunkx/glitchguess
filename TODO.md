@@ -167,6 +167,17 @@
   - [x] Updated role logic: word setter = answerer, other = questioner
   - [x] Both players can set secret word after joining
   - [x] Clear UI messaging about role assignment
+  - [x] Fix: Ensure only one player can become thinker at a time
+    - [x] Added word_setter_claimed field to database
+    - [x] Created atomic claim_word_setter() RPC function
+    - [x] Updated UI to show when opponent is setting word
+    - [x] Prevent race conditions with database-level locking
+  - [x] Fix: Improve winning logic with proper guess mechanism
+    - [x] Added "Make a Guess" button for questioner
+    - [x] Proper guess submission with "Is it X?" format
+    - [x] Answerer sees special indicator for guesses
+    - [x] Correct winner tracking in database
+    - [x] End game with proper winner assignment
 - [x] All lint checks passing
 
 ## Notes

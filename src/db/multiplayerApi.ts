@@ -173,6 +173,25 @@ export async function getMultiplayerQuestions(gameId: string): Promise<Multiplay
   return Array.isArray(data) ? data : [];
 }
 
+// Claim word setter role (atomic operation to prevent race conditions)
+export async function claimWordSetter(
+  gameId: string,
+  player: 'player1' | 'player2'
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .rpc('claim_word_setter', {
+      p_game_id: gameId,
+      p_player: player
+    });
+
+  if (error) {
+    console.error('Error claiming word setter:', error);
+    return false;
+  }
+
+  return data === true;
+}
+
 // Update secret word
 export async function updateSecretWord(
   gameId: string, 
@@ -189,9 +208,11 @@ export async function updateSecretWord(
       secret_word: secretWord,
       game_status: 'active',
       current_thinker: setterPlayer,
-      current_questioner: questioner
+      current_questioner: questioner,
+      word_setter_claimed: setterPlayer
     })
-    .eq('id', gameId);
+    .eq('id', gameId)
+    .eq('word_setter_claimed', setterPlayer);
 
   if (error) throw error;
 }
@@ -199,13 +220,15 @@ export async function updateSecretWord(
 // End multiplayer game
 export async function endMultiplayerGame(
   gameId: string,
-  isWon: boolean
+  isWon: boolean,
+  winner?: 'player1' | 'player2'
 ): Promise<void> {
   const { error } = await supabase
     .from('multiplayer_games')
     .update({
       game_status: 'ended',
       is_won: isWon,
+      winner: winner || null,
       ended_at: new Date().toISOString(),
     })
     .eq('id', gameId);

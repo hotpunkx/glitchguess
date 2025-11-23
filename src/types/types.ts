@@ -40,6 +40,8 @@ export interface MultiplayerGame {
   player2_session: string | null;
   current_thinker: 'player1' | 'player2';
   current_questioner: 'player1' | 'player2' | null;
+  word_setter_claimed: 'player1' | 'player2' | null;
+  winner: 'player1' | 'player2' | null;
   game_status: 'waiting' | 'active' | 'ended';
   secret_word: string | null;
   question_count: number;

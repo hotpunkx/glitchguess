@@ -10,6 +10,7 @@ import {
   updateSecretWord,
   requestRematch,
   createRematchGame,
+  claimWordSetter,
 } from '@/db/multiplayerApi';
 import type { MultiplayerGame } from '@/types/types';
 import { toast } from 'sonner';
@@ -196,6 +197,16 @@ export default function MultiplayerGamePage() {
 
     setIsSettingWord(true);
     try {
+      // First, try to claim the word setter role (atomic operation)
+      const claimed = await claimWordSetter(game!.id, playerNumber);
+      
+      if (!claimed) {
+        toast.error('Your opponent is already setting the word!');
+        setSecretWord('');
+        return;
+      }
+
+      // If successfully claimed, set the secret word
       await updateSecretWord(game!.id, secretWord.trim(), playerNumber);
       toast.success('Secret word set! Game starting...');
       // Game will update via real-time subscription
@@ -250,6 +261,8 @@ export default function MultiplayerGamePage() {
     const currentPlayerName = isPlayer1 ? game.player1_name : game.player2_name;
     const opponentName = isPlayer1 ? game.player2_name : game.player1_name;
     const bothPlayersJoined = game.player1_name && game.player2_name;
+    const opponentClaimed = game.word_setter_claimed && game.word_setter_claimed !== playerNumber;
+    const iClaimed = game.word_setter_claimed === playerNumber;
 
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
@@ -315,49 +328,65 @@ export default function MultiplayerGamePage() {
                   </>
                 ) : (
                   <>
-                    <p className="text-lg text-accent font-black">
-                      {opponentName} is ready to play! 🎮
-                    </p>
-                    <p className="text-md text-muted-foreground font-bold">
-                      Either player can set the secret word to start
-                    </p>
-                    <div className="brutal-border bg-accent/10 p-4 mb-4">
-                      <p className="text-sm font-bold">
-                        Players: {game.player1_name} vs {game.player2_name}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        💡 Whoever sets the word will answer questions
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-black uppercase">
-                          Your Secret Word
-                        </label>
-                        <p className="text-xs text-muted-foreground font-bold">
-                          Think of any object, person, animal, movie, or place
+                    {opponentClaimed ? (
+                      <>
+                        <p className="text-lg text-accent font-black">
+                          ⏳ {opponentName} is setting the word...
                         </p>
-                        <Input
-                          type="text"
-                          placeholder="Enter your secret word..."
-                          value={secretWord}
-                          onChange={(e) => setSecretWord(e.target.value)}
-                          onKeyDown={(e) => e.key === 'Enter' && handleSetSecretWord()}
-                          maxLength={50}
-                          className="h-14 text-lg font-bold brutal-border"
-                          disabled={isSettingWord}
-                        />
-                      </div>
+                        <div className="brutal-border bg-muted p-6">
+                          <Loader2 className="animate-spin mx-auto mb-3" size={32} />
+                          <p className="text-sm font-bold text-center">
+                            Wait for {opponentName} to finish setting the secret word
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-lg text-accent font-black">
+                          {opponentName} is ready to play! 🎮
+                        </p>
+                        <p className="text-md text-muted-foreground font-bold">
+                          {iClaimed ? 'Enter your secret word to start' : 'Either player can set the secret word to start'}
+                        </p>
+                        <div className="brutal-border bg-accent/10 p-4 mb-4">
+                          <p className="text-sm font-bold">
+                            Players: {game.player1_name} vs {game.player2_name}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-2">
+                            💡 Whoever sets the word will answer questions
+                          </p>
+                        </div>
 
-                      <Button
-                        onClick={handleSetSecretWord}
-                        disabled={isSettingWord || !secretWord.trim()}
-                        className="w-full h-auto py-6 text-xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
-                      >
-                        {isSettingWord ? 'STARTING GAME...' : 'I\'LL SET THE WORD'}
-                      </Button>
-                    </div>
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <label className="text-sm font-black uppercase">
+                              Your Secret Word
+                            </label>
+                            <p className="text-xs text-muted-foreground font-bold">
+                              Think of any object, person, animal, movie, or place
+                            </p>
+                            <Input
+                              type="text"
+                              placeholder="Enter your secret word..."
+                              value={secretWord}
+                              onChange={(e) => setSecretWord(e.target.value)}
+                              onKeyDown={(e) => e.key === 'Enter' && handleSetSecretWord()}
+                              maxLength={50}
+                              className="h-14 text-lg font-bold brutal-border"
+                              disabled={isSettingWord}
+                            />
+                          </div>
+
+                          <Button
+                            onClick={handleSetSecretWord}
+                            disabled={isSettingWord || !secretWord.trim()}
+                            className="w-full h-auto py-6 text-xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
+                          >
+                            {isSettingWord ? 'STARTING GAME...' : 'I\'LL SET THE WORD'}
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
               </div>

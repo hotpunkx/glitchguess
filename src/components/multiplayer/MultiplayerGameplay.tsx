@@ -25,6 +25,8 @@ interface MultiplayerGameplayProps {
 export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerGameplayProps) {
   const [history, setHistory] = useState<QuestionAnswer[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState('');
+  const [guess, setGuess] = useState('');
+  const [showGuessInput, setShowGuessInput] = useState(false);
   const [secretWord, setSecretWord] = useState('');
   const [showSecretInput, setShowSecretInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -153,23 +155,51 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
     try {
       const questionNumber = game.question_count + 1;
 
-      // Check if it's a final guess
-      const isFinalGuess = pendingQuestion.toLowerCase().includes('is it');
+      // Check if this is a guess (starts with "Is it")
+      const isGuess = pendingQuestion.toLowerCase().startsWith('is it');
       
-      if (isFinalGuess && answer === 'Yes') {
+      if (isGuess && answer === 'Yes') {
+        // Questioner guessed correctly!
         await updateQuestionAnswer(game.id, questionNumber, answer);
-        await endMultiplayerGame(game.id, true);
+        await endMultiplayerGame(game.id, true, game.current_questioner!);
         return;
       }
 
+      // Update the answer
       await updateQuestionAnswer(game.id, questionNumber, answer);
 
+      // Check if we've reached 20 questions
       if (questionNumber >= 20) {
-        await endMultiplayerGame(game.id, false);
+        // Answerer wins if questioner couldn't guess in 20 questions
+        await endMultiplayerGame(game.id, false, game.current_thinker);
       }
     } catch (error) {
       console.error('Error answering question:', error);
       toast.error('Failed to answer question');
+    }
+  };
+
+  const handleMakeGuess = async () => {
+    if (!guess.trim()) {
+      toast.error('Please enter your guess');
+      return;
+    }
+
+    setIsAnswering(true);
+    try {
+      const questionNumber = game.question_count + 1;
+      const guessQuestion = `Is it ${guess.trim()}?`;
+      
+      // Add the guess as a question
+      await addMultiplayerQuestion(game.id, questionNumber, guessQuestion, 'pending');
+      
+      setGuess('');
+      setShowGuessInput(false);
+    } catch (error) {
+      console.error('Error making guess:', error);
+      toast.error('Failed to make guess');
+    } finally {
+      setIsAnswering(false);
     }
   };
 
@@ -232,6 +262,13 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
 
           {pendingQuestion ? (
             <div className="brutal-border-thick bg-card p-6 xl:p-8 shadow-brutal-pink">
+              {pendingQuestion.toLowerCase().startsWith('is it') && (
+                <div className="brutal-border bg-accent/20 p-3 mb-4 text-center">
+                  <p className="text-sm font-black text-accent-foreground">
+                    🎯 OPPONENT IS MAKING A GUESS!
+                  </p>
+                </div>
+              )}
               <p className="text-xl xl:text-3xl font-black text-foreground leading-relaxed mb-6">
                 {pendingQuestion}
               </p>
@@ -307,22 +344,69 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
           )}
 
           <div className="space-y-2">
-            <Input
-              type="text"
-              placeholder="Type your question..."
-              value={currentQuestion}
-              onChange={(e) => setCurrentQuestion(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleAskQuestion()}
-              className="h-14 text-lg font-bold brutal-border"
-              disabled={isAnswering || game.question_count >= 20}
-            />
-            <Button
-              onClick={handleAskQuestion}
-              disabled={!currentQuestion.trim() || isAnswering || game.question_count >= 20}
-              className="w-full h-auto py-4 text-lg font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
-            >
-              {isAnswering ? 'ASKING...' : 'ASK QUESTION'}
-            </Button>
+            {!showGuessInput ? (
+              <>
+                <Input
+                  type="text"
+                  placeholder="Type your question..."
+                  value={currentQuestion}
+                  onChange={(e) => setCurrentQuestion(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAskQuestion()}
+                  className="h-14 text-lg font-bold brutal-border"
+                  disabled={isAnswering || game.question_count >= 20}
+                />
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    onClick={handleAskQuestion}
+                    disabled={!currentQuestion.trim() || isAnswering || game.question_count >= 20}
+                    className="h-auto py-4 text-lg font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
+                  >
+                    {isAnswering ? 'ASKING...' : 'ASK QUESTION'}
+                  </Button>
+                  <Button
+                    onClick={() => setShowGuessInput(true)}
+                    disabled={isAnswering || game.question_count >= 20}
+                    variant="outline"
+                    className="h-auto py-4 text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                  >
+                    🎯 MAKE A GUESS
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <Input
+                  type="text"
+                  placeholder="What do you think it is?"
+                  value={guess}
+                  onChange={(e) => setGuess(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleMakeGuess()}
+                  className="h-14 text-lg font-bold brutal-border"
+                  disabled={isAnswering}
+                  autoFocus
+                />
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    onClick={handleMakeGuess}
+                    disabled={!guess.trim() || isAnswering}
+                    className="h-auto py-4 text-lg font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
+                  >
+                    {isAnswering ? 'GUESSING...' : 'SUBMIT GUESS'}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowGuessInput(false);
+                      setGuess('');
+                    }}
+                    disabled={isAnswering}
+                    variant="outline"
+                    className="h-auto py-4 text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                  >
+                    CANCEL
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
 
           {history.length > 0 && (
