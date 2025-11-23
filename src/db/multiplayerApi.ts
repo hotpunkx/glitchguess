@@ -288,6 +288,7 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
   // Switch roles - if player1 was thinking, now player2 thinks
   // The previous questioner becomes the new thinker (answerer)
   const newThinker = oldGame.current_thinker === 'player1' ? 'player2' : 'player1';
+  const newQuestioner = oldGame.current_thinker; // Previous thinker becomes questioner
 
   // Create new game with switched roles
   // Set word_setter_claimed to the new thinker so only they can set the word
@@ -300,6 +301,7 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
       player1_session: oldGame.player1_session,
       player2_session: oldGame.player2_session,
       current_thinker: newThinker,
+      current_questioner: newQuestioner,
       word_setter_claimed: newThinker,
       game_status: 'active',
       started_at: new Date().toISOString(),

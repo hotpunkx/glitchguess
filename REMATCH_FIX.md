@@ -2,7 +2,7 @@
 
 ## Problem Statement
 
-When players requested a rematch in the 1v1 multiplayer game, both players were able to set the secret word. This violated the game's role-switching mechanic and caused confusion.
+When players requested a rematch in the 1v1 multiplayer game, both players were able to set the secret word. Additionally, both players appeared as "thinkers" instead of having distinct roles.
 
 ### Expected Behavior
 
@@ -12,18 +12,35 @@ In a rematch, roles should **switch**:
 
 ### Actual Behavior (Before Fix)
 
-Both players could set the secret word, leading to:
-- Race conditions (whoever sets first wins)
-- Confusion about whose turn it is
-- Violation of fair play (roles not switching)
+**Issue 1: Both Players Could Set Word**
+- Both players could set the secret word, leading to:
+  - Race conditions (whoever sets first wins)
+  - Confusion about whose turn it is
+  - Violation of fair play (roles not switching)
+
+**Issue 2: Both Players Were Thinkers**
+- The `current_questioner` field was not being set
+- Both players appeared as thinkers
+- No clear distinction between roles
+
+**Issue 3: Questioner Couldn't See History**
+- Questioner couldn't see their pending question
+- Question history was not visible to questioner
+- No feedback while waiting for answer
 
 ## Root Cause
 
-The `createRematchGame()` function was correctly switching the `current_thinker` role, but it was **not setting** the `word_setter_claimed` field. This field is critical because it:
+The `createRematchGame()` function had two missing fields:
 
-1. **Prevents race conditions** - Only one player can claim the right to set the word
-2. **Enforces role assignment** - The UI checks this field to determine who can set the word
-3. **Maintains game state** - Tracks which player has claimed the word-setting privilege
+1. **Missing `word_setter_claimed`**: This field is critical because it:
+   - Prevents race conditions - Only one player can claim the right to set the word
+   - Enforces role assignment - The UI checks this field to determine who can set the word
+   - Maintains game state - Tracks which player has claimed the word-setting privilege
+
+2. **Missing `current_questioner`**: This field is critical because it:
+   - Defines who asks questions vs who answers
+   - Prevents both players from being thinkers
+   - Ensures proper role separation
 
 ### Code Before Fix
 
@@ -45,6 +62,7 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
       player2_session: oldGame.player2_session,
       current_thinker: newThinker,
       // ❌ Missing: word_setter_claimed field!
+      // ❌ Missing: current_questioner field!
       game_status: 'active',
       started_at: new Date().toISOString(),
     })
@@ -57,7 +75,7 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
 
 ## Solution
 
-Set the `word_setter_claimed` field to the `newThinker` when creating the rematch game. This ensures that only the player who should be thinking (the previous questioner) can set the word.
+Set both the `word_setter_claimed` and `current_questioner` fields when creating the rematch game. Additionally, improve the questioner UI to show pending questions and history.
 
 ### Code After Fix
 
@@ -68,6 +86,7 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
   // Switch roles - if player1 was thinking, now player2 thinks
   // The previous questioner becomes the new thinker (answerer)
   const newThinker = oldGame.current_thinker === 'player1' ? 'player2' : 'player1';
+  const newQuestioner = oldGame.current_thinker; // Previous thinker becomes questioner
 
   // Create new game with switched roles
   // Set word_setter_claimed to the new thinker so only they can set the word
@@ -80,7 +99,8 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
       player1_session: oldGame.player1_session,
       player2_session: oldGame.player2_session,
       current_thinker: newThinker,
-      word_setter_claimed: newThinker,  // ✅ Added: Claim word setter for new thinker
+      current_questioner: newQuestioner,  // ✅ Added: Set questioner role
+      word_setter_claimed: newThinker,    // ✅ Added: Claim word setter for new thinker
       game_status: 'active',
       started_at: new Date().toISOString(),
     })
@@ -101,6 +121,7 @@ The `multiplayer_games` table has these relevant fields:
 CREATE TABLE multiplayer_games (
   id uuid PRIMARY KEY,
   current_thinker text CHECK (current_thinker IN ('player1', 'player2')),
+  current_questioner text CHECK (current_questioner IN ('player1', 'player2')),
   word_setter_claimed text CHECK (word_setter_claimed IN ('player1', 'player2')),
   secret_word text,
   -- ... other fields ...

@@ -384,18 +384,14 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
             </span>
           </div>
 
-          {isLoading ? (
-            <div className="brutal-border-thick bg-card p-6 flex items-center justify-center gap-3">
-              <Loader2 className="animate-spin" size={32} />
-              <p className="text-xl font-black">THINKING...</p>
-            </div>
-          ) : (
+          {/* Show pending question if exists */}
+          {pendingQuestion && (
             <div className="brutal-border-thick bg-card p-6 xl:p-8 shadow-brutal-pink">
-              <p className="text-xl xl:text-3xl font-black text-foreground leading-relaxed mb-6">
-                {currentQuestion}
+              <p className="text-xl xl:text-3xl font-black text-foreground leading-relaxed mb-4">
+                {pendingQuestion}
               </p>
               <p className="text-sm text-muted-foreground font-bold text-center">
-                Waiting for opponent to answer...
+                ⏳ Waiting for opponent to answer...
               </p>
             </div>
           )}
@@ -410,19 +406,19 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
                   onChange={(e) => setCurrentQuestion(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleAskQuestion()}
                   className="h-14 text-lg font-bold brutal-border"
-                  disabled={isAnswering || game.question_count >= 20}
+                  disabled={isAnswering || game.question_count >= 20 || !!pendingQuestion}
                 />
                 <div className="grid grid-cols-2 gap-2">
                   <Button
                     onClick={handleAskQuestion}
-                    disabled={!currentQuestion.trim() || isAnswering || game.question_count >= 20}
+                    disabled={!currentQuestion.trim() || isAnswering || game.question_count >= 20 || !!pendingQuestion}
                     className="h-auto py-4 text-lg font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
                   >
                     {isAnswering ? 'ASKING...' : 'ASK QUESTION'}
                   </Button>
                   <Button
                     onClick={() => setShowGuessInput(true)}
-                    disabled={isAnswering || game.question_count >= 20}
+                    disabled={isAnswering || game.question_count >= 20 || !!pendingQuestion}
                     variant="outline"
                     className="h-auto py-4 text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
                   >

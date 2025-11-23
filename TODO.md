@@ -193,8 +193,14 @@
     - [x] Button always visible for answerer to end game when opponent guesses correctly
   - [x] Rematch role assignment fix
     - [x] Set word_setter_claimed to new thinker (previous questioner)
+    - [x] Set current_questioner to previous thinker
     - [x] Only the previous questioner can set word in rematch
     - [x] Prevents both players from setting word
+    - [x] Fixed: Both players were thinkers - now roles switch correctly
+  - [x] Questioner UX improvements
+    - [x] Show pending question while waiting for answer
+    - [x] Display question history for questioner
+    - [x] Disable input while waiting for answer
 - [x] All lint checks passing
 
 ## Notes

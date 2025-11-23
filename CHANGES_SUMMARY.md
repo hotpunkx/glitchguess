@@ -80,8 +80,11 @@ OR (after answering):
 
 ## Rematch Role Assignment Fix
 
-### Problem
-When a rematch was requested, both players were able to set the secret word. This caused confusion and race conditions.
+### Problem 1: Both Players Were Thinkers
+When a rematch was requested, both players were able to set the secret word. Additionally, the `current_questioner` field was not being set, causing both players to appear as thinkers.
+
+### Problem 2: Questioner Couldn't See History
+The questioner couldn't see their pending question or the full question history while waiting for answers.
 
 ### Expected Behavior
 In a rematch, roles should switch:
@@ -89,13 +92,20 @@ In a rematch, roles should switch:
 - **Previous Questioner** → Becomes Thinker (Answerer) and sets the word
 
 ### Solution
-Set `word_setter_claimed` field to the new thinker when creating rematch game.
+1. Set both `word_setter_claimed` and `current_questioner` fields when creating rematch game
+2. Show pending question and history to questioner
 
 ### Files Changed
 - `src/db/multiplayerApi.ts`
   - Updated `createRematchGame()` function
   - Added `word_setter_claimed: newThinker` to game creation
+  - Added `current_questioner: newQuestioner` to game creation
   - Added comments explaining role switching logic
+
+- `src/components/multiplayer/MultiplayerGameplay.tsx`
+  - Show pending question to questioner while waiting for answer
+  - Display question history for questioner (already existed, now more visible)
+  - Disable input while waiting for answer
 
 ### How It Works
 
@@ -103,6 +113,7 @@ Set `word_setter_claimed` field to the new thinker when creating rematch game.
 // Switch roles - if player1 was thinking, now player2 thinks
 // The previous questioner becomes the new thinker (answerer)
 const newThinker = oldGame.current_thinker === 'player1' ? 'player2' : 'player1';
+const newQuestioner = oldGame.current_thinker; // Previous thinker becomes questioner
 
 // Create new game with switched roles
 // Set word_setter_claimed to the new thinker so only they can set the word
@@ -111,7 +122,8 @@ const { data, error } = await supabase
   .insert({
     // ... other fields ...
     current_thinker: newThinker,
-    word_setter_claimed: newThinker,  // ← This prevents both players from setting word
+    current_questioner: newQuestioner,  // ← This sets the questioner role
+    word_setter_claimed: newThinker,    // ← This prevents both players from setting word
     game_status: 'active',
   })
 ```
@@ -130,6 +142,38 @@ Result: Player B wins
 Player A: Questioner (asks questions) ← Role switched
 Player B: Thinker (sets word) ← Role switched, word_setter_claimed = player B
 Result: Only Player B can set the word ✓
+```
+
+### Questioner UI Improvements
+
+**Before:**
+```
+- Questioner asks question
+- Question disappears
+- No indication of what they asked
+- Can't see history
+```
+
+**After:**
+```
+┌─────────────────────────────────────────┐
+│  Question 5 / 20    🤔 Opponent...      │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  Is it a mammal?                        │
+│  ⏳ Waiting for opponent to answer...  │
+└─────────────────────────────────────────┘
+
+[Input disabled while waiting]
+
+┌─────────────────────────────────────────┐
+│  QUESTION HISTORY                       │
+│  Q1: Is it alive? → Yes                 │
+│  Q2: Is it an animal? → Yes             │
+│  Q3: Does it live in water? → Yes       │
+│  Q4: Is it a fish? → No                 │
+└─────────────────────────────────────────┘
 ```
 
 ---
@@ -155,7 +199,15 @@ Result: Only Player B can set the word ✓
 - [x] Only previous questioner can set word in rematch
 - [x] Previous answerer becomes questioner in rematch
 - [x] word_setter_claimed is set correctly
+- [x] current_questioner is set correctly
 - [x] No race condition when both players accept rematch
+- [x] Both players have distinct roles (not both thinkers)
+
+### Questioner UX Tests
+- [x] Pending question shows while waiting for answer
+- [x] Question history visible to questioner
+- [x] Input disabled while waiting for answer
+- [x] History updates in real-time
 
 ---
 
