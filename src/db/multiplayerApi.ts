@@ -77,7 +77,6 @@ export async function joinMultiplayerGame(
     .update({
       player2_name: playerName,
       player2_session: playerSession,
-      game_status: 'active',
       started_at: new Date().toISOString(),
     })
     .eq('id', game.id)
@@ -178,7 +177,10 @@ export async function getMultiplayerQuestions(gameId: string): Promise<Multiplay
 export async function updateSecretWord(gameId: string, secretWord: string): Promise<void> {
   const { error } = await supabase
     .from('multiplayer_games')
-    .update({ secret_word: secretWord })
+    .update({ 
+      secret_word: secretWord,
+      game_status: 'active'
+    })
     .eq('id', gameId);
 
   if (error) throw error;

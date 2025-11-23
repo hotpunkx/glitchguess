@@ -130,13 +130,13 @@ export default function MultiplayerGamePage() {
   };
 
   const handleCopyLink = () => {
-    const link = `${window.location.origin}/multiplayer/game/${gameId}?code=${game?.game_code}`;
+    const link = `${window.location.origin}/play/${game?.game_code}`;
     navigator.clipboard.writeText(link);
     toast.success('Link copied to clipboard!');
   };
 
   const handleShare = async () => {
-    const link = `${window.location.origin}/multiplayer/game/${gameId}?code=${game?.game_code}`;
+    const link = `${window.location.origin}/play/${game?.game_code}`;
     
     if (navigator.share) {
       try {
@@ -214,9 +214,12 @@ export default function MultiplayerGamePage() {
                 </p>
 
                 <div className="brutal-border bg-muted p-4 space-y-3">
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex flex-col items-center gap-2">
                     <span className="text-4xl font-black tracking-wider">
                       {game.game_code}
+                    </span>
+                    <span className="text-sm text-muted-foreground font-mono break-all px-2">
+                      {window.location.origin}/play/{game.game_code}
                     </span>
                   </div>
                   
@@ -304,6 +307,42 @@ export default function MultiplayerGamePage() {
               >
                 {isJoining ? 'JOINING...' : 'JOIN GAME'}
               </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  // Both players joined, waiting for game to start (thinker setting word)
+  if (game.game_status === 'waiting' && playerNumber === 'player2') {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+        <Toaster position="top-center" />
+        
+        <div className="w-full max-w-2xl space-y-6">
+          <Card className="border-4 border-foreground shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <CardHeader>
+              <CardTitle className="text-3xl xl:text-5xl font-black text-center">
+                ⏳ GAME STARTING...
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="text-center space-y-4">
+                <p className="text-xl font-bold">
+                  Hi, {game.player2_name}!
+                </p>
+                <p className="text-lg text-muted-foreground font-bold">
+                  Waiting for {game.player1_name} to set their secret word...
+                </p>
+
+                <div className="animate-pulse">
+                  <Loader2 className="animate-spin mx-auto" size={32} />
+                  <p className="text-sm font-bold text-muted-foreground mt-2">
+                    Game will start soon!
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>

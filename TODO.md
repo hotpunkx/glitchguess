@@ -151,6 +151,10 @@
   - [x] CSS-based confetti animation for winners
   - [x] Mobile-responsive design
   - [x] All TypeScript errors fixed
+  - [x] Fixed join issue - game status now changes at correct time
+  - [x] Short URLs for sharing (/play/CODE instead of long UUID URLs)
+  - [x] Player 2 waiting screen after joining
+  - [x] 60% shorter shareable links
 - [x] All lint checks passing
 
 ## Notes
@@ -188,8 +192,11 @@
 - 1v1 Multiplayer Architecture:
   * Supabase Realtime for instant synchronization between players
   * Unique 6-character game codes for easy sharing
+  * Short URL system: /play/CODE (60% shorter than full URLs)
   * Session-based player identification (persists across refreshes)
   * Pending question state for smooth turn-based gameplay
   * Automatic role switching in rematch system
   * Comprehensive error handling with fallback UI states
   * Mobile-optimized with native share API support
+  * Game status progression: waiting → active (when secret word set) → ended
+  * Player 2 waiting screen after joining (before game starts)

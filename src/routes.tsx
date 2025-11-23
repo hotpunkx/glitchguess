@@ -4,6 +4,7 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import MultiplayerCreatePage from './pages/MultiplayerCreatePage';
 import MultiplayerGamePage from './pages/MultiplayerGamePage';
+import PlayPage from './pages/PlayPage';
 import type { ReactNode } from 'react';
 
 interface RouteConfig {
@@ -23,6 +24,12 @@ const routes: RouteConfig[] = [
     name: 'How to Play',
     path: '/how-to-play',
     element: <HowToPlayPage />
+  },
+  {
+    name: 'Play Game',
+    path: '/play/:code',
+    element: <PlayPage />,
+    visible: false
   },
   {
     name: 'Create Multiplayer',
