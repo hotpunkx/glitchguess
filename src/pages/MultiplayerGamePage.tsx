@@ -7,6 +7,7 @@ import {
   getMultiplayerGame,
   subscribeToGame,
   joinMultiplayerGame,
+  updateSecretWord,
   requestRematch,
   createRematchGame,
 } from '@/db/multiplayerApi';
@@ -24,7 +25,9 @@ export default function MultiplayerGamePage() {
   
   const [game, setGame] = useState<MultiplayerGame | null>(null);
   const [playerName, setPlayerName] = useState('');
+  const [secretWord, setSecretWord] = useState('');
   const [isJoining, setIsJoining] = useState(false);
+  const [isSettingWord, setIsSettingWord] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [playerNumber, setPlayerNumber] = useState<'player1' | 'player2' | null>(null);
 
@@ -175,6 +178,30 @@ export default function MultiplayerGamePage() {
     }
   };
 
+  const handleSetSecretWord = async () => {
+    if (!secretWord.trim()) {
+      toast.error('Please enter a secret word');
+      return;
+    }
+
+    if (secretWord.trim().length < 2) {
+      toast.error('Secret word must be at least 2 characters');
+      return;
+    }
+
+    setIsSettingWord(true);
+    try {
+      await updateSecretWord(game!.id, secretWord.trim());
+      toast.success('Secret word set! Game starting...');
+      // Game will update via real-time subscription
+    } catch (error: any) {
+      console.error('Error setting secret word:', error);
+      toast.error(error.message || 'Failed to set secret word');
+    } finally {
+      setIsSettingWord(false);
+    }
+  };
+
   const handleRequestRematch = async () => {
     if (!game || !playerNumber) return;
 
@@ -278,12 +305,41 @@ export default function MultiplayerGamePage() {
                       {game.player2_name} is ready to play! 🎮
                     </p>
                     <p className="text-md text-muted-foreground font-bold">
-                      The game will start automatically once you set your secret word.
+                      Enter your secret word to start the game
                     </p>
-                    <div className="brutal-border bg-accent/10 p-4">
+                    <div className="brutal-border bg-accent/10 p-4 mb-4">
                       <p className="text-sm font-bold">
                         Players: {game.player1_name} vs {game.player2_name}
                       </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-black uppercase">
+                          Your Secret Word
+                        </label>
+                        <p className="text-xs text-muted-foreground font-bold">
+                          Think of any object, person, animal, movie, or place
+                        </p>
+                        <Input
+                          type="text"
+                          placeholder="Enter your secret word..."
+                          value={secretWord}
+                          onChange={(e) => setSecretWord(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && handleSetSecretWord()}
+                          maxLength={50}
+                          className="h-14 text-lg font-bold brutal-border"
+                          disabled={isSettingWord}
+                        />
+                      </div>
+
+                      <Button
+                        onClick={handleSetSecretWord}
+                        disabled={isSettingWord || !secretWord.trim()}
+                        className="w-full h-auto py-6 text-xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
+                      >
+                        {isSettingWord ? 'STARTING GAME...' : 'START GAME'}
+                      </Button>
                     </div>
                   </>
                 )}

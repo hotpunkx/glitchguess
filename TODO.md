@@ -159,6 +159,9 @@
   - [x] Added toast notification for Player 1 when Player 2 joins
   - [x] Updated waiting room UI to show opponent status
   - [x] Improved join flow with clear feedback for both players
+  - [x] Added secret word input field for Player 1 after Player 2 joins
+  - [x] Complete validation and error handling for secret word
+  - [x] "START GAME" button with loading states
 - [x] All lint checks passing
 
 ## Notes
