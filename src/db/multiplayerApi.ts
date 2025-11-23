@@ -122,7 +122,8 @@ export async function addMultiplayerQuestion(
   gameId: string,
   questionNumber: number,
   questionText: string,
-  answer: string
+  answer: string,
+  isGuess: boolean = false
 ): Promise<void> {
   const { error } = await supabase
     .from('multiplayer_questions')
@@ -131,6 +132,7 @@ export async function addMultiplayerQuestion(
       question_number: questionNumber,
       question_text: questionText,
       answer,
+      is_guess: isGuess,
     });
 
   if (error) throw error;

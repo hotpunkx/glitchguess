@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { QuestionHistory } from '@/components/game/QuestionHistory';
-import type { MultiplayerGame } from '@/types/types';
+import type { MultiplayerGame, MultiplayerQuestion } from '@/types/types';
 import type { Answer, QuestionAnswer } from '@/types/game';
 import {
   addMultiplayerQuestion,
@@ -24,6 +24,7 @@ interface MultiplayerGameplayProps {
 
 export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerGameplayProps) {
   const [history, setHistory] = useState<QuestionAnswer[]>([]);
+  const [questions, setQuestions] = useState<MultiplayerQuestion[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [guess, setGuess] = useState('');
   const [showGuessInput, setShowGuessInput] = useState(false);
@@ -42,6 +43,19 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
     
     // Subscribe to new questions
     const unsubscribe = subscribeToQuestions(game.id, (question) => {
+      // Update raw questions array
+      setQuestions(prev => {
+        const exists = prev.find(q => q.id === question.id);
+        if (exists) {
+          // Update existing question
+          return prev.map(q => q.id === question.id ? question : q);
+        } else {
+          // Add new question
+          return [...prev, question];
+        }
+      });
+
+      // Update UI state
       if (question.answer === 'pending') {
         setPendingQuestion(question.question_text);
       } else {
@@ -72,10 +86,12 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
 
   const loadQuestions = async () => {
     try {
-      const questions = await getMultiplayerQuestions(game.id);
+      const loadedQuestions = await getMultiplayerQuestions(game.id);
+      setQuestions(loadedQuestions); // Store raw questions for is_guess checking
+      
       const formattedHistory: QuestionAnswer[] = [];
       
-      for (const q of questions) {
+      for (const q of loadedQuestions) {
         if (q.answer === 'pending') {
           setPendingQuestion(q.question_text);
         } else {
@@ -155,8 +171,9 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
     try {
       const questionNumber = game.question_count + 1;
 
-      // Check if this is a guess (starts with "Is it")
-      const isGuess = pendingQuestion.toLowerCase().startsWith('is it');
+      // Check if this is a formal guess (marked with is_guess flag)
+      const currentQuestionData = questions.find(q => q.question_number === questionNumber);
+      const isGuess = currentQuestionData?.is_guess || false;
       
       if (isGuess && answer === 'Yes') {
         // Questioner guessed correctly!
@@ -190,8 +207,8 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
       const questionNumber = game.question_count + 1;
       const guessQuestion = `Is it ${guess.trim()}?`;
       
-      // Add the guess as a question
-      await addMultiplayerQuestion(game.id, questionNumber, guessQuestion, 'pending');
+      // Add the guess as a question with is_guess flag set to true
+      await addMultiplayerQuestion(game.id, questionNumber, guessQuestion, 'pending', true);
       
       setGuess('');
       setShowGuessInput(false);
@@ -262,13 +279,16 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
 
           {pendingQuestion ? (
             <div className="brutal-border-thick bg-card p-6 xl:p-8 shadow-brutal-pink">
-              {pendingQuestion.toLowerCase().startsWith('is it') && (
-                <div className="brutal-border bg-accent/20 p-3 mb-4 text-center">
-                  <p className="text-sm font-black text-accent-foreground">
-                    🎯 OPPONENT IS MAKING A GUESS!
-                  </p>
-                </div>
-              )}
+              {(() => {
+                const currentQuestionData = questions.find(q => q.question_number === game.question_count + 1);
+                return currentQuestionData?.is_guess && (
+                  <div className="brutal-border bg-accent/20 p-3 mb-4 text-center">
+                    <p className="text-sm font-black text-accent-foreground">
+                      🎯 OPPONENT IS MAKING A GUESS!
+                    </p>
+                  </div>
+                );
+              })()}
               <p className="text-xl xl:text-3xl font-black text-foreground leading-relaxed mb-6">
                 {pendingQuestion}
               </p>

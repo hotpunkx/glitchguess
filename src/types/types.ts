@@ -59,5 +59,6 @@ export interface MultiplayerQuestion {
   question_number: number;
   question_text: string;
   answer: string;
+  is_guess: boolean;
   created_at: string;
 }

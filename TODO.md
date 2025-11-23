@@ -182,6 +182,10 @@
     - [x] Answerer sees special indicator for guesses
     - [x] Correct winner tracking in database
     - [x] End game with proper winner assignment
+    - [x] Fixed bug: Game ending after first question
+      - [x] Added is_guess field to database
+      - [x] Use is_guess flag instead of text detection
+      - [x] Regular questions no longer treated as guesses
 - [x] All lint checks passing
 
 ## Notes
