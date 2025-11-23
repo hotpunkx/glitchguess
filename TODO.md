@@ -172,6 +172,10 @@
     - [x] Created atomic claim_word_setter() RPC function
     - [x] Updated UI to show when opponent is setting word
     - [x] Prevent race conditions with database-level locking
+  - [x] Implement random word setter assignment
+    - [x] Randomly select one player when both join
+    - [x] Update UI to show only selected player can set word
+    - [x] Other player sees waiting message with clear role indication
   - [x] Fix: Improve winning logic with proper guess mechanism
     - [x] Added "Make a Guess" button for questioner
     - [x] Proper guess submission with "Is it X?" format

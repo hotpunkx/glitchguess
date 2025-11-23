@@ -71,12 +71,16 @@ export async function joinMultiplayerGame(
   if (!game) throw new Error('Game not found or already started');
   if (game.player2_name) throw new Error('Game is full');
 
+  // Randomly select who will set the word (player1 or player2)
+  const randomWordSetter: 'player1' | 'player2' = Math.random() < 0.5 ? 'player1' : 'player2';
+
   // Join the game
   const { data, error } = await supabase
     .from('multiplayer_games')
     .update({
       player2_name: playerName,
       player2_session: playerSession,
+      word_setter_claimed: randomWordSetter,
       started_at: new Date().toISOString(),
     })
     .eq('id', game.id)
