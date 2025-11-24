@@ -320,6 +320,8 @@ export function subscribeToGame(
   gameId: string,
   callback: (game: MultiplayerGame) => void
 ) {
+  console.log('Creating subscription for game:', gameId);
+  
   const channel = supabase
     .channel(`game:${gameId}`)
     .on(
@@ -331,12 +333,21 @@ export function subscribeToGame(
         filter: `id=eq.${gameId}`,
       },
       (payload) => {
+        console.log('Subscription received payload:', {
+          event: payload.eventType,
+          gameId: (payload.new as any)?.id,
+          status: (payload.new as any)?.game_status,
+          secretWord: (payload.new as any)?.secret_word ? '***SET***' : 'NOT SET',
+        });
         callback(payload.new as MultiplayerGame);
       }
     )
-    .subscribe();
+    .subscribe((status) => {
+      console.log('Subscription status:', status);
+    });
 
   return () => {
+    console.log('Removing subscription for game:', gameId);
     supabase.removeChannel(channel);
   };
 }

@@ -46,12 +46,28 @@ export default function MultiplayerGamePage() {
   useEffect(() => {
     if (!game?.id) return;
 
+    console.log('Setting up game subscription for game:', game.id);
+
     // Subscribe to game updates
     const unsubscribe = subscribeToGame(game.id, (updatedGame) => {
-      console.log('Game updated:', updatedGame);
+      console.log('Game updated via subscription:', {
+        gameId: updatedGame.id,
+        status: updatedGame.game_status,
+        secretWord: updatedGame.secret_word ? '***SET***' : 'NOT SET',
+        currentThinker: updatedGame.current_thinker,
+        currentQuestioner: updatedGame.current_questioner,
+      });
       
       // Use functional setState to avoid depending on game in dependencies
       setGame((prevGame) => {
+        console.log('Updating game state from:', {
+          prevStatus: prevGame?.game_status,
+          prevSecretWord: prevGame?.secret_word ? '***SET***' : 'NOT SET',
+        }, 'to:', {
+          newStatus: updatedGame.game_status,
+          newSecretWord: updatedGame.secret_word ? '***SET***' : 'NOT SET',
+        });
+        
         // Notify Player 1 when Player 2 joins
         if (
           playerNumber === 'player1' &&
@@ -76,7 +92,10 @@ export default function MultiplayerGamePage() {
       }
     });
 
-    return unsubscribe;
+    return () => {
+      console.log('Cleaning up game subscription for game:', game.id);
+      unsubscribe();
+    };
   }, [game?.id, playerNumber]);
 
   const loadGame = async () => {
