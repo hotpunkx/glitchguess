@@ -309,7 +309,7 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
                 {pendingQuestion}
               </p>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="flex flex-col gap-3 xl:grid xl:grid-cols-3">
                 <Button
                   onClick={() => handleAnswer('Yes')}
                   className="h-auto py-4 text-lg font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
@@ -318,13 +318,13 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
                 </Button>
                 <Button
                   onClick={() => handleAnswer('No')}
-                  className="h-auto py-4 text-lg font-black brutal-border shadow-brutal-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-secondary text-secondary-foreground"
+                  className="h-auto py-4 text-lg font-black brutal-border shadow-brutal-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-secondary text-secondary-foreground"
                 >
                   NO
                 </Button>
                 <Button
                   onClick={() => handleAnswer('Sometimes')}
-                  className="h-auto py-4 text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-muted text-foreground"
+                  className="h-auto py-4 text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-muted text-foreground"
                 >
                   SOMETIMES
                 </Button>

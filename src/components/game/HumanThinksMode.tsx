@@ -130,7 +130,7 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
         </div>
 
         {!isLoading && (
-          <div className="grid grid-cols-3 gap-3 xl:gap-4">
+          <div className="flex flex-col gap-3 xl:grid xl:grid-cols-3 xl:gap-4">
             <Button
               onClick={() => handleAnswer('Yes')}
               className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground max-sm:text-base max-sm:py-3"
@@ -139,13 +139,13 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
             </Button>
             <Button
               onClick={() => handleAnswer('No')}
-              className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-secondary text-secondary-foreground max-sm:text-base max-sm:py-3"
+              className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-secondary text-secondary-foreground max-sm:text-base max-sm:py-3"
             >
               NO
             </Button>
             <Button
               onClick={() => handleAnswer('Sometimes')}
-              className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-muted text-foreground max-sm:text-base max-sm:py-3"
+              className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-muted text-foreground max-sm:text-base max-sm:py-3"
             >
               SOMETIMES
             </Button>
