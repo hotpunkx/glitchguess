@@ -208,7 +208,47 @@ export async function updateSecretWord(
   // The other player is the questioner
   const questioner = setterPlayer === 'player1' ? 'player2' : 'player1';
   
-  const { error } = await supabase
+  console.log('updateSecretWord called:', {
+    gameId,
+    secretWord: '***HIDDEN***',
+    setterPlayer,
+    questioner,
+  });
+  
+  // First, verify the current game state
+  const { data: currentGame, error: fetchError } = await supabase
+    .from('multiplayer_games')
+    .select('word_setter_claimed, game_status, secret_word')
+    .eq('id', gameId)
+    .maybeSingle();
+  
+  if (fetchError) {
+    console.error('Error fetching game:', fetchError);
+    throw fetchError;
+  }
+  
+  if (!currentGame) {
+    console.error('Game not found');
+    throw new Error('Game not found');
+  }
+  
+  console.log('Current game state:', {
+    word_setter_claimed: currentGame.word_setter_claimed,
+    game_status: currentGame.game_status,
+    secret_word: currentGame.secret_word ? '***SET***' : 'NOT SET',
+  });
+  
+  // Check if this player is allowed to set the word
+  if (currentGame.word_setter_claimed !== setterPlayer) {
+    console.error('Player not allowed to set word:', {
+      expected: currentGame.word_setter_claimed,
+      actual: setterPlayer,
+    });
+    throw new Error('You are not allowed to set the secret word');
+  }
+  
+  // Update the game
+  const { data, error } = await supabase
     .from('multiplayer_games')
     .update({ 
       secret_word: secretWord,
@@ -218,9 +258,26 @@ export async function updateSecretWord(
       word_setter_claimed: setterPlayer
     })
     .eq('id', gameId)
-    .eq('word_setter_claimed', setterPlayer);
+    .eq('word_setter_claimed', setterPlayer)
+    .select();
+  
+  console.log('Update result:', {
+    success: !error,
+    rowsAffected: data?.length || 0,
+    error: error?.message,
+  });
 
-  if (error) throw error;
+  if (error) {
+    console.error('Error updating secret word:', error);
+    throw error;
+  }
+  
+  if (!data || data.length === 0) {
+    console.error('No rows updated - word_setter_claimed mismatch');
+    throw new Error('Failed to update game - please refresh and try again');
+  }
+  
+  console.log('Secret word set successfully');
 }
 
 // End multiplayer game
