@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getAllSessions, getSessionStats } from '@/db/api';
 import type { GameSessionWithQuestions } from '@/types/types';
 import { isAdminAuthenticated, clearAdminAuth } from './AdminLoginPage';
-import { getLocationDisplay, getCountryFlag } from '@/services/geolocationService';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
 
@@ -84,7 +83,7 @@ export default function AdminDashboardPage() {
           {/* Stats Cards */}
           {stats && (
             <>
-              <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
                 <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                   <CardHeader>
                     <CardTitle className="text-sm">TOTAL GAMES</CardTitle>
@@ -138,44 +137,7 @@ export default function AdminDashboardPage() {
                     <div className="text-3xl font-black">{stats.avgQuestions}</div>
                   </CardContent>
                 </Card>
-
-                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                  <CardHeader>
-                    <CardTitle className="text-sm">COUNTRIES</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-3xl font-black">🌍 {stats.uniqueCountries}</div>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                  <CardHeader>
-                    <CardTitle className="text-sm">CITIES</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-3xl font-black">🏙️ {stats.uniqueCities}</div>
-                  </CardContent>
-                </Card>
               </div>
-
-              {/* Top Countries */}
-              {stats.topCountries && stats.topCountries.length > 0 && (
-                <Card className="border-4 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] mb-8">
-                  <CardHeader>
-                    <CardTitle className="text-sm">TOP COUNTRIES</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {stats.topCountries.map((item: any, idx: number) => (
-                        <div key={idx} className="flex justify-between items-center">
-                          <span className="font-bold">{item.country}</span>
-                          <span className="text-muted-foreground">{item.count} games</span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
             </>
           )}
 
@@ -205,11 +167,6 @@ export default function AdminDashboardPage() {
                         <p className="text-sm text-muted-foreground mt-1">
                           {formatDate(session.created_at)}
                         </p>
-                        {session.country && (
-                          <p className="text-sm font-bold mt-1">
-                            {getCountryFlag(session.country_code || '')} {getLocationDisplay(session)}
-                          </p>
-                        )}
                       </div>
                       <div className="flex gap-2 flex-wrap">
                         <span className={`px-3 py-1 text-xs font-black border-2 border-foreground ${
