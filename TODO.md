@@ -216,6 +216,10 @@
     - [x] Removed askNextQuestion() function
     - [x] Removed generateAIQuestion import
     - [x] Players now type their own questions
+  - [x] Game subscription fix
+    - [x] Fixed useEffect dependencies causing subscription re-creation
+    - [x] Use functional setState to avoid stale closures
+    - [x] Questioner UI now updates when opponent sets secret word
 - [x] All lint checks passing
 
 ## Notes

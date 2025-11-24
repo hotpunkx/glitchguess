@@ -44,24 +44,27 @@ export default function MultiplayerGamePage() {
   }, [gameId, navigate]);
 
   useEffect(() => {
-    if (!game) return;
+    if (!game?.id) return;
 
     // Subscribe to game updates
     const unsubscribe = subscribeToGame(game.id, (updatedGame) => {
       console.log('Game updated:', updatedGame);
       
-      // Notify Player 1 when Player 2 joins
-      if (
-        playerNumber === 'player1' &&
-        !game.player2_name &&
-        updatedGame.player2_name
-      ) {
-        toast.success(`${updatedGame.player2_name} joined the game! 🎮`, {
-          duration: 4000,
-        });
-      }
-      
-      setGame(updatedGame);
+      // Use functional setState to avoid depending on game in dependencies
+      setGame((prevGame) => {
+        // Notify Player 1 when Player 2 joins
+        if (
+          playerNumber === 'player1' &&
+          !prevGame?.player2_name &&
+          updatedGame.player2_name
+        ) {
+          toast.success(`${updatedGame.player2_name} joined the game! 🎮`, {
+            duration: 4000,
+          });
+        }
+        
+        return updatedGame;
+      });
       
       // Check if both players requested rematch
       if (
@@ -74,7 +77,7 @@ export default function MultiplayerGamePage() {
     });
 
     return unsubscribe;
-  }, [game?.id, game?.player2_name, playerNumber]);
+  }, [game?.id, playerNumber]);
 
   const loadGame = async () => {
     setIsLoading(true);
