@@ -292,6 +292,7 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
 
   // Create new game with switched roles
   // Set word_setter_claimed to the new thinker so only they can set the word
+  // Game starts in 'waiting' status until secret word is set
   const { data, error } = await supabase
     .from('multiplayer_games')
     .insert({
@@ -303,7 +304,7 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
       current_thinker: newThinker,
       current_questioner: newQuestioner,
       word_setter_claimed: newThinker,
-      game_status: 'active',
+      game_status: 'waiting', // Changed from 'active' - wait for secret word
       started_at: new Date().toISOString(),
     })
     .select('id')

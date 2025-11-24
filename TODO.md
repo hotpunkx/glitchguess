@@ -220,11 +220,12 @@
     - [x] Fixed useEffect dependencies causing subscription re-creation
     - [x] Use functional setState to avoid stale closures
     - [x] Questioner UI now updates when opponent sets secret word
-  - [ ] Debug subscription issue
+  - [x] Debug subscription issue
     - [x] Added comprehensive logging to subscription
     - [x] Added state transition logging
     - [x] Added payload logging
-    - [ ] Test with browser console to identify issue
+    - [x] Found root cause: rematch created with wrong status
+    - [x] Fixed: Changed game_status from 'active' to 'waiting' in createRematchGame()
 - [x] All lint checks passing
 
 ## Notes
