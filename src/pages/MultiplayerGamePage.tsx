@@ -318,27 +318,24 @@ export default function MultiplayerGamePage() {
                           Share this link with your friend to start playing
                         </p>
 
-                        <div className="brutal-border bg-muted p-4 space-y-3">
-                          <div className="flex flex-col items-center gap-2">
-                            <span className="text-4xl font-black tracking-wider">
-                              {game.game_code}
-                            </span>
-                            <span className="text-sm text-muted-foreground font-mono break-all px-2">
+                        <div className="brutal-border bg-muted p-4 xl:p-6 space-y-4">
+                          <div className="flex flex-col items-center gap-3">
+                            <span className="text-2xl xl:text-3xl font-black text-foreground break-all text-center px-2">
                               {window.location.origin}/play/{game.game_code}
                             </span>
                           </div>
                           
-                          <div className="flex gap-2">
+                          <div className="flex flex-col gap-3 xl:flex-row xl:gap-2">
                             <Button
                               onClick={handleCopyLink}
-                              className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                              className="w-full brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground font-black text-base xl:text-lg py-6 xl:py-4"
                             >
                               <Copy className="mr-2" size={20} />
                               COPY LINK
                             </Button>
                             <Button
                               onClick={handleShare}
-                              className="flex-1 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                              className="w-full brutal-border shadow-brutal-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-secondary text-secondary-foreground font-black text-base xl:text-lg py-6 xl:py-4"
                             >
                               <Share2 className="mr-2" size={20} />
                               SHARE
