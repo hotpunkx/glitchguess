@@ -205,6 +205,10 @@
     - [x] Subscribe to UPDATE events for questions
     - [x] Answerer sees questions in real-time
     - [x] History updates when questions are answered
+  - [x] Rematch questioner wait state
+    - [x] Questioner sees waiting message until thinker sets secret word
+    - [x] Prevents asking questions before game is ready
+    - [x] Better UX for rematch flow
 - [x] All lint checks passing
 
 ## Notes

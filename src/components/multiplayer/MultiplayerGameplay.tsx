@@ -370,6 +370,33 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
 
   // Guesser view
   if (isQuestioner) {
+    // If no secret word set yet, show waiting message
+    if (!game.secret_word) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background gap-6">
+          <Toaster position="top-center" />
+          
+          <div className="w-full max-w-2xl space-y-6">
+            <div className="brutal-border bg-card p-4 flex justify-between items-center">
+              <span className="font-black text-lg">
+                Question {game.question_count} / 20
+              </span>
+              <span className="font-black text-lg">
+                🤔 Opponent is thinking...
+              </span>
+            </div>
+
+            <div className="brutal-border-thick bg-card p-6 xl:p-8 text-center">
+              <Loader2 className="animate-spin mx-auto mb-4" size={32} />
+              <p className="text-xl xl:text-3xl font-black text-foreground leading-relaxed">
+                Waiting for opponent to set their secret word...
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background gap-6">
         <Toaster position="top-center" />
