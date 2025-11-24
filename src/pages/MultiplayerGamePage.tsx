@@ -79,6 +79,17 @@ export default function MultiplayerGamePage() {
           });
         }
         
+        // Notify questioner when secret word is set
+        if (
+          prevGame?.game_status === 'waiting' &&
+          updatedGame.game_status === 'active' &&
+          updatedGame.current_questioner === playerNumber
+        ) {
+          toast.success('Opponent set the secret word! You can now ask questions.', {
+            duration: 4000,
+          });
+        }
+        
         return updatedGame;
       });
       
