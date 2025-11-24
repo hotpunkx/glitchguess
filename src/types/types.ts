@@ -48,6 +48,7 @@ export interface MultiplayerGame {
   is_won: boolean;
   player1_rematch: boolean;
   player2_rematch: boolean;
+  rematch_game_id: string | null;
   created_at: string;
   started_at: string | null;
   ended_at: string | null;

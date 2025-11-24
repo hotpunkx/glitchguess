@@ -94,12 +94,20 @@ export default function MultiplayerGamePage() {
       });
       
       // Check if both players requested rematch
+      // Only player1 creates the rematch game to avoid creating duplicate games
       if (
         updatedGame.player1_rematch &&
         updatedGame.player2_rematch &&
         updatedGame.game_status === 'ended'
       ) {
-        handleRematchAccepted();
+        if (playerNumber === 'player1') {
+          // Player 1 creates the rematch game
+          handleRematchAccepted();
+        } else if (playerNumber === 'player2' && updatedGame.rematch_game_id) {
+          // Player 2 navigates to the rematch game created by player 1
+          toast.success('Rematch starting!');
+          navigate(`/multiplayer/game/${updatedGame.rematch_game_id}`);
+        }
       }
     });
 

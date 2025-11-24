@@ -326,6 +326,12 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
   if (fetchError) throw fetchError;
   if (!oldGame) throw new Error('Original game not found');
 
+  // Check if rematch already exists
+  if (oldGame.rematch_game_id) {
+    console.log('Rematch already created, returning existing game ID:', oldGame.rematch_game_id);
+    return oldGame.rematch_game_id;
+  }
+
   // Generate new game code
   let gameCode = generateGameCode();
   let attempts = 0;
@@ -369,6 +375,17 @@ export async function createRematchGame(oldGameId: string): Promise<string> {
 
   if (error) throw error;
   if (!data) throw new Error('Failed to create rematch');
+
+  // Update old game with rematch_game_id so player2 can find it
+  const { error: updateError } = await supabase
+    .from('multiplayer_games')
+    .update({ rematch_game_id: data.id })
+    .eq('id', oldGameId);
+
+  if (updateError) {
+    console.error('Failed to update rematch_game_id:', updateError);
+    // Don't throw - the rematch game was created successfully
+  }
 
   return data.id;
 }
