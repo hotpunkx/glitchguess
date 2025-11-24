@@ -209,6 +209,13 @@
     - [x] Questioner sees waiting message until thinker sets secret word
     - [x] Prevents asking questions before game is ready
     - [x] Better UX for rematch flow
+  - [x] Secret word notification
+    - [x] Show toast notification when opponent sets secret word
+    - [x] Notify questioner they can now ask questions
+  - [x] Remove AI question suggestion
+    - [x] Removed askNextQuestion() function
+    - [x] Removed generateAIQuestion import
+    - [x] Players now type their own questions
 - [x] All lint checks passing
 
 ## Notes

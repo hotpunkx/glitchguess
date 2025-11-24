@@ -12,7 +12,6 @@ import {
   subscribeToQuestions,
   updateQuestionAnswer,
 } from '@/db/multiplayerApi';
-import { generateAIQuestion } from '@/services/aiService';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
@@ -30,10 +29,10 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
   const [showGuessInput, setShowGuessInput] = useState(false);
   const [secretWord, setSecretWord] = useState('');
   const [showSecretInput, setShowSecretInput] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [isAnswering, setIsAnswering] = useState(false);
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);
   const [waitingForNextQuestion, setWaitingForNextQuestion] = useState(false);
+  const [hasShownSecretWordNotification, setHasShownSecretWordNotification] = useState(false);
 
   // Determine roles based on who is the questioner
   const isQuestioner = game.current_questioner === playerNumber;
@@ -79,12 +78,17 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
     if (isAnswerer && !game.secret_word) {
       setShowSecretInput(true);
     }
-
-    // If guesser and thinker has set word, start asking
-    if (isQuestioner && game.secret_word && history.length === 0) {
-      askNextQuestion();
-    }
   }, [game.secret_word, isAnswerer, isQuestioner]);
+
+  // Show notification when opponent sets secret word
+  useEffect(() => {
+    if (isQuestioner && game.secret_word && !hasShownSecretWordNotification) {
+      toast.success('Opponent set the secret word! You can now ask questions.', {
+        duration: 4000,
+      });
+      setHasShownSecretWordNotification(true);
+    }
+  }, [game.secret_word, isQuestioner, hasShownSecretWordNotification]);
 
   const loadQuestions = async () => {
     try {
@@ -124,24 +128,6 @@ export default function MultiplayerGameplay({ game, playerNumber }: MultiplayerG
     } catch (error) {
       console.error('Error setting secret word:', error);
       toast.error('Failed to set secret word');
-    }
-  };
-
-  const askNextQuestion = async () => {
-    if (game.question_count >= 20) {
-      await endMultiplayerGame(game.id, false);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const question = await generateAIQuestion(history);
-      setCurrentQuestion(question);
-    } catch (error) {
-      console.error('Error generating question:', error);
-      setCurrentQuestion('Is it something you can hold in your hand?');
-    } finally {
-      setIsLoading(false);
     }
   };
 
