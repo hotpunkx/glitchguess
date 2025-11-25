@@ -1,5 +1,10 @@
 import { supabase } from './supabase';
-import type { GameSession, GameQuestion, GameSessionWithQuestions } from '@/types/types';
+import type { GameSession, GameQuestion, GameSessionWithQuestions, MultiplayerGame, MultiplayerQuestion } from '@/types/types';
+
+// Extended type for multiplayer games with questions
+export interface MultiplayerGameWithQuestions extends MultiplayerGame {
+  questions: MultiplayerQuestion[];
+}
 
 // Create a new game session
 export async function createGameSession(
@@ -82,16 +87,24 @@ export async function getSessionQuestions(sessionId: string): Promise<GameQuesti
   return Array.isArray(data) ? data : [];
 }
 
-// Admin: Get all sessions with questions
-export async function getAllSessions(): Promise<GameSessionWithQuestions[]> {
+// Admin: Get all sessions with questions (paginated)
+export async function getAllSessions(page: number = 1, pageSize: number = 10): Promise<{ sessions: GameSessionWithQuestions[], total: number }> {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  // Get total count
+  const { count } = await supabase
+    .from('game_sessions')
+    .select('*', { count: 'exact', head: true });
+
   const { data: sessions, error: sessionsError } = await supabase
     .from('game_sessions')
     .select('*')
     .order('created_at', { ascending: false })
-    .limit(100);
+    .range(from, to);
 
   if (sessionsError) throw sessionsError;
-  if (!Array.isArray(sessions)) return [];
+  if (!Array.isArray(sessions)) return { sessions: [], total: 0 };
 
   // Fetch questions for all sessions
   const sessionsWithQuestions = await Promise.all(
@@ -104,11 +117,52 @@ export async function getAllSessions(): Promise<GameSessionWithQuestions[]> {
     })
   );
 
-  return sessionsWithQuestions;
+  return { sessions: sessionsWithQuestions, total: count || 0 };
+}
+
+// Admin: Get all multiplayer games with questions (paginated)
+export async function getAllMultiplayerGames(page: number = 1, pageSize: number = 10): Promise<{ games: MultiplayerGameWithQuestions[], total: number }> {
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  // Get total count
+  const { count } = await supabase
+    .from('multiplayer_games')
+    .select('*', { count: 'exact', head: true });
+
+  const { data: games, error: gamesError } = await supabase
+    .from('multiplayer_games')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  if (gamesError) throw gamesError;
+  if (!Array.isArray(games)) return { games: [], total: 0 };
+
+  // Fetch questions for all games
+  const gamesWithQuestions = await Promise.all(
+    games.map(async (game) => {
+      const { data: questions, error: questionsError } = await supabase
+        .from('multiplayer_questions')
+        .select('*')
+        .eq('game_id', game.id)
+        .order('question_number', { ascending: true });
+
+      if (questionsError) throw questionsError;
+
+      return {
+        ...game,
+        questions: Array.isArray(questions) ? questions : [],
+      };
+    })
+  );
+
+  return { games: gamesWithQuestions, total: count || 0 };
 }
 
 // Admin: Get session statistics
 export async function getSessionStats() {
+  // Get single player sessions
   const { data: sessions, error } = await supabase
     .from('game_sessions')
     .select('game_type, is_won, question_count');
@@ -116,14 +170,26 @@ export async function getSessionStats() {
   if (error) throw error;
   if (!Array.isArray(sessions)) return null;
 
+  // Get multiplayer games
+  const { data: multiplayerGames, error: mpError } = await supabase
+    .from('multiplayer_games')
+    .select('game_status, is_won, question_count, rematch_game_id');
+
+  if (mpError) throw mpError;
+  const mpGames = Array.isArray(multiplayerGames) ? multiplayerGames : [];
+
+  // Count completed multiplayer games (each rematch is counted as a new game)
+  const completedMpGames = mpGames.filter(g => g.game_status === 'ended');
+
   const stats = {
-    total: sessions.length,
+    total: sessions.length + completedMpGames.length,
     humanThinksMode: sessions.filter(s => s.game_type === 'human-thinks').length,
     aiThinksMode: sessions.filter(s => s.game_type === 'ai-thinks').length,
-    won: sessions.filter(s => s.is_won).length,
-    lost: sessions.filter(s => !s.is_won && s.question_count >= 20).length,
-    avgQuestions: sessions.length > 0 
-      ? Math.round(sessions.reduce((sum, s) => sum + s.question_count, 0) / sessions.length)
+    multiplayerMode: completedMpGames.length,
+    won: sessions.filter(s => s.is_won).length + completedMpGames.filter(g => g.is_won).length,
+    lost: sessions.filter(s => !s.is_won && s.question_count >= 20).length + completedMpGames.filter(g => !g.is_won && g.question_count >= 20).length,
+    avgQuestions: (sessions.length + completedMpGames.length) > 0 
+      ? Math.round((sessions.reduce((sum, s) => sum + s.question_count, 0) + completedMpGames.reduce((sum, g) => sum + g.question_count, 0)) / (sessions.length + completedMpGames.length))
       : 0,
   };
 

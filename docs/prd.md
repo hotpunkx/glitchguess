@@ -1,10 +1,13 @@
-# 20 Questions Game Requirements Document\n
+#20Questions Game Requirements Document
+
 ## 1. Game Overview
 
 ### 1.1 Game Name
-\nGLITCHGUESS
 
-### 1.2 Game Description\n
+GLITCHGUESS
+
+### 1.2 Game Description
+
 A fully functional guessing game where players and AI take turns thinking of objects and asking yes/no questions to guess what the other is thinking. The game features three modes: Human thinks (AI guesses), AI thinks (Human guesses), and 1v1 Multiplayer (two players compete against each other).
 
 ### 1.3 Core Features
@@ -12,46 +15,49 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Three game modes: Human vs AI (two modes) and 1v1 Multiplayer
 - Category selection system for fair gameplay
 - AI-powered question generation using Large Language Model
-- 20-question limit per round\n- Real-time question history tracking
+- 20-question limit per round
+- Real-time question history tracking
 - Dramatic reveal and celebration screens
 - Mobile-friendly responsive design
 - How to Play instructional page
 - Browser local session storage for game state persistence
-- Theme switcher for visual customization\n- Database-backed session management with unique session IDs
-- Admin dashboard for game data review
-- IP-based geolocation tracking\n- Multiplayer game room creation with shareable URLs
+- Theme switcher for visual customization
+- Database-backed session management with unique session IDs
+- Admin dashboard for game data review\n- IP-based geolocation tracking
+- Multiplayer game room creation with shareable URLs
 - Real-time multiplayer synchronization
 - Rematch system with role switching
 \n## 2. Gameplay Mechanics
 
 ### 2.1 Start Screen
-\n- Display bold title: 'GLITCHGUESS'
-- Show 'How to Play' link/button in top corner leading to instructional page
-- Show category selection section with instruction: 'Choose a category for a fair game:'\n- Category options displayed as large clickable cards:
-  + Animals\n  + Objects
-  + People (Famous)
-  + Movies
+
+- Display bold title:'GLITCHGUESS'
+- Show'How to Play' link/button in top corner leading to instructional page
+- Show category selection section with instruction: 'Choose a category for a fair game:'
+- Category options displayed as large clickable cards:\n  + Animals
+  + Objects
+  + People (Famous)\n  + Movies
   + Places
 - Three large action buttons (enabled after category selection):
   + 'I think of something – AI guesses' (Human thinks mode)
   + 'AI thinks of something – I guess' (AI thinks mode)
-+ '1v1 Multiplayer – Play with a friend' (Multiplayer mode)
-
-### 2.2 How to Play Page
+  + '1v1 Multiplayer – Play with a friend' (Multiplayer mode)
+\n### 2.2 How to Play Page
 
 - Display page title: 'HOW TO PLAY'
-- Game overview section explaining the core concept:
-  + This is a 20 questions guessing game between you and AI or another player
-  + Choose a category to keep the game fair and fun\n  + Take turns thinking of something and guessing
+- Game overview section explaining the core concept:\n  + This is a 20 questions guessing game between you and AI or another player
+  + Choose a category to keep the game fair and fun
+  + Take turns thinking of something and guessing
 - Mode explanations:
   + **Human Thinks Mode**: You think of something in the chosen category, AI asks up to 20 yes/no questions to guess it
-  + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses\n  + **1v1 Multiplayer Mode**: Play against a friend in real-time, one player thinks while the other guesses, then switch roles in rematch
+  + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses
+  + **1v1 Multiplayer Mode**: Play against a friend in real-time, one player thinks while the other guesses, then switch roles in rematch
 - Game rules:
   + Maximum 20 questions per round
   + Answer with Yes/No/Sometimes
   + All answers must be within the selected category
   + Make your final guess anytime during the game
-- 'Back to Home' button to return to start screen
+-'Back to Home' button to return to start screen
 - Maintain Neubrutalism design theme throughout the page
 
 ### 2.3 Human Thinks Mode
@@ -59,33 +65,28 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Display selected category at top of screen
 - Show instruction message: 'Perfect! Think of any [CATEGORY] within the selected category. Don't tell me what it is. I'll ask up to 20 yes/no questions.'
 - No text input required (human keeps answer in mind)
-- AI generates intelligent yes/no questions based on selected category and previous answers\n- Three response buttons: Yes / No / Sometimes
+- AI generates intelligent questions based on selected category and previous answers
+- Three response buttons: Yes / No / Sometimes
 - AI makes educated guesses based on accumulated information and category constraints
+\n### 2.4 AI Thinks Mode
 
-### 2.4 AI Thinks Mode
-
-- Display selected category at top of screen
-- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)\n- Human types and submits yes/no questions
-- AI responds with Yes/No/Sometimes based on its secret answer
+- Display selected category at top of screen\n- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)
+- Human types and submits yes/no questions\n- AI responds with Yes/No/Sometimes based on its secret answer
 - Human can make guesses at any time
-
-### 2.5 1v1 Multiplayer Mode\n
+\n### 2.5 1v1 Multiplayer Mode\n
 ####2.5.1 Game Room Creation
 
 - After selecting '1v1 Multiplayer' button, display name entry screen
-- Show input field with label: 'Enter your name:'
-- Submit button to create game room
+- Show input field with label: 'Enter your name:'\n- Submit button to create game room
 - Upon submission:\n  + Generate unique game room ID
   + Create shareable URL with game room ID (format: /game/[room-id])
   + Display waiting screen with:\n    * Message: 'Waiting for your friend to join...'
     * Shareable URL displayed prominently
-    * 'Copy Link' button to copy URL to clipboard
-    * 'Share' button to open native share dialog (mobile-friendly)
+    * 'Copy Link' button to copy URL to clipboard\n    * 'Share' button to open native share dialog (mobile-friendly)
     * Player name displayed\n    * Selected category displayed
 \n#### 2.5.2 Joining Game Room
 
-- When friend accesses shared URL, display join screen
-- Show input field with label: 'Enter your name:'
+- When friend accesses shared URL, display join screen\n- Show input field with label: 'Enter your name:'
 - Display host player's name and selected category
 - Submit button to join game room
 - Upon joining, both players proceed to game start
@@ -112,7 +113,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Opponent's name\n\n#### 2.5.5 Multiplayer End Game
 
 - Game ends when:
-  + Guesser guesses correctly\n  + 20 questions reached without correct guess
+  + Guesser guesses correctly
+  + 20 questions reached without correct guess
 - Display result screen to both players:\n  + Winner announcement
   + Correct answer revealed
   + Number of questions used
@@ -123,7 +125,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - When one player clicks 'Rematch', show waiting message: 'Waiting for opponent to accept rematch...'
 - When both players click 'Rematch':
   + Roles automatically switch (previous Thinker becomes Guesser, previous Guesser becomes Thinker)
-  + New game starts with same category\n  + Question counter resets
+  + New game starts with same category
+  + Question counter resets
   + Question history clears
 - If one player leaves or declines, show message: 'Opponent left the game' with'Back to Home' button
 
@@ -132,25 +135,24 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Question counter showing current question number out of 20
 - Question history panel displaying all previous Q&A pairs in chronological order
 - Clear visual distinction between questions and answers
+\n### 2.7 End Game Conditions
 
-### 2.7 End Game Conditions
-
-- AI/Human/Player guesses correctly before 20 questions\n- 20 questions reached without correct guess
-
-### 2.8 End Screen
+- AI/Human/Player guesses correctly before 20 questions
+- 20 questions reached without correct guess\n\n### 2.8 End Screen
 
 - Victory message: 'I got it in X questions!' (if guessed correctly)
 - Surrender message: 'I surrender! What was it?' (if 20 questions reached)
 - Display confetti animation on victory
 - Reveal the correct answer
-- Large 'Play Again' button to restart (single player modes)
+- Large'Play Again' button to restart (single player modes)
 -'Rematch' button for multiplayer mode
 
 ## 3. Design Style
 
-### 3.1 Visual Aesthetic\n
-Neubrutalism design with bold, professional, and intentionally imperfect premium feel
-\n### 3.2 Color Scheme
+### 3.1 Visual Aesthetic
+
+Neubrutalism design with bold, professional, and intentionally imperfect premium feel\n
+### 3.2 Color Scheme
 
 - Base colors: Pure black (#000000) and pure white (#FFFFFF) for extreme contrast
 - Accent colors: Hot pink (#FF006E) and electric lime (#CCFF00) for aggressive neon highlights
@@ -160,7 +162,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 
 - Typography: Oversized bold sans-serif fonts (Inter or system fonts with font-weight 900)
 - Borders: Thick irregular borders with intentional asymmetry
-- Shadows: Heavy drop shadows for depth and drama\n- Layout: Asymmetric composition with deliberate 'broken' elements
+- Shadows: Heavy drop shadows for depth and drama
+- Layout: Asymmetric composition with deliberate 'broken' elements
 - Cards: Black background cards with neon text for question history
 - Buttons: Large, chunky buttons with high contrast and bold labels
 - Category cards: Distinct visual style with neon borders and hover effects
@@ -169,25 +172,24 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Multiplayer UI: Clear role indicators, real-time status updates, and prominent share/copy buttons with neon styling
 
 ### 3.4 Responsive Design
-\n- Fully mobile-friendly and responsive across all screen sizes
+
+- Fully mobile-friendly and responsive across all screen sizes
 - Touch-optimized button sizes for mobile devices
 - Adaptive layout maintaining Neubrutalism aesthetic on all viewports
-
-## 4. Technical Requirements
+\n## 4. Technical Requirements
 
 ### 4.1 AI Integration
 
-- Use Large Language Model for:
-  + Generating intelligent questions in Human Thinks mode strictly within selected category
-  + Creating creative/absurd secret answers in AI Thinks mode strictly within selected category\n  + Making educated guesses based on answer patterns and category constraints
+- Use Large Language Model for:\n  + Generating intelligent questions in Human Thinks mode strictly within selected category
+  + Creating creative/absurd secret answers in AI Thinks mode strictly within selected category
+  + Making educated guesses based on answer patterns and category constraints
   + Responding to human questions in AI Thinks mode
-- AI must strictly follow category rules to ensure answers are guessable within 20 questions
+- AI must strictly follow category rules to ensure answers are guessable within20 questions
 
 ### 4.2 Interaction Features
 
 - Immediate AI response after each human answer
-- Smooth transitions between game states
-- Confetti animation on victory
+- Smooth transitions between game states\n- Confetti animation on victory
 - Question history auto-scroll to latest entry
 - Allow users to share the results with friends, generate dynamic unique url (avoid caching the og image by social medias) and dynamic og image to share the results
 - Navigation between home page and How to Play page with smooth transitions
@@ -195,7 +197,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Copy to clipboard functionality for game room URLs
 - Native share dialog integration for mobile devices
 
-### 4.3 Session Management and Database Storage\n
+### 4.3 Session Management and Database Storage
+
 - Generate a unique session ID for each new game (single player and multiplayer)
 - Store session ID in browser local storage
 - Save the following data to database for each session:
@@ -230,8 +233,7 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 ### 4.5 Game Room Management
 
 - Generate unique game room IDs (short, shareable format)
-- Store game room data in database:\n  + Room ID
-  + Host player name
+- Store game room data in database:\n  + Room ID\n  + Host player name
   + Guest player name
   + Selected category
   + Room creation timestamp
@@ -259,6 +261,9 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
   + View detailed game data: all questions and answers in chronological order
   + Display secret word for AI thinks mode and multiplayer games
   + For multiplayer sessions: show both player names, role assignments, and rematch history
+  + **1v1 Multiplayer game statistics**: Display total number of multiplayer games, win/loss ratios, average questions per game, and other relevant metrics
+  + **Rematch handling**: Each rematch is logged and counted as a new game in statistics, with clear indication of rematch sequence (e.g., 'Game 1', 'Rematch 1', 'Rematch 2')
+  + **Pagination**: Display 10 session records per page with navigation controls (Previous/Next buttons and page numbers)
   + Filter and search functionality by date, game type, category, or location
   + Simple, clean interface consistent with overall design aesthetic
 
