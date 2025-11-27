@@ -17,7 +17,21 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
           <h1 className="text-5xl xl:text-8xl font-black text-center text-foreground animate-glitch max-sm:text-4xl mt-16 xl:mt-20">
             GLITCHGUESS
           </h1>
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <a 
+              href="https://www.producthunt.com/posts/glitchguess?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-glitchguess" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <img 
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=761262&theme=light" 
+                alt="GLITCHGUESS - AI-powered 20 Questions game with multiplayer mode | Product Hunt" 
+                style={{ width: '250px', height: '54px' }}
+                width="250" 
+                height="54" 
+              />
+            </a>
             <Button
               onClick={() => navigate('/how-to-play')}
               className="h-auto py-3 px-6 xl:py-4 xl:px-8 text-sm xl:text-lg font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-card text-foreground max-sm:text-xs max-sm:py-2 max-sm:px-4"
