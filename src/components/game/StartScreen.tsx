@@ -22,14 +22,14 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
               href="https://www.producthunt.com/posts/glitchguess?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-glitchguess" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="brutal-border-thick shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-background p-3 inline-block"
+              className="brutal-border-thick shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-background p-2 inline-block"
             >
               <img 
                 src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1042024&theme=light&t=1764238514228" 
                 alt="GLITCHGUESS - AI-powered 20 Questions game with multiplayer mode | Product Hunt" 
-                style={{ width: '250px', height: '54px' }}
-                width="250" 
-                height="54"
+                style={{ width: '200px', height: '43px' }}
+                width="200" 
+                height="43"
                 className="block"
               />
             </a>
