@@ -25,7 +25,7 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
               className="hover:opacity-80 transition-opacity"
             >
               <img 
-                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=761262&theme=light" 
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1042024&theme=light&t=1764238514228" 
                 alt="GLITCHGUESS - AI-powered 20 Questions game with multiplayer mode | Product Hunt" 
                 style={{ width: '250px', height: '54px' }}
                 width="250" 
