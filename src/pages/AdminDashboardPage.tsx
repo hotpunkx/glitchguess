@@ -8,7 +8,7 @@ import type { MultiplayerGameWithQuestions } from '@/db/api';
 import { isAdminAuthenticated, clearAdminAuth } from './AdminLoginPage';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home } from 'lucide-react';
 
 export default function AdminDashboardPage() {
   const [sessions, setSessions] = useState<GameSessionWithQuestions[]>([]);
@@ -103,13 +103,23 @@ export default function AdminDashboardPage() {
               <h1 className="text-4xl xl:text-5xl font-black mb-2">ADMIN DASHBOARD</h1>
               <p className="text-muted-foreground">GLITCHGUESS Game Analytics</p>
             </div>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className="border-2 border-foreground font-black"
-            >
-              LOGOUT
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => navigate('/')}
+                variant="outline"
+                className="border-2 border-foreground font-black"
+              >
+                <Home className="mr-2" size={20} />
+                HOME
+              </Button>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="border-2 border-foreground font-black"
+              >
+                LOGOUT
+              </Button>
+            </div>
           </div>
 
           {/* Stats Cards */}

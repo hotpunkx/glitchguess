@@ -1,4 +1,4 @@
-# 20Questions Game Requirements Document
+#20Questions Game Requirements Document
 
 ## 1. Game Overview
 
@@ -30,7 +30,9 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Real-time multiplayer synchronization
 - Rematch system with role switching
 - Local storage tracking for ongoing games
-\n## 2. Gameplay Mechanics
+- Back to Home button on all pages that lack navigation to home
+
+## 2. Gameplay Mechanics
 
 ### 2.1 Start Screen
 
@@ -51,12 +53,12 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Display page title: 'HOW TO PLAY'
 - Game overview section explaining the core concept:\n  + This is a 20 questions guessing game between you and AI or another player
   + Choose a category to keep the game fair and fun
-  + Take turns thinking of something and guessing
-- Mode explanations:
+  + Take turns thinking of something and guessing\n- Mode explanations:
   + **Human Thinks Mode**: You think of something in the chosen category, AI asks up to 20 yes/no questions to guess it
   + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses
   + **1v1 Multiplayer Mode**: Play against a friend in real-time (private or public game), one player thinks while the other guesses, then switch roles in rematch
-- Game rules:\n  + Maximum 20 questions per round
+- Game rules:
+  + Maximum 20 questions per round
   + Answer with Yes/No/Sometimes
   + All answers must be within the selected category
   + Make your final guess anytime during the game
@@ -71,11 +73,18 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - AI generates intelligent questions based on selected category and previous answers
 - Three response buttons: Yes / No / Sometimes
 - AI makes educated guesses based on accumulated information and category constraints
-\n### 2.4 AI Thinks Mode
+- Include'Back to Home' button to return to start screen
 
-- Display selected category at top of screen\n- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)
+### 2.4 AI Thinks Mode
+
+- Display selected category at top of screen
+- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)
 - Human types and submits yes/no questions\n- AI responds with Yes/No/Sometimes based on its secret answer
-- Human can make guesses at any time\n\n### 2.5 1v1 Multiplayer Mode\n
+- Human can make guesses at any time
+- Include 'Back to Home' button to return to start screen
+
+### 2.5 1v1 Multiplayer Mode
+
 #### 2.5.1 Game Type Selection
 
 - After selecting '1v1 Multiplayer' button and choosing category, display game type selection screen
@@ -83,7 +92,9 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + 'Private Game' - Play with a specific friend via shared link
   + 'Public Game' - Join public lobby for matchmaking
 - Display selected category at top of screen
-\n#### 2.5.2 Private Game Creation
+- Include 'Back to Home' button to return to start screen
+
+#### 2.5.2 Private Game Creation
 
 - After selecting 'Private Game', display name entry screen
 - Show input field with label: 'Enter your name:'\n- Submit button to create private game room
@@ -95,8 +106,7 @@ A fully functional guessing game where players and AI take turns thinking of obj
     * 'Copy Link' button to copy URL to clipboard
     * 'Share' button to open native share dialog (mobile-friendly)
     * Player name displayed\n    * Selected category displayed
-    * 'Cancel' button to return to home\n
-#### 2.5.3 Public Game Creation
+    * 'Cancel' button to return to home\n\n#### 2.5.3 Public Game Creation
 
 - After selecting 'Public Game', display name entry screen
 - Show input field with label: 'Enter your name:'\n- Submit button to create public game room
@@ -142,7 +152,9 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Update host's local storage status to 'active'
   + Notify host that opponent has joined
   + Both players proceed to game start
-\n#### 2.5.6 Joining Private Game via URL
+- Include 'Back to Home' button to return to start screen
+
+#### 2.5.6 Joining Private Game via URL
 
 - When friend accesses shared URL, display join screen
 - Show input field with label: 'Enter your name:'\n- Display host player's name and selected category
@@ -151,6 +163,7 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Store game information in joiner's local storage with status 'active'
   + Update host's local storage status to 'active'
   + Both players proceed to game start
+- Include 'Back to Home' button to return to start screen
 \n#### 2.5.7 Local Storage Game Tracking
 
 - Store the following in local storage for each multiplayer game:
@@ -164,8 +177,7 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Session ID\n- Update local storage in real-time as game progresses
 - Allow users to check local storage and continue ongoing games
 - Clear completed games from local storage after24 hours
-
-#### 2.5.8 Continuing Ongoing Games
+\n#### 2.5.8 Continuing Ongoing Games
 
 - Users can access ongoing games from:\n  + 1v1 Lobby (ongoing games section)
   + Automatic detection when returning to site (check local storage)
@@ -173,16 +185,17 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Retrieve game state from database using session ID
   + Restore question history, current question count, and player roles
   + Resume game from exact point where it was left\n- If opponent has disconnected, show 'Waiting for opponent to reconnect...'
-- Provide'Abandon Game' option to exit and clear from local storage
-
-#### 2.5.9 Role Assignment
+- Provide 'Abandon Game' option to exit and clear from local storage
+- Include 'Back to Home' button to return to start screen
+\n#### 2.5.9 Role Assignment
 
 - System randomly assigns roles to two players:\n  + Player 1: Thinker (thinks of word within category)
   + Player 2: Guesser (asks questions and guesses)
 - Display role assignment clearly to both players
-- Thinker sees: 'You think of a [CATEGORY]. Your friend will guess!'
+- Thinker sees:'You think of a [CATEGORY]. Your friend will guess!'
 - Guesser sees: 'Your friend is thinking of a [CATEGORY]. Ask yes/no questions!'
-\n#### 2.5.10 Multiplayer Gameplay\n
+\n#### 2.5.10 Multiplayer Gameplay
+
 - Thinker:\n  + Keeps word in mind (no input required)
   + Receives questions from Guesser in real-time
   + Responds with Yes/No/Sometimes buttons
@@ -191,10 +204,11 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Receives answers in real-time
   + Can make guesses at any time
   + Can see question history
-- Both players see:
-  + Question counter (X/20)
+- Both players see:\n  + Question counter (X/20)
   + Real-time question and answer history
-  + Opponent's name\n\n#### 2.5.11 Multiplayer End Game
+  + Opponent's name\n- Include 'Back to Home' button to return to start screen
+
+#### 2.5.11 Multiplayer End Game
 
 - Game ends when:
   + Guesser guesses correctly
@@ -204,8 +218,10 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Number of questions used
   + Confetti animation if Guesser wins
 - Show 'Rematch' button to both players
-- Update local storage status to 'completed'\n\n#### 2.5.12 Rematch System
-\n- When one player clicks 'Rematch', show waiting message: 'Waiting for opponent to accept rematch...'
+- Update local storage status to 'completed'\n- Include 'Back to Home' button to return to start screen\n
+#### 2.5.12 Rematch System
+
+- When one player clicks 'Rematch', show waiting message: 'Waiting for opponent to accept rematch...'
 - When both players click 'Rematch':
   + Roles automatically switch (previous Thinker becomes Guesser, previous Guesser becomes Thinker)
   + New game starts with same category\n  + Question counter resets
@@ -213,8 +229,7 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Create new session ID for rematch
   + Update local storage with new session ID and status 'active'
 - If one player leaves or declines, show message: 'Opponent left the game' with'Back to Home' button
-
-### 2.6 Game Progress Display
+\n### 2.6 Game Progress Display
 
 - Question counter showing current question number out of 20
 - Question history panel displaying all previous Q&A pairs in chronological order
@@ -230,7 +245,9 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Reveal the correct answer
 - Large'Play Again' button to restart (single player modes)
 - 'Rematch' button for multiplayer mode
-\n## 3. Design Style
+- Include 'Back to Home' button to return to start screen
+
+## 3. Design Style
 
 ### 3.1 Visual Aesthetic
 
@@ -255,6 +272,7 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Multiplayer UI: Clear role indicators, real-time status updates, and prominent share/copy buttons with neon styling
 - Lobby UI: List-style layout with game cards showing host info, category badges, and prominent join buttons with neon accents
 - Game type selection: Large option cards with distinct visual styling for private vs public games
+- Back to Home button: Consistent styling across all pages, positioned clearly for easy navigation
 
 ### 3.4 Responsive Design
 
@@ -268,7 +286,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Use Large Language Model for:\n  + Generating intelligent questions in Human Thinks mode strictly within selected category
   + Creating creative/absurd secret answers in AI Thinks mode strictly within selected category
   + Making educated guesses based on answer patterns and category constraints
-  + Responding to human questions in AI Thinks mode\n- AI must strictly follow category rules to ensure answers are guessable within 20 questions
+  + Responding to human questions in AI Thinks mode
+- AI must strictly follow category rules to ensure answers are guessable within 20 questions
 \n### 4.2 Interaction Features
 
 - Immediate AI response after each human answer
@@ -281,7 +300,9 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Native share dialog integration for mobile devices
 - Real-time lobby updates when games are added or joined
 - Automatic game state restoration from local storage on page load
-\n### 4.3 Session Management and Database Storage
+- Back to Home button functionality on all relevant pages
+
+### 4.3 Session Management and Database Storage
 
 - Generate a unique session ID for each new game (single player and multiplayer)
 - Store session ID in browser local storage\n- Save the following data to database for each session:
@@ -354,8 +375,9 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
   + Game type (private/public)
   + Player role (host/guest)
   + Player name
-  + Opponent name
-  + Selected category\n  + Game status (waiting/waiting_public/active/completed)\n  + Last updated timestamp
+  + Opponent name\n  + Selected category
+  + Game status (waiting/waiting_public/active/completed)
+  + Last updated timestamp
 - Update local storage in real-time as game progresses
 - Check local storage on page load:\n  + If active game found, prompt user to continue
   + If waiting game found, show status and allow cancellation
@@ -392,7 +414,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 ### 4.10 Theme Switcher
 
 - Fixed position theme switcher button always visible in top right corner across all pages
-- Allow users to toggle between different color themes\n- Save theme preference in browser local storage
+- Allow users to toggle between different color themes
+- Save theme preference in browser local storage
 - Apply theme changes instantly with smooth transitions
 - Maintain Neubrutalism design principles across all theme variations
 
