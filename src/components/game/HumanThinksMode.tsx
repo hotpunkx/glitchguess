@@ -63,6 +63,7 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
     setQuestionCount(updatedCount);
 
     // Save question to database
+    console.log('Saving question:', { sessionId, updatedCount, currentQuestion, answer });
     await onSaveQuestion(sessionId, updatedCount, currentQuestion, answer);
 
     // Check if this is a final guess (not a regular question)

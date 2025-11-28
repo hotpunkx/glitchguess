@@ -33,15 +33,20 @@ export async function addQuestion(
   questionText: string,
   answer: string
 ): Promise<void> {
-  const { error } = await supabase
+  console.log('addQuestion called with:', { sessionId, questionNumber, questionText, answer });
+  
+  const { data, error } = await supabase
     .from('game_questions')
     .insert({
       session_id: sessionId,
       question_number: questionNumber,
       question_text: questionText,
       answer: answer,
-    });
+    })
+    .select();
 
+  console.log('addQuestion result:', { data, error });
+  
   if (error) throw error;
 }
 
