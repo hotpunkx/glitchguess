@@ -46,6 +46,7 @@ export interface MultiplayerGame {
   secret_word: string | null;
   question_count: number;
   is_won: boolean;
+  is_public: boolean;
   player1_rematch: boolean;
   player2_rematch: boolean;
   rematch_game_id: string | null;

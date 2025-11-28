@@ -14,7 +14,8 @@ function generateGameCode(): string {
 // Create a new multiplayer game
 export async function createMultiplayerGame(
   playerName: string,
-  playerSession: string
+  playerSession: string,
+  isPublic: boolean = false
 ): Promise<{ gameId: string; gameCode: string }> {
   // Generate unique game code
   let gameCode = generateGameCode();
@@ -43,6 +44,7 @@ export async function createMultiplayerGame(
       player1_session: playerSession,
       current_thinker: currentThinker,
       game_status: 'waiting',
+      is_public: isPublic,
     })
     .select('id, game_code')
     .maybeSingle();
@@ -464,3 +466,40 @@ export function subscribeToQuestions(
     supabase.removeChannel(channel);
   };
 }
+
+// Get all public games for lobby
+export async function getPublicGames(): Promise<MultiplayerGame[]> {
+  const { data, error } = await supabase
+    .from('multiplayer_games')
+    .select('*')
+    .eq('is_public', true)
+    .in('game_status', ['waiting', 'active'])
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return Array.isArray(data) ? data : [];
+}
+
+// Subscribe to public games changes for lobby
+export function subscribeToPublicGames(callback: (game: MultiplayerGame) => void) {
+  const channel = supabase
+    .channel('public-games-changes')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'multiplayer_games',
+        filter: 'is_public=eq.true',
+      },
+      (payload) => {
+        callback(payload.new as MultiplayerGame);
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}
+

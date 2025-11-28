@@ -77,6 +77,13 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
           >
             👥 1v1 MULTIPLAYER
           </Button>
+
+          <Button
+            onClick={() => navigate('/multiplayer/lobby')}
+            className="w-full h-auto py-4 xl:py-6 text-lg xl:text-2xl font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-card text-foreground max-sm:text-sm max-sm:py-4"
+          >
+            🌐 1v1 LOBBY
+          </Button>
         </div>
 
         <div className="text-center space-y-4">

@@ -4,6 +4,8 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import MultiplayerCreatePage from './pages/MultiplayerCreatePage';
 import MultiplayerGamePage from './pages/MultiplayerGamePage';
+import MultiplayerJoinPage from './pages/MultiplayerJoinPage';
+import PublicLobbyPage from './pages/PublicLobbyPage';
 import PlayPage from './pages/PlayPage';
 import type { ReactNode } from 'react';
 
@@ -35,6 +37,18 @@ const routes: RouteConfig[] = [
     name: 'Create Multiplayer',
     path: '/multiplayer/create',
     element: <MultiplayerCreatePage />,
+    visible: false
+  },
+  {
+    name: 'Join Multiplayer',
+    path: '/multiplayer/join/:gameId?',
+    element: <MultiplayerJoinPage />,
+    visible: false
+  },
+  {
+    name: 'Public Lobby',
+    path: '/multiplayer/lobby',
+    element: <PublicLobbyPage />,
     visible: false
   },
   {

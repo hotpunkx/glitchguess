@@ -1,4 +1,4 @@
-#20Questions Game Requirements Document
+# 20Questions Game Requirements Document
 
 ## 1. Game Overview
 
@@ -8,14 +8,13 @@ GLITCHGUESS
 
 ### 1.2 Game Description
 
-A fully functional guessing game where players and AI take turns thinking of objects and asking yes/no questions to guess what the other is thinking. The game features three modes: Human thinks (AI guesses), AI thinks (Human guesses), and 1v1 Multiplayer (two players compete against each other).
+A fully functional guessing game where players and AI take turns thinking of objects and asking yes/no questions to guess what the other is thinking. The game features three modes: Human thinks (AI guesses), AI thinks (Human guesses), and 1v1 Multiplayer (two players compete against each other with private or public game options).
 
 ### 1.3 Core Features
 
 - Three game modes: Human vs AI (two modes) and 1v1 Multiplayer
 - Category selection system for fair gameplay
-- AI-powered question generation using Large Language Model
-- 20-question limit per round
+- AI-powered question generation using Large Language Model\n- 20-question limit per round
 - Real-time question history tracking
 - Dramatic reveal and celebration screens
 - Mobile-friendly responsive design
@@ -23,10 +22,14 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Browser local session storage for game state persistence
 - Theme switcher for visual customization
 - Database-backed session management with unique session IDs
-- Admin dashboard for game data review\n- IP-based geolocation tracking
+- Admin dashboard for game data review
+- IP-based geolocation tracking
 - Multiplayer game room creation with shareable URLs
+- Private and public game options for multiplayer mode
+- Public game lobby for matchmaking
 - Real-time multiplayer synchronization
 - Rematch system with role switching
+- Local storage tracking for ongoing games
 \n## 2. Gameplay Mechanics
 
 ### 2.1 Start Screen
@@ -42,6 +45,7 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + 'I think of something – AI guesses' (Human thinks mode)
   + 'AI thinks of something – I guess' (AI thinks mode)
   + '1v1 Multiplayer – Play with a friend' (Multiplayer mode)
+- Additional button visible at all times:\n  + '1v1 Lobby' button to access public game lobby
 \n### 2.2 How to Play Page
 
 - Display page title: 'HOW TO PLAY'
@@ -51,9 +55,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Mode explanations:
   + **Human Thinks Mode**: You think of something in the chosen category, AI asks up to 20 yes/no questions to guess it
   + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses
-  + **1v1 Multiplayer Mode**: Play against a friend in real-time, one player thinks while the other guesses, then switch roles in rematch
-- Game rules:
-  + Maximum 20 questions per round
+  + **1v1 Multiplayer Mode**: Play against a friend in real-time (private or public game), one player thinks while the other guesses, then switch roles in rematch
+- Game rules:\n  + Maximum 20 questions per round
   + Answer with Yes/No/Sometimes
   + All answers must be within the selected category
   + Make your final guess anytime during the game
@@ -72,34 +75,114 @@ A fully functional guessing game where players and AI take turns thinking of obj
 
 - Display selected category at top of screen\n- AI secretly selects a random word strictly within the chosen category (animal, object, famous person, movie, or place)
 - Human types and submits yes/no questions\n- AI responds with Yes/No/Sometimes based on its secret answer
-- Human can make guesses at any time
-\n### 2.5 1v1 Multiplayer Mode\n
-####2.5.1 Game Room Creation
+- Human can make guesses at any time\n\n### 2.5 1v1 Multiplayer Mode\n
+#### 2.5.1 Game Type Selection
 
-- After selecting '1v1 Multiplayer' button, display name entry screen
-- Show input field with label: 'Enter your name:'\n- Submit button to create game room
+- After selecting '1v1 Multiplayer' button and choosing category, display game type selection screen
+- Show two large option buttons:
+  + 'Private Game' - Play with a specific friend via shared link
+  + 'Public Game' - Join public lobby for matchmaking
+- Display selected category at top of screen
+\n#### 2.5.2 Private Game Creation
+
+- After selecting 'Private Game', display name entry screen
+- Show input field with label: 'Enter your name:'\n- Submit button to create private game room
 - Upon submission:\n  + Generate unique game room ID
   + Create shareable URL with game room ID (format: /game/[room-id])
+  + Store game information in local storage with status'waiting'
   + Display waiting screen with:\n    * Message: 'Waiting for your friend to join...'
     * Shareable URL displayed prominently
-    * 'Copy Link' button to copy URL to clipboard\n    * 'Share' button to open native share dialog (mobile-friendly)
+    * 'Copy Link' button to copy URL to clipboard
+    * 'Share' button to open native share dialog (mobile-friendly)
     * Player name displayed\n    * Selected category displayed
-\n#### 2.5.2 Joining Game Room
+    * 'Cancel' button to return to home\n
+#### 2.5.3 Public Game Creation
 
-- When friend accesses shared URL, display join screen\n- Show input field with label: 'Enter your name:'
+- After selecting 'Public Game', display name entry screen
+- Show input field with label: 'Enter your name:'\n- Submit button to create public game room
+- Upon submission:
+  + Generate unique game room ID\n  + Add game to public lobby list in database
+  + Store game information in local storage with status 'waiting_public'
+  + Display waiting screen with:
+    * Message: 'Waiting for someone to join from lobby...'
+    * Player name displayed
+    * Selected category displayed
+    * 'View Lobby' button to check lobby status
+    * 'Cancel' button to remove game from lobby and return to home
+- Host can check local storage to see if someone joined their public game
+- When opponent joins, update local storage status to 'active' and proceed to game start
+
+#### 2.5.4 1v1 Lobby
+
+- Accessible via '1v1 Lobby' button on start screen
+- Display list of all available public games waiting for players
+- For each game in lobby, show:
+  + Host player name
+  + Selected category
+  + Game creation time
+  + 'Join Game' button\n- Show separate section for ongoing games:\n  + Display user's active games (both as host and as guest)
+  + Show opponent name and game status
+  + 'Continue Game' button to rejoin active game
+- Filter options:
+  + Show only waiting games
+  + Show only ongoing games
+  + Show all games
+- Real-time updates when new games are added or games are joined
+-'Back to Home' button to return to start screen
+
+#### 2.5.5 Joining Public Game from Lobby
+
+- When user clicks 'Join Game' in lobby, display name entry screen
+- Show input field with label: 'Enter your name:'
 - Display host player's name and selected category
 - Submit button to join game room
-- Upon joining, both players proceed to game start
+- Upon joining:
+  + Remove game from public lobby waiting list
+  + Store game information in joiner's local storage with status 'active'
+  + Update host's local storage status to 'active'
+  + Notify host that opponent has joined
+  + Both players proceed to game start
+\n#### 2.5.6 Joining Private Game via URL
 
-#### 2.5.3 Role Assignment
+- When friend accesses shared URL, display join screen
+- Show input field with label: 'Enter your name:'\n- Display host player's name and selected category
+- Submit button to join game room
+- Upon joining:
+  + Store game information in joiner's local storage with status 'active'
+  + Update host's local storage status to 'active'
+  + Both players proceed to game start
+\n#### 2.5.7 Local Storage Game Tracking
+
+- Store the following in local storage for each multiplayer game:
+  + Game room ID
+  + Game type (private/public)
+  + Player role (host/guest)
+  + Player name
+  + Opponent name (once joined)
+  + Selected category
+  + Game status (waiting/waiting_public/active/completed)
+  + Session ID\n- Update local storage in real-time as game progresses
+- Allow users to check local storage and continue ongoing games
+- Clear completed games from local storage after24 hours
+
+#### 2.5.8 Continuing Ongoing Games
+
+- Users can access ongoing games from:\n  + 1v1 Lobby (ongoing games section)
+  + Automatic detection when returning to site (check local storage)
+- When continuing game:
+  + Retrieve game state from database using session ID
+  + Restore question history, current question count, and player roles
+  + Resume game from exact point where it was left\n- If opponent has disconnected, show 'Waiting for opponent to reconnect...'
+- Provide'Abandon Game' option to exit and clear from local storage
+
+#### 2.5.9 Role Assignment
 
 - System randomly assigns roles to two players:\n  + Player 1: Thinker (thinks of word within category)
   + Player 2: Guesser (asks questions and guesses)
 - Display role assignment clearly to both players
 - Thinker sees: 'You think of a [CATEGORY]. Your friend will guess!'
 - Guesser sees: 'Your friend is thinking of a [CATEGORY]. Ask yes/no questions!'
-\n#### 2.5.4 Multiplayer Gameplay
-
+\n#### 2.5.10 Multiplayer Gameplay\n
 - Thinker:\n  + Keeps word in mind (no input required)
   + Receives questions from Guesser in real-time
   + Responds with Yes/No/Sometimes buttons
@@ -108,9 +191,10 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Receives answers in real-time
   + Can make guesses at any time
   + Can see question history
-- Both players see:\n  + Question counter (X/20)
+- Both players see:
+  + Question counter (X/20)
   + Real-time question and answer history
-  + Opponent's name\n\n#### 2.5.5 Multiplayer End Game
+  + Opponent's name\n\n#### 2.5.11 Multiplayer End Game
 
 - Game ends when:
   + Guesser guesses correctly
@@ -120,14 +204,14 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Number of questions used
   + Confetti animation if Guesser wins
 - Show 'Rematch' button to both players
-\n#### 2.5.6 Rematch System
-
-- When one player clicks 'Rematch', show waiting message: 'Waiting for opponent to accept rematch...'
+- Update local storage status to 'completed'\n\n#### 2.5.12 Rematch System
+\n- When one player clicks 'Rematch', show waiting message: 'Waiting for opponent to accept rematch...'
 - When both players click 'Rematch':
   + Roles automatically switch (previous Thinker becomes Guesser, previous Guesser becomes Thinker)
-  + New game starts with same category
-  + Question counter resets
+  + New game starts with same category\n  + Question counter resets
   + Question history clears
+  + Create new session ID for rematch
+  + Update local storage with new session ID and status 'active'
 - If one player leaves or declines, show message: 'Opponent left the game' with'Back to Home' button
 
 ### 2.6 Game Progress Display
@@ -145,9 +229,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Display confetti animation on victory
 - Reveal the correct answer
 - Large'Play Again' button to restart (single player modes)
--'Rematch' button for multiplayer mode
-
-## 3. Design Style
+- 'Rematch' button for multiplayer mode
+\n## 3. Design Style
 
 ### 3.1 Visual Aesthetic
 
@@ -170,6 +253,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - How to Play page: Same Neubrutalism aesthetic with bold headings, neon accents, and chunky text blocks
 - Theme switcher: Fixed position button in top right corner, visible on all pages, with bold icon and smooth transition effects
 - Multiplayer UI: Clear role indicators, real-time status updates, and prominent share/copy buttons with neon styling
+- Lobby UI: List-style layout with game cards showing host info, category badges, and prominent join buttons with neon accents
+- Game type selection: Large option cards with distinct visual styling for private vs public games
 
 ### 3.4 Responsive Design
 
@@ -183,10 +268,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Use Large Language Model for:\n  + Generating intelligent questions in Human Thinks mode strictly within selected category
   + Creating creative/absurd secret answers in AI Thinks mode strictly within selected category
   + Making educated guesses based on answer patterns and category constraints
-  + Responding to human questions in AI Thinks mode
-- AI must strictly follow category rules to ensure answers are guessable within20 questions
-
-### 4.2 Interaction Features
+  + Responding to human questions in AI Thinks mode\n- AI must strictly follow category rules to ensure answers are guessable within 20 questions
+\n### 4.2 Interaction Features
 
 - Immediate AI response after each human answer
 - Smooth transitions between game states\n- Confetti animation on victory
@@ -196,22 +279,22 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Real-time synchronization for multiplayer mode
 - Copy to clipboard functionality for game room URLs
 - Native share dialog integration for mobile devices
-
-### 4.3 Session Management and Database Storage
+- Real-time lobby updates when games are added or joined
+- Automatic game state restoration from local storage on page load
+\n### 4.3 Session Management and Database Storage
 
 - Generate a unique session ID for each new game (single player and multiplayer)
-- Store session ID in browser local storage
-- Save the following data to database for each session:
+- Store session ID in browser local storage\n- Save the following data to database for each session:
   + Session ID (unique identifier)
   + Game type (Human thinks mode, AI thinks mode, or 1v1 Multiplayer)
+  + Multiplayer game type (private/public, if applicable)
   + Selected category
   + Secret word (if AI thinks mode or multiplayer)
   + All questions asked with corresponding answers (Yes/No/Sometimes)
   + Question order and timestamps
   + Game outcome (won/lost, number of questions used)
   + User geolocation data (country, region, city) obtained from IP address
-  + For multiplayer: game room ID, both player names, role assignments, rematch count
-- Local storage only stores session ID, all other game data retrieved from database
+  + For multiplayer: game room ID, both player names, role assignments, rematch count, game status\n- Local storage stores session ID and game tracking information
 - Restore game state from database when page is refreshed using session ID
 - Clear local storage session ID when game ends or user starts a new game
 
@@ -225,51 +308,97 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
   + Guess attempts
   + Game end state
   + Rematch requests and acceptances
-- Handle disconnection scenarios:\n  + Show'Opponent disconnected' message
+  + Lobby updates (new games added, games joined)
+- Handle disconnection scenarios:\n  + Show 'Opponent disconnected' message
   + Allow reconnection within time window
-  + Provide'Back to Home' option if opponent doesn't return
+  + Provide 'Back to Home' option if opponent doesn't return
 - Ensure data consistency across both player sessions
 
 ### 4.5 Game Room Management
 
 - Generate unique game room IDs (short, shareable format)
-- Store game room data in database:\n  + Room ID\n  + Host player name
+- Store game room data in database:\n  + Room ID
+  + Game type (private/public)
+  + Host player name
   + Guest player name
   + Selected category
   + Room creation timestamp
-  + Room status (waiting/active/completed)
+  + Room status (waiting/waiting_public/active/completed)
   + Current game state\n- Expire inactive rooms after reasonable time period
 - Validate room ID when guest joins via URL
 - Handle edge cases: room full, room expired, invalid room ID
+- For public games:\n  + Add to public lobby list when created
+  + Remove from lobby list when joined
+  + Track lobby visibility status
 
-### 4.6 IP Geolocation Tracking
-\n- Capture user's IP address when game session starts
+### 4.6 Public Game Lobby System
+
+- Maintain real-time list of public games in database
+- Store lobby game data:
+  + Game room ID
+  + Host player name
+  + Selected category
+  + Creation timestamp
+  + Game status (waiting/active)\n- Real-time updates when:\n  + New public game is created
+  + Public game is joined (remove from waiting list)
+  + Player disconnects from waiting game
+- Query and display:\n  + All waiting public games
+  + User's ongoing games (as host or guest)
+- Implement filtering and sorting options
+- Auto-refresh lobby every few seconds
+
+### 4.7 Local Storage Management
+
+- Store multiplayer game tracking data in browser local storage:\n  + Game room ID
+  + Session ID
+  + Game type (private/public)
+  + Player role (host/guest)
+  + Player name
+  + Opponent name
+  + Selected category\n  + Game status (waiting/waiting_public/active/completed)\n  + Last updated timestamp
+- Update local storage in real-time as game progresses
+- Check local storage on page load:\n  + If active game found, prompt user to continue
+  + If waiting game found, show status and allow cancellation
+- Implement local storage cleanup:\n  + Remove completed games after 24 hours
+  + Remove abandoned games after 1 hour of inactivity
+- Sync local storage with database to ensure consistency
+
+### 4.8 IP Geolocation Tracking
+
+- Capture user's IP address when game session starts
 - Use IP geolocation service to determine user's location:\n  + Country
   + Region/State
   + City
 - Store geolocation data in database linked to session ID
 - Handle cases where geolocation data is unavailable or blocked
 - Ensure compliance with privacy regulations\n
-### 4.7 Admin Dashboard
+### 4.9 Admin Dashboard
 
 - Route: /lokka\n- Authentication required:\n  + Username: mamayilokka
   + Password: EHDZDWick@261221
 - Dashboard features:
   + Display list of all game sessions with session IDs
-  + Show game type (Human thinks, AI thinks, or 1v1 Multiplayer), category, and outcome for each session
+  + Show game type (Human thinks, AI thinks, or 1v1 Multiplayer), multiplayer type (private/public), category, and outcome for each session
   + Display user geolocation data (country, region, city) for each session
   + View detailed game data: all questions and answers in chronological order
   + Display secret word for AI thinks mode and multiplayer games
-  + For multiplayer sessions: show both player names, role assignments, and rematch history
-  + **1v1 Multiplayer game statistics**: Display total number of multiplayer games, win/loss ratios, average questions per game, and other relevant metrics
-  + **Rematch handling**: Each rematch is logged and counted as a new game in statistics, with clear indication of rematch sequence (e.g., 'Game 1', 'Rematch 1', 'Rematch 2')
+  + For multiplayer sessions: show both player names, role assignments, game type (private/public), and rematch history
+  + **1v1 Multiplayer game statistics**: Display total number of multiplayer games (separated by private/public), win/loss ratios, average questions per game, and other relevant metrics
+  + **Public lobby statistics**: Show total public games created, average wait time, join rate\n  + **Rematch handling**: Each rematch is logged and counted as a new game in statistics, with clear indication of rematch sequence (e.g., 'Game 1', 'Rematch 1', 'Rematch 2')
   + **Pagination**: Display 10 session records per page with navigation controls (Previous/Next buttons and page numbers)
-  + Filter and search functionality by date, game type, category, or location
+  + Filter and search functionality by date, game type, multiplayer type, category, or location
   + Simple, clean interface consistent with overall design aesthetic
 
-### 4.8 Theme Switcher
+### 4.10 Theme Switcher
 
 - Fixed position theme switcher button always visible in top right corner across all pages
 - Allow users to toggle between different color themes\n- Save theme preference in browser local storage
 - Apply theme changes instantly with smooth transitions
 - Maintain Neubrutalism design principles across all theme variations
+
+## 5. Reference Images
+
+- image.png: Opponent joined notification screen showing player names and game start prompt
+- image.png: Waiting screen for opponent to set secret word with loading indicator
+- image.png: Ready to start screen showing role assignment and game instructions
+- image.png: Private game waiting screen with shareable link, copy and share buttons

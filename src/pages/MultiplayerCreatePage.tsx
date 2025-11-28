@@ -6,14 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { createMultiplayerGame } from '@/db/multiplayerApi';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Lock, Globe } from 'lucide-react';
 
 export default function MultiplayerCreatePage() {
   const [playerName, setPlayerName] = useState('');
+  const [gameType, setGameType] = useState<'private' | 'public' | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const navigate = useNavigate();
 
-  const handleCreateGame = async () => {
+  const handleCreateGame = async (isPublic: boolean) => {
     if (!playerName.trim()) {
       toast.error('Please enter your name');
       return;
@@ -32,8 +33,21 @@ export default function MultiplayerCreatePage() {
 
       const { gameId, gameCode } = await createMultiplayerGame(
         playerName.trim(),
-        playerSession
+        playerSession,
+        isPublic
       );
+
+      // Store game info in localStorage for tracking
+      const myGames = JSON.parse(localStorage.getItem('my-multiplayer-games') || '[]');
+      myGames.push({
+        gameId,
+        gameCode,
+        role: 'host',
+        playerName: playerName.trim(),
+        isPublic,
+        createdAt: new Date().toISOString(),
+      });
+      localStorage.setItem('my-multiplayer-games', JSON.stringify(myGames));
 
       // Navigate to waiting room
       navigate(`/multiplayer/game/${gameId}`);
@@ -78,28 +92,79 @@ export default function MultiplayerCreatePage() {
                   placeholder="Enter your name..."
                   value={playerName}
                   onChange={(e) => setPlayerName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleCreateGame()}
                   maxLength={20}
                   className="h-14 text-lg font-bold brutal-border"
                   disabled={isCreating}
                 />
               </div>
 
-              <Button
-                onClick={handleCreateGame}
-                disabled={isCreating || !playerName.trim()}
-                className="w-full h-auto py-6 text-xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground"
-              >
-                {isCreating ? 'CREATING GAME...' : 'CREATE GAME'}
-              </Button>
+              {!gameType ? (
+                <div className="space-y-4">
+                  <p className="text-sm font-black uppercase text-center">Choose Game Type:</p>
+                  
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                    <Button
+                      onClick={() => setGameType('private')}
+                      disabled={!playerName.trim() || isCreating}
+                      className="h-auto py-6 text-lg font-black brutal-border-thick shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-card text-foreground flex flex-col gap-2"
+                    >
+                      <Lock size={32} />
+                      <span>PRIVATE GAME</span>
+                      <span className="text-xs font-normal">Share link with a friend</span>
+                    </Button>
+
+                    <Button
+                      onClick={() => setGameType('public')}
+                      disabled={!playerName.trim() || isCreating}
+                      className="h-auto py-6 text-lg font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-accent text-accent-foreground flex flex-col gap-2"
+                    >
+                      <Globe size={32} />
+                      <span>PUBLIC GAME</span>
+                      <span className="text-xs font-normal">Anyone can join from lobby</span>
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="brutal-border bg-muted p-4 text-center">
+                    <p className="font-black text-sm uppercase">
+                      {gameType === 'private' ? '🔒 Private Game' : '🌐 Public Game'}
+                    </p>
+                    <p className="text-xs font-bold mt-1">
+                      {gameType === 'private' 
+                        ? 'You will get a link to share with your friend'
+                        : 'Your game will appear in the public lobby'
+                      }
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button
+                      onClick={() => setGameType(null)}
+                      disabled={isCreating}
+                      variant="outline"
+                      className="brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+                    >
+                      BACK
+                    </Button>
+
+                    <Button
+                      onClick={() => handleCreateGame(gameType === 'public')}
+                      disabled={isCreating}
+                      className="brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground font-black"
+                    >
+                      {isCreating ? 'CREATING...' : 'CREATE'}
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="brutal-border bg-muted p-4 space-y-2">
               <h3 className="font-black text-sm uppercase">How it works:</h3>
               <ol className="list-decimal list-inside space-y-1 text-sm font-bold">
-                <li>Enter your name and create a game</li>
-                <li>Share the game link with your friend</li>
-                <li>Wait for them to join</li>
+                <li>Enter your name and choose game type</li>
+                <li>Private: Share link with a friend | Public: Wait in lobby</li>
                 <li>One of you will think, the other will guess</li>
                 <li>After the game, you can rematch with switched roles!</li>
               </ol>
