@@ -44,30 +44,44 @@ async function callLLM(messages: Message[]): Promise<string> {
       throw new Error('Response body is null');
     }
 
+    console.log('Starting to read stream...');
     const reader = response.body
       .pipeThrough(new TextDecoderStream())
       .pipeThrough(new EventSourceParserStream())
       .getReader();
 
     let fullText = '';
+    let chunkCount = 0;
 
     while (true) {
       const { done, value } = await reader.read();
-      if (done) break;
+      chunkCount++;
+      console.log(`Chunk ${chunkCount}:`, { done, value });
+      
+      if (done) {
+        console.log('Stream reading completed. Total chunks:', chunkCount);
+        break;
+      }
 
       if (value.data && value.data !== '[DONE]') {
+        console.log('Processing SSE data:', value.data);
         try {
           const data: AIResponse = JSON.parse(value.data);
+          console.log('Parsed data:', data);
           const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
           if (text) {
+            console.log('Extracted text:', text);
             fullText += text;
+          } else {
+            console.log('No text found in response');
           }
         } catch (e) {
-          console.error('Error parsing SSE data:', e);
+          console.error('Error parsing SSE data:', e, 'Raw data:', value.data);
         }
       }
     }
 
+    console.log('Final accumulated text:', fullText);
     return fullText.trim();
   } catch (error) {
     console.error('LLM API Error:', error);
