@@ -44,39 +44,44 @@ async function callLLM(messages: Message[]): Promise<string> {
       throw new Error('Response body is null');
     }
 
-    console.log('Starting to read stream...');
-    const reader = response.body
-      .pipeThrough(new TextDecoderStream())
-      .pipeThrough(new EventSourceParserStream())
-      .getReader();
-
-    let fullText = '';
-    let chunkCount = 0;
+    console.log('Starting to read raw stream first...');
+    // First, let's read the raw stream to see what we're getting
+    const rawReader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+    let rawText = '';
+    let rawChunkCount = 0;
 
     while (true) {
-      const { done, value } = await reader.read();
-      chunkCount++;
-      console.log(`Chunk ${chunkCount}:`, { done, value });
-      
+      const { done, value } = await rawReader.read();
+      rawChunkCount++;
       if (done) {
-        console.log('Stream reading completed. Total chunks:', chunkCount);
+        console.log('Raw stream completed. Total raw chunks:', rawChunkCount);
         break;
       }
+      console.log(`Raw chunk ${rawChunkCount}:`, value);
+      rawText += value;
+    }
 
-      if (value.data && value.data !== '[DONE]') {
-        console.log('Processing SSE data:', value.data);
-        try {
-          const data: AIResponse = JSON.parse(value.data);
-          console.log('Parsed data:', data);
-          const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (text) {
-            console.log('Extracted text:', text);
-            fullText += text;
-          } else {
-            console.log('No text found in response');
+    console.log('Complete raw response:', rawText);
+
+    // Now parse the SSE format manually
+    let fullText = '';
+    const lines = rawText.split('\n');
+    
+    for (const line of lines) {
+      if (line.startsWith('data: ')) {
+        const data = line.substring(6); // Remove 'data: ' prefix
+        if (data && data !== '[DONE]') {
+          try {
+            const parsed: AIResponse = JSON.parse(data);
+            console.log('Parsed SSE data:', parsed);
+            const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (text) {
+              console.log('Extracted text:', text);
+              fullText += text;
+            }
+          } catch (e) {
+            console.error('Error parsing SSE line:', e, 'Line:', data);
           }
-        } catch (e) {
-          console.error('Error parsing SSE data:', e, 'Raw data:', value.data);
         }
       }
     }
