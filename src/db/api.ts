@@ -35,6 +35,11 @@ export async function addQuestion(
 ): Promise<void> {
   console.log('addQuestion called with:', { sessionId, questionNumber, questionText, answer });
   
+  if (!questionText || questionText.trim() === '') {
+    console.error('Cannot save question: questionText is empty');
+    throw new Error('Question text cannot be empty');
+  }
+  
   const { data, error } = await supabase
     .from('game_questions')
     .insert({

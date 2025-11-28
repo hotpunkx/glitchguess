@@ -116,7 +116,7 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background gap-6 xl:gap-8">
       <div className="w-full max-w-2xl space-y-6 xl:space-y-8">
         <div className="brutal-border-thick bg-card p-6 xl:p-8 shadow-brutal-pink">
-          {isLoading ? (
+          {isLoading || !currentQuestion ? (
             <div className="flex items-center justify-center gap-3 py-4">
               <Loader2 className="animate-spin" size={32} />
               <p className="text-xl xl:text-2xl font-black text-foreground max-sm:text-lg">
@@ -130,7 +130,7 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
           )}
         </div>
 
-        {!isLoading && (
+        {!isLoading && currentQuestion && (
           <div className="flex flex-col gap-3 xl:grid xl:grid-cols-3 xl:gap-4">
             <Button
               onClick={() => handleAnswer('Yes')}
