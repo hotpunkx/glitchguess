@@ -5,6 +5,7 @@ import { Answer, QuestionAnswer } from '@/types/game';
 import { generateAIQuestion, generateAIGuess } from '@/services/aiService';
 import { Loader2 } from 'lucide-react';
 import { SavedGameState } from '@/hooks/use-game-storage';
+import { toast } from 'sonner';
 
 interface HumanThinksModeProps {
   sessionId: string;
@@ -43,6 +44,7 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
       }
     } catch (error) {
       console.error('Error generating question:', error);
+      toast.error('AI service error. Using fallback question.');
       setCurrentQuestion('Is it something you can hold in your hand?');
     } finally {
       setIsLoading(false);

@@ -18,6 +18,9 @@ interface AIResponse {
 
 async function callLLM(messages: Message[]): Promise<string> {
   try {
+    console.log('Calling LLM API:', API_URL);
+    console.log('Request payload:', { contents: messages });
+    
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
@@ -29,8 +32,12 @@ async function callLLM(messages: Message[]): Promise<string> {
       }),
     });
 
+    console.log('Response status:', response.status, response.statusText);
+    
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('API error response:', errorText);
+      throw new Error(`API request failed: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     if (!response.body) {
