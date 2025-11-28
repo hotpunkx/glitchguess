@@ -1,7 +1,5 @@
-import { EventSourceParserStream } from 'eventsource-parser/stream';
-
-const APP_ID = import.meta.env.VITE_APP_ID || 'app-7pnfstpgpse9';
-const API_URL = `https://api-integrations.appmedo.com/${APP_ID}/api-rLob8RdzAOl9/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse`;
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`;
 
 interface Message {
   role: 'user' | 'model';
@@ -18,11 +16,10 @@ interface AIResponse {
 
 async function callLLM(messages: Message[]): Promise<string> {
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch(`${API_URL}?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-App-Id': APP_ID,
       },
       body: JSON.stringify({
         contents: messages,
@@ -34,40 +31,14 @@ async function callLLM(messages: Message[]): Promise<string> {
       throw new Error(`API request failed: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
-    if (!response.body) {
-      throw new Error('Response body is null');
-    }
-
-    const rawReader = response.body.pipeThrough(new TextDecoderStream()).getReader();
-    let rawText = '';
-
-    while (true) {
-      const { done, value } = await rawReader.read();
-      if (done) break;
-      rawText += value;
-    }
-
-    let fullText = '';
-    const lines = rawText.split('\n');
+    const data: AIResponse = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
     
-    for (const line of lines) {
-      if (line.startsWith('data: ')) {
-        const data = line.substring(6);
-        if (data && data !== '[DONE]') {
-          try {
-            const parsed: AIResponse = JSON.parse(data);
-            const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-              fullText += text;
-            }
-          } catch (e) {
-            // Silently skip unparseable lines
-          }
-        }
-      }
+    if (!text) {
+      throw new Error('No text content in API response');
     }
 
-    return fullText.trim();
+    return text.trim();
   } catch (error) {
     throw error;
   }

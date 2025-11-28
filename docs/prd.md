@@ -1,4 +1,4 @@
-#20Questions Game Requirements Document
+# 20Questions Game Requirements Document
 
 ## 1. Game Overview
 
@@ -31,8 +31,7 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Rematch system with role switching
 - Local storage tracking for ongoing games
 - Back to Home button on all pages that lack navigation to home
-
-## 2. Gameplay Mechanics
+\n## 2. Gameplay Mechanics
 
 ### 2.1 Start Screen
 
@@ -41,7 +40,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - Show category selection section with instruction: 'Choose a category for a fair game:'
 - Category options displayed as large clickable cards:\n  + Animals
   + Objects
-  + People (Famous)\n  + Movies
+  + People (Famous)
+  + Movies
   + Places
 - Three large action buttons (enabled after category selection):
   + 'I think of something – AI guesses' (Human thinks mode)
@@ -57,8 +57,7 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + **Human Thinks Mode**: You think of something in the chosen category, AI asks up to 20 yes/no questions to guess it
   + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses
   + **1v1 Multiplayer Mode**: Play against a friend in real-time (private or public game), one player thinks while the other guesses, then switch roles in rematch
-- Game rules:
-  + Maximum 20 questions per round
+- Game rules:\n  + Maximum 20 questions per round
   + Answer with Yes/No/Sometimes
   + All answers must be within the selected category
   + Make your final guess anytime during the game
@@ -109,9 +108,11 @@ A fully functional guessing game where players and AI take turns thinking of obj
     * 'Cancel' button to return to home\n\n#### 2.5.3 Public Game Creation
 
 - After selecting 'Public Game', display name entry screen
-- Show input field with label: 'Enter your name:'\n- Submit button to create public game room
+- Show input field with label: 'Enter your name:'
+- Submit button to create public game room
 - Upon submission:
-  + Generate unique game room ID\n  + Add game to public lobby list in database
+  + Generate unique game room ID
+  + Add game to public lobby list in database
   + Store game information in local storage with status 'waiting_public'
   + Display waiting screen with:
     * Message: 'Waiting for someone to join from lobby...'
@@ -219,13 +220,11 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + Confetti animation if Guesser wins
 - Show 'Rematch' button to both players
 - Update local storage status to 'completed'\n- Include 'Back to Home' button to return to start screen\n
-#### 2.5.12 Rematch System
-
+#### 2.5.12 Rematch System\n
 - When one player clicks 'Rematch', show waiting message: 'Waiting for opponent to accept rematch...'
 - When both players click 'Rematch':
   + Roles automatically switch (previous Thinker becomes Guesser, previous Guesser becomes Thinker)
-  + New game starts with same category\n  + Question counter resets
-  + Question history clears
+  + New game starts with same category\n  + Question counter resets\n  + Question history clears
   + Create new session ID for rematch
   + Update local storage with new session ID and status 'active'
 - If one player leaves or declines, show message: 'Opponent left the game' with'Back to Home' button
@@ -280,15 +279,20 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Touch-optimized button sizes for mobile devices
 - Adaptive layout maintaining Neubrutalism aesthetic on all viewports
 \n## 4. Technical Requirements
+\n### 4.1 AI Integration
 
-### 4.1 AI Integration
-
-- Use Large Language Model for:\n  + Generating intelligent questions in Human Thinks mode strictly within selected category
+- Use Gemini API for AI-powered features:\n  + API Endpoint: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+  + API Key: X-goog-api-key: AIzaSyBxta-mOinnGrBjuoV44bd-TrFnKuVk5V4
+- AI functionalities:
+  + Generating intelligent questions in Human Thinks mode strictly within selected category
   + Creating creative/absurd secret answers in AI Thinks mode strictly within selected category
   + Making educated guesses based on answer patterns and category constraints
   + Responding to human questions in AI Thinks mode
-- AI must strictly follow category rules to ensure answers are guessable within 20 questions
-\n### 4.2 Interaction Features
+- AI must strictly follow category rules to ensure answers are guessable within20 questions
+- Implement proper error handling for API calls
+- Optimize API usage to minimize latency and costs
+
+### 4.2 Interaction Features
 
 - Immediate AI response after each human answer
 - Smooth transitions between game states\n- Confetti animation on victory
@@ -305,9 +309,9 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 ### 4.3 Session Management and Database Storage
 
 - Generate a unique session ID for each new game (single player and multiplayer)
-- Store session ID in browser local storage\n- Save the following data to database for each session:
-  + Session ID (unique identifier)
-  + Game type (Human thinks mode, AI thinks mode, or 1v1 Multiplayer)
+- Store session ID in browser local storage
+- Save the following data to database for each session:
+  + Session ID (unique identifier)\n  + Game type (Human thinks mode, AI thinks mode, or 1v1 Multiplayer)
   + Multiplayer game type (private/public, if applicable)
   + Selected category
   + Secret word (if AI thinks mode or multiplayer)
@@ -375,9 +379,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
   + Game type (private/public)
   + Player role (host/guest)
   + Player name
-  + Opponent name\n  + Selected category
-  + Game status (waiting/waiting_public/active/completed)
-  + Last updated timestamp
+  + Opponent name
+  + Selected category\n  + Game status (waiting/waiting_public/active/completed)\n  + Last updated timestamp
 - Update local storage in real-time as game progresses
 - Check local storage on page load:\n  + If active game found, prompt user to continue
   + If waiting game found, show status and allow cancellation
@@ -425,3 +428,5 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - image.png: Waiting screen for opponent to set secret word with loading indicator
 - image.png: Ready to start screen showing role assignment and game instructions
 - image.png: Private game waiting screen with shareable link, copy and share buttons
+- image.png: Game interface with question input and answer buttons
+- image.png: Database table showing game questions and answers
