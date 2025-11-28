@@ -18,10 +18,16 @@ export default function PublicLobbyPage() {
   const loadGames = async () => {
     try {
       const publicGames = await getPublicGames();
-      setGames(publicGames);
+      
+      // Get my games from localStorage to filter them out
+      const storedGames = JSON.parse(localStorage.getItem('my-multiplayer-games') || '[]');
+      const myGameIds = storedGames.map((g: any) => g.gameId);
+      
+      // Filter out games that the user created (host)
+      const filteredGames = publicGames.filter(game => !myGameIds.includes(game.id));
+      setGames(filteredGames);
       
       // Load my games from localStorage and check their status
-      const storedGames = JSON.parse(localStorage.getItem('my-multiplayer-games') || '[]');
       const updatedMyGames = await Promise.all(
         storedGames.map(async (game: any) => {
           try {
@@ -154,7 +160,7 @@ export default function PublicLobbyPage() {
                         </div>
                         <Button
                           onClick={() => handleContinueGame(game.gameId)}
-                          className="w-full brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-accent text-accent-foreground font-black"
+                          className="w-full brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground font-black"
                         >
                           <Play className="mr-2" size={16} />
                           CONTINUE
@@ -221,7 +227,7 @@ export default function PublicLobbyPage() {
                         {game.game_status === 'waiting' && !game.player2_name ? (
                           <Button
                             onClick={() => handleJoinGame(game.id)}
-                            className="w-full brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-accent text-accent-foreground font-black"
+                            className="w-full brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground font-black"
                           >
                             <Play className="mr-2" size={16} />
                             JOIN GAME

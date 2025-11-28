@@ -106,7 +106,7 @@ export default function MultiplayerCreatePage() {
                     <Button
                       onClick={() => setGameType('private')}
                       disabled={!playerName.trim() || isCreating}
-                      className="h-auto py-6 text-lg font-black brutal-border-thick shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-card text-foreground flex flex-col gap-2"
+                      className="h-auto py-6 text-lg font-black brutal-border-thick shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-card text-foreground flex flex-col gap-2"
                     >
                       <Lock size={32} />
                       <span>PRIVATE GAME</span>
@@ -116,7 +116,7 @@ export default function MultiplayerCreatePage() {
                     <Button
                       onClick={() => setGameType('public')}
                       disabled={!playerName.trim() || isCreating}
-                      className="h-auto py-6 text-lg font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-accent text-accent-foreground flex flex-col gap-2"
+                      className="h-auto py-6 text-lg font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground flex flex-col gap-2"
                     >
                       <Globe size={32} />
                       <span>PUBLIC GAME</span>
