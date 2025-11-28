@@ -21,7 +21,7 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
   const [showInstruction, setShowInstruction] = useState(initialState?.showInstruction ?? true);
 
   useEffect(() => {
-    if (!showInstruction && questionCount === 0 && !currentQuestion) {
+    if (!showInstruction && !currentQuestion && !isLoading) {
       askNextQuestion();
     }
   }, [showInstruction]);
