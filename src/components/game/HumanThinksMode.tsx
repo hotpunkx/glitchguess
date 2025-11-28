@@ -43,7 +43,6 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
         setCurrentQuestion(question);
       }
     } catch (error) {
-      console.error('Error generating question:', error);
       toast.error('AI service error. Using fallback question.');
       setCurrentQuestion('Is it something you can hold in your hand?');
     } finally {
@@ -64,8 +63,6 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
     setHistory(updatedHistory);
     setQuestionCount(updatedCount);
 
-    // Save question to database
-    console.log('Saving question:', { sessionId, updatedCount, currentQuestion, answer });
     await onSaveQuestion(sessionId, updatedCount, currentQuestion, answer);
 
     // Check if this is a final guess (not a regular question)

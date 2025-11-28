@@ -18,9 +18,6 @@ interface AIResponse {
 
 async function callLLM(messages: Message[]): Promise<string> {
   try {
-    console.log('Calling LLM API:', API_URL);
-    console.log('Request payload:', { contents: messages });
-    
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
@@ -31,12 +28,9 @@ async function callLLM(messages: Message[]): Promise<string> {
         contents: messages,
       }),
     });
-
-    console.log('Response status:', response.status, response.statusText);
     
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('API error response:', errorText);
       throw new Error(`API request failed: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
@@ -44,52 +38,37 @@ async function callLLM(messages: Message[]): Promise<string> {
       throw new Error('Response body is null');
     }
 
-    console.log('Starting to read raw stream first...');
-    // First, let's read the raw stream to see what we're getting
     const rawReader = response.body.pipeThrough(new TextDecoderStream()).getReader();
     let rawText = '';
-    let rawChunkCount = 0;
 
     while (true) {
       const { done, value } = await rawReader.read();
-      rawChunkCount++;
-      if (done) {
-        console.log('Raw stream completed. Total raw chunks:', rawChunkCount);
-        break;
-      }
-      console.log(`Raw chunk ${rawChunkCount}:`, value);
+      if (done) break;
       rawText += value;
     }
 
-    console.log('Complete raw response:', rawText);
-
-    // Now parse the SSE format manually
     let fullText = '';
     const lines = rawText.split('\n');
     
     for (const line of lines) {
       if (line.startsWith('data: ')) {
-        const data = line.substring(6); // Remove 'data: ' prefix
+        const data = line.substring(6);
         if (data && data !== '[DONE]') {
           try {
             const parsed: AIResponse = JSON.parse(data);
-            console.log('Parsed SSE data:', parsed);
             const text = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
             if (text) {
-              console.log('Extracted text:', text);
               fullText += text;
             }
           } catch (e) {
-            console.error('Error parsing SSE line:', e, 'Line:', data);
+            // Silently skip unparseable lines
           }
         }
       }
     }
 
-    console.log('Final accumulated text:', fullText);
     return fullText.trim();
   } catch (error) {
-    console.error('LLM API Error:', error);
     throw error;
   }
 }
@@ -221,7 +200,6 @@ Output ONLY the thing (1–2 words max), nothing else at all — no quotes, no c
   // If AI still returns Paris or Eiffel Tower, use fallback
   const normalized = cleaned.toLowerCase();
   if (normalized.includes('paris') || normalized.includes('eiffel')) {
-    console.warn('AI returned overused word, using fallback');
     const fallbacks = [
       'Tiger', 'Pizza', 'Minecraft', 'Basketball', 'Sushi',
       'Titanic', 'Guitar', 'Penguin', 'Coffee', 'Helicopter'
