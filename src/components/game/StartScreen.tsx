@@ -18,19 +18,6 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
             GLITCHGUESS
           </h1>
           
-          {/* SEO-friendly description */}
-          <div className="brutal-border bg-card p-4 xl:p-6 shadow-brutal-pink space-y-3">
-            <h2 className="text-xl xl:text-3xl font-black text-center text-secondary max-sm:text-lg">
-              The Ultimate AI 20 Questions Game
-            </h2>
-            <p className="text-sm xl:text-base font-bold text-foreground text-center leading-relaxed max-sm:text-xs">
-              Test your knowledge and deduction skills in this free online guessing game! Challenge our intelligent AI in a battle of wits, or compete against friends in thrilling 1v1 multiplayer matches. With 20 questions to crack the secret, every game is a unique puzzle waiting to be solved.
-            </p>
-            <p className="text-sm xl:text-base font-bold text-muted-foreground text-center leading-relaxed max-sm:text-xs">
-              Whether you're playing solo against our smart AI or competing with friends in multiplayer mode, GLITCHGUESS offers endless entertainment. Perfect for party games, brain training, or just having fun online. No downloads required – start playing instantly!
-            </p>
-          </div>
-          
           <div className="flex flex-col items-center gap-3">
             <a 
               href="https://www.producthunt.com/posts/glitchguess?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-glitchguess" 
@@ -103,6 +90,19 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
         <div className="text-center space-y-4">
           <p className="text-base xl:text-xl font-bold text-muted-foreground max-sm:text-sm">
             20 QUESTIONS. YES/NO ANSWERS. CAN YOU WIN?
+          </p>
+        </div>
+
+        {/* SEO-friendly description */}
+        <div className="brutal-border bg-card p-4 xl:p-6 shadow-brutal-pink space-y-3">
+          <h2 className="text-xl xl:text-3xl font-black text-center text-secondary max-sm:text-lg">
+            The Ultimate AI 20 Questions Game
+          </h2>
+          <p className="text-sm xl:text-base font-bold text-foreground text-center leading-relaxed max-sm:text-xs">
+            Test your knowledge and deduction skills in this free online guessing game! Challenge our intelligent AI in a battle of wits, or compete against friends in thrilling 1v1 multiplayer matches. With 20 questions to crack the secret, every game is a unique puzzle waiting to be solved.
+          </p>
+          <p className="text-sm xl:text-base font-bold text-muted-foreground text-center leading-relaxed max-sm:text-xs">
+            Whether you're playing solo against our smart AI or competing with friends in multiplayer mode, GLITCHGUESS offers endless entertainment. Perfect for party games, brain training, or just having fun online. No downloads required – start playing instantly!
           </p>
         </div>
 
