@@ -22,7 +22,7 @@ All colors MUST be HSL.
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
-    --accent: 75 100% 60%;
+    --accent: 75 100% 44%;
     --accent-foreground: 0 0% 0%;
     --accent-dark: 75 80% 25%;
     --destructive: 0 84.2% 60.2%;
@@ -46,7 +46,7 @@ All colors MUST be HSL.
     --shadow-brutal: 8px 8px 0px 0px hsl(0 0% 0%);
     --shadow-brutal-lg: 12px 12px 0px 0px hsl(0 0% 0%);
     --shadow-brutal-pink: 8px 8px 0px 0px hsl(330 100% 50%);
-    --shadow-brutal-lime: 8px 8px 0px 0px hsl(75 100% 60%);
+    --shadow-brutal-lime: 8px 8px 0px 0px hsl(75 100% 44%);
   }
 
   .dark {
@@ -62,7 +62,7 @@ All colors MUST be HSL.
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 60%;
-    --accent: 75 100% 60%;
+    --accent: 75 100% 44%;
     --accent-foreground: 0 0% 0%;
     --accent-dark: 75 100% 70%;
     --destructive: 0 62.8% 30.6%;
@@ -86,7 +86,7 @@ All colors MUST be HSL.
     --shadow-brutal: 8px 8px 0px 0px hsl(0 0% 100%);
     --shadow-brutal-lg: 12px 12px 0px 0px hsl(0 0% 100%);
     --shadow-brutal-pink: 8px 8px 0px 0px hsl(330 100% 50%);
-    --shadow-brutal-lime: 8px 8px 0px 0px hsl(75 100% 60%);
+    --shadow-brutal-lime: 8px 8px 0px 0px hsl(75 100% 44%);
   }
 }
 
