@@ -23,11 +23,35 @@ export default function HowToPlayPage() {
             </h2>
             <div className="brutal-border bg-background p-4 xl:p-6 space-y-3">
               <p className="text-base xl:text-xl font-bold text-foreground leading-relaxed max-sm:text-sm">
-                GLITCHGUESS is a modern twist on the classic 20 Questions game. You play against an AI opponent in a battle of wits and deduction!
+                GLITCHGUESS is a modern twist on the classic 20 Questions game. Play against AI or challenge real players in 1v1 multiplayer battles!
               </p>
               <p className="text-sm xl:text-lg font-bold text-accent-dark max-sm:text-xs">
-                ⚡ 20 questions maximum • Yes/No/Sometimes answers • Two game modes
+                ⚡ 20 questions maximum • Yes/No/Sometimes answers • Solo AI & Multiplayer modes
               </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-2xl xl:text-4xl font-black text-foreground max-sm:text-xl">
+              🎮 GAME MODES
+            </h2>
+            <div className="brutal-border bg-background p-4 xl:p-6 space-y-3">
+              <div className="space-y-2">
+                <p className="text-base xl:text-lg font-black text-secondary max-sm:text-sm">
+                  🤖 SOLO MODE (vs AI)
+                </p>
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                  Play against an intelligent AI opponent. Choose between "I Think" mode (AI guesses your word) or "AI Thinks" mode (you guess AI's word).
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-base xl:text-lg font-black text-accent max-sm:text-sm">
+                  👥 MULTIPLAYER MODE (1v1)
+                </p>
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                  Challenge real players! Create a private game and share the link, or join public games from the lobby. Take turns thinking of words and guessing.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -96,6 +120,52 @@ export default function HowToPlayPage() {
           </div>
 
           <div className="space-y-4">
+            <h2 className="text-2xl xl:text-4xl font-black text-accent max-sm:text-xl">
+              👥 MULTIPLAYER MODE: 1v1 BATTLES
+            </h2>
+            <div className="brutal-border bg-background p-4 xl:p-6 space-y-3">
+              <div className="space-y-2">
+                <p className="text-base xl:text-lg font-black text-foreground max-sm:text-sm">
+                  STEP 1: Create or Join a Game
+                </p>
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                  <span className="font-black text-accent">Create Private:</span> Start a private game and share the unique link with a friend.
+                </p>
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                  <span className="font-black text-accent">Create Public:</span> Create a public game that appears in the lobby for anyone to join.
+                </p>
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                  <span className="font-black text-accent">Join from Lobby:</span> Browse available public games and join one instantly!
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-base xl:text-lg font-black text-foreground max-sm:text-sm">
+                  STEP 2: Wait for Opponent
+                </p>
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                  Once both players are in the game room, the first player to click "I'll set the word" becomes the thinker. They enter a secret word while the other player waits.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-base xl:text-lg font-black text-foreground max-sm:text-sm">
+                  STEP 3: Play the Game
+                </p>
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                  The guesser asks yes/no questions, and the thinker answers with Yes, No, or Sometimes. The guesser has up to 20 questions to figure out the secret word!
+                </p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-base xl:text-lg font-black text-foreground max-sm:text-sm">
+                  STEP 4: Rematch or Leave
+                </p>
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                  After the game ends, you can request a rematch to play again with roles reversed, or leave to find a new opponent!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
             <h2 className="text-2xl xl:text-4xl font-black text-foreground max-sm:text-xl">
               🏆 WINNING CONDITIONS
             </h2>
@@ -106,17 +176,19 @@ export default function HowToPlayPage() {
                     ✅ YOU WIN IF:
                   </p>
                   <ul className="text-sm xl:text-base font-bold text-foreground space-y-1 pl-4 max-sm:text-xs">
-                    <li>• You guess correctly (AI Thinks mode)</li>
-                    <li>• AI fails to guess in 20 questions (I Think mode)</li>
+                    <li>• You guess correctly (AI/Multiplayer)</li>
+                    <li>• Opponent fails to guess in 20 questions</li>
+                    <li>• AI fails to guess in 20 questions (Solo mode)</li>
                   </ul>
                 </div>
                 <div className="brutal-border bg-card p-3 xl:p-4 space-y-2">
                   <p className="text-base xl:text-lg font-black text-secondary max-sm:text-sm">
-                    ❌ AI WINS IF:
+                    ❌ YOU LOSE IF:
                   </p>
                   <ul className="text-sm xl:text-base font-bold text-foreground space-y-1 pl-4 max-sm:text-xs">
-                    <li>• AI guesses correctly (I Think mode)</li>
-                    <li>• You can't guess in 20 questions (AI Thinks mode)</li>
+                    <li>• Opponent guesses correctly (Multiplayer)</li>
+                    <li>• You can't guess in 20 questions</li>
+                    <li>• AI guesses correctly (Solo mode)</li>
                   </ul>
                 </div>
               </div>
@@ -150,6 +222,12 @@ export default function HowToPlayPage() {
                 <span className="text-2xl">🎲</span>
                 <p className="text-sm xl:text-base font-bold text-foreground max-sm:text-xs">
                   <span className="font-black">Use "Sometimes" wisely:</span> This answer means the question doesn't have a clear yes/no answer for the secret thing.
+                </p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">👥</span>
+                <p className="text-sm xl:text-base font-bold text-foreground max-sm:text-xs">
+                  <span className="font-black">Multiplayer strategy:</span> In 1v1 games, try to think of creative words that are hard to guess but still fair. Use the lobby to find opponents quickly!
                 </p>
               </div>
             </div>
