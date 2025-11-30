@@ -1,4 +1,4 @@
-# 20Questions Game Requirements Document
+# GLITCHGUESS Game Requirements Document
 
 ## 1. Game Overview
 
@@ -35,8 +35,7 @@ A fully functional guessing game where players and AI take turns thinking of obj
 
 ### 2.1 Start Screen
 
-- Display bold title:'GLITCHGUESS'
-- Show'How to Play' link/button in top corner leading to instructional page
+- Display bold title:'GLITCHGUESS'\n- Show'How to Play' link/button in top corner leading to instructional page
 - Show category selection section with instruction: 'Choose a category for a fair game:'
 - Category options displayed as large clickable cards:\n  + Animals
   + Objects
@@ -47,7 +46,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + 'I think of something – AI guesses' (Human thinks mode)
   + 'AI thinks of something – I guess' (AI thinks mode)
   + '1v1 Multiplayer – Play with a friend' (Multiplayer mode)
-- Additional button visible at all times:\n  + '1v1 Lobby' button to access public game lobby
+- Additional button visible at all times:
+  + '1v1 Lobby' button to access public game lobby
 \n### 2.2 How to Play Page
 
 - Display page title: 'HOW TO PLAY'
@@ -57,7 +57,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
   + **Human Thinks Mode**: You think of something in the chosen category, AI asks up to 20 yes/no questions to guess it
   + **AI Thinks Mode**: AI thinks of something in the chosen category, you ask yes/no questions and make guesses
   + **1v1 Multiplayer Mode**: Play against a friend in real-time (private or public game), one player thinks while the other guesses, then switch roles in rematch
-- Game rules:\n  + Maximum 20 questions per round
+- Game rules:
+  + Maximum 20 questions per round
   + Answer with Yes/No/Sometimes
   + All answers must be within the selected category
   + Make your final guess anytime during the game
@@ -224,7 +225,8 @@ A fully functional guessing game where players and AI take turns thinking of obj
 - When one player clicks 'Rematch', show waiting message: 'Waiting for opponent to accept rematch...'
 - When both players click 'Rematch':
   + Roles automatically switch (previous Thinker becomes Guesser, previous Guesser becomes Thinker)
-  + New game starts with same category\n  + Question counter resets\n  + Question history clears
+  + New game starts with same category\n  + Question counter resets
+  + Question history clears
   + Create new session ID for rematch
   + Update local storage with new session ID and status 'active'
 - If one player leaves or declines, show message: 'Opponent left the game' with'Back to Home' button
@@ -279,7 +281,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Touch-optimized button sizes for mobile devices
 - Adaptive layout maintaining Neubrutalism aesthetic on all viewports
 \n## 4. Technical Requirements
-\n### 4.1 AI Integration
+
+### 4.1 AI Integration
 
 - Use Gemini API for AI-powered features:\n  + API Endpoint: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
   + API Key: X-goog-api-key: AIzaSyBxta-mOinnGrBjuoV44bd-TrFnKuVk5V4
@@ -319,7 +322,8 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
   + Question order and timestamps
   + Game outcome (won/lost, number of questions used)
   + User geolocation data (country, region, city) obtained from IP address
-  + For multiplayer: game room ID, both player names, role assignments, rematch count, game status\n- Local storage stores session ID and game tracking information
+  + For multiplayer: game room ID, both player names, role assignments, rematch count, game status
+- Local storage stores session ID and game tracking information
 - Restore game state from database when page is refreshed using session ID
 - Clear local storage session ID when game ends or user starts a new game
 
@@ -422,11 +426,73 @@ Neubrutalism design with bold, professional, and intentionally imperfect premium
 - Apply theme changes instantly with smooth transitions
 - Maintain Neubrutalism design principles across all theme variations
 
-## 5. Reference Images
+## 5. SEO Optimization Requirements
 
-- image.png: Opponent joined notification screen showing player names and game start prompt
-- image.png: Waiting screen for opponent to set secret word with loading indicator
-- image.png: Ready to start screen showing role assignment and game instructions
-- image.png: Private game waiting screen with shareable link, copy and share buttons
-- image.png: Game interface with question input and answer buttons
-- image.png: Database table showing game questions and answers
+### 5.1 Title Tag
+
+- Implement keyword-rich title tag: 'GLITCHGUESS: AI20Questions Game - Free Multiplayer Guessing Game Online'
+- Ensure title is under 60 characters for optimal display in search results
+- Include primary keywords: AI guessing game, 20 questions, multiplayer, free online game
+\n### 5.2 Meta Description
+
+- Write compelling meta description with call-to-action: 'Challenge the AI or a friend in GLITCHGUESS, the free online20 Questions game with multiplayer mode. Test your knowledge and guessing skills. Start playing now!'
+- Keep meta description between 150-160 characters
+- Include primary keywords and action-oriented language
+
+### 5.3 H1 Heading Structure
+
+- Use single H1 heading for main title: 'GLITCHGUESS'\n- Implement proper heading hierarchy with H2 and H3 tags for sub-sections:\n  + H2: 'How to Play', 'Game Modes', 'Features'
+  + H3: Mode-specific sections, feature details\n- Ensure headings are descriptive and keyword-relevant
+
+### 5.4 Body Content Enhancement
+
+- Add engaging introductory text block (2-3 paragraphs) on homepage describing:\n  + Game features and benefits (e.g., 'Test your knowledge', 'Challenge friends', 'AI-powered gameplay')
+  + What makes GLITCHGUESS unique (Neubrutalism design, multiple game modes, real-time multiplayer)
+  + Target audience appeal (casual gamers, trivia enthusiasts, party game seekers)
+- Include natural keyword integration throughout content
+- Maintain conversational and engaging tone
+
+### 5.5 Keyword Targeting
+
+- Primary keywords to target:
+  + AI guessing game
+  + Free20 questions online
+  + Multiplayer trivia game
+  + Online party game
+  + Guessing game with friends
+  + 20 questions AI
+- Integrate keywords naturally in:\n  + Page titles and headings
+  + Body content and descriptions
+  + Button labels and CTAs where appropriate
+  + Alt text for images
+
+### 5.6 Image Optimization
+
+- Implement descriptive Alt Text for all images:\n  + App icon/logo: 'GLITCHGUESS logo - AI 20 Questions guessing game'
+  + Game interface screenshots: 'GLITCHGUESS gameplay interface showing question history and answer buttons'
+  + Multiplayer screens: 'GLITCHGUESS multiplayer mode - play with friends online'
+  + Category selection: 'Choose category for GLITCHGUESS - Animals, Objects, People, Movies, Places'\n- Ensure all images have relevant, keyword-rich alt text
+- Optimize image file sizes for fast loading
+
+### 5.7 Structured Data Markup
+
+- Implement Schema.org markup for:
+  + VideoGame schema with properties: name, description, genre, gamePlatform\n  + WebApplication schema for online game functionality
+  + AggregateRating schema (when user ratings are available)
+- Include JSON-LD structured data in page head
+
+### 5.8 URL Structure
+
+- Use clean, descriptive URLs:
+  + Homepage: /
+  + How to Play: /how-to-play
+  + Game modes: /play/human-thinks, /play/ai-thinks, /play/multiplayer
+  + Lobby: /lobby\n- Avoid dynamic parameters in main navigation URLs
+
+## 6. Reference Images\n
+- image.png: Opponent joined notification screen showing player names and game start prompt (Alt text: 'GLITCHGUESS multiplayer - opponent joined notification screen')
+- image.png: Waiting screen for opponent to set secret word with loading indicator (Alt text: 'GLITCHGUESS waiting screen - opponent setting secret word')
+- image.png: Ready to start screen showing role assignment and game instructions (Alt text: 'GLITCHGUESS game start - role assignment screen for multiplayer mode')
+- image.png: Private game waiting screen with shareable link, copy and share buttons (Alt text: 'GLITCHGUESS private game - shareable link and waiting screen')
+- image.png: Game interface with question input and answer buttons (Alt text: 'GLITCHGUESS gameplay interface - question input and Yes/No/Sometimes answer buttons')
+- image.png: Database table showing game questions and answers (Alt text: 'GLITCHGUESS admin dashboard - game questions and answers database table')

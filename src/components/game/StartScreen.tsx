@@ -17,6 +17,20 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
           <h1 className="text-5xl xl:text-8xl font-black text-center text-foreground animate-glitch max-sm:text-4xl mt-16 xl:mt-20">
             GLITCHGUESS
           </h1>
+          
+          {/* SEO-friendly description */}
+          <div className="brutal-border bg-card p-4 xl:p-6 shadow-brutal-pink space-y-3">
+            <h2 className="text-xl xl:text-3xl font-black text-center text-secondary max-sm:text-lg">
+              The Ultimate AI 20 Questions Game
+            </h2>
+            <p className="text-sm xl:text-base font-bold text-foreground text-center leading-relaxed max-sm:text-xs">
+              Test your knowledge and deduction skills in this free online guessing game! Challenge our intelligent AI in a battle of wits, or compete against friends in thrilling 1v1 multiplayer matches. With 20 questions to crack the secret, every game is a unique puzzle waiting to be solved.
+            </p>
+            <p className="text-sm xl:text-base font-bold text-muted-foreground text-center leading-relaxed max-sm:text-xs">
+              Whether you're playing solo against our smart AI or competing with friends in multiplayer mode, GLITCHGUESS offers endless entertainment. Perfect for party games, brain training, or just having fun online. No downloads required – start playing instantly!
+            </p>
+          </div>
+          
           <div className="flex flex-col items-center gap-3">
             <a 
               href="https://www.producthunt.com/posts/glitchguess?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-glitchguess" 
@@ -93,9 +107,9 @@ export function StartScreen({ onSelectMode, onContinueGame, savedGameMode }: Sta
         </div>
 
         <div className="brutal-border bg-card p-4 xl:p-6 shadow-brutal">
-          <h2 className="text-xl xl:text-2xl font-black text-foreground mb-3 max-sm:text-lg">
+          <h3 className="text-xl xl:text-2xl font-black text-foreground mb-3 max-sm:text-lg">
             ⚡ FAIR GAME CATEGORIES
-          </h2>
+          </h3>
           <p className="text-sm xl:text-base font-bold text-muted-foreground mb-4 max-sm:text-xs">
             For a fair game, choose something from these categories:
           </p>
