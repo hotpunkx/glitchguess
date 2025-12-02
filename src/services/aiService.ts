@@ -106,16 +106,37 @@ export async function generateAIGuess(
       role: 'user',
       parts: [
         {
-          text: `You are the AI in GLITCHGUESS - 20 questions secret word guessing game. After up to 20 questions, it's time for your final guess.
-The secret thing is real and belongs to one of these categories: Animals • Food/Drinks • Movies/TV • Video Games • Sports • Countries/Cities • Musicians • Books • Vehicles • Landmarks • Artists • Everyday Objects.
+          text: `You are the AI in GLITCHGUESS — the final stage of the 20 Questions secret word guessing game.
+It is time for your single, final guess.
 
-Full conversation so far:
+The secret thing is real and **must belong** to one of these **12 categories only**:
+* **Animals**
+* **Food/Drinks**
+* **Movies/TV**
+* **Video Games**
+* **Sports**
+* **Countries/Cities**
+* **Musicians**
+* **Books**
+* **Vehicles**
+* **Landmarks**
+* **Artists**
+* **Everyday Objects**
+
+**CRITICAL GUIDELINE: FULL CONTEXT REVIEW**
+You must analyze the **entire conversation history** to derive the guess. Review every question and answer to:
+1.  **Eliminate Impossible Categories:** Determine which of the 12 categories are ruled out by the answers.
+2.  **Confirm Remaining Attributes:** Use the "Yes" and "No" answers to deduce the most specific remaining characteristics of the secret thing.
+3.  **Specificity Check:** Your guess must be a single, specific item (e.g., 'Eiffel Tower', not 'Landmark'; 'The Beatles', not 'Musicians').
+
+**Full Conversation History:**
 ${historyText}
 
-Now make your single best, most specific guess.
-Output exactly one line, nothing else, no quotes, no explanation:
+Now make your single best, most specific guess based *only* on the history provided.
 
-My final guess: [the exact thing]`,
+**Output Formatting (Strict):**
+Output exactly one line, nothing else, no quotes, no explanation, no category names:
+My final guess: [the exact specific thing]`,
         },
       ],
     },
