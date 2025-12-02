@@ -224,20 +224,25 @@ export async function answerQuestion(secretWord: string, question: string): Prom
       role: 'user',
       parts: [
         {
-          text: `You are the AI in GLITCHGUESS - 20 questions secret word guessing game. You are secretly thinking of exactly this:
+          text: `You are the player in GLITCHGUESS - 20 questions secret word guessing game.
+You are secretly thinking of exactly this:
 "${secretWord}"
 
-The human just asked: "${question}"
+The AI interrogator just asked: "${question}"
 
-You must answer with literally ONE word and nothing else — no punctuation, no explanation, no emojis:
+**CRITICAL GUIDELINES FOR ANSWERING:**
+1.  **Strict One-Word Output:** You must answer with literally ONE word and nothing else (no punctuation, no explanation, no quotes, no emojis).
+2.  **Human Context & Scale:** When the question involves physical attributes (size, weight, state of matter, location), think like a human considering the **typical, real-world context** of the **"${secretWord}"**.
+    * *Example:* If the secret word is "Elephant" and the question is "Is it heavy?", the answer is "Yes" (compared to a human scale). If the word is "Water Bottle" and the question is "Is it big?", the answer is "No" (compared to a human scale).
+    * *Example:* If the secret word is "Water" and the question is "Is it a liquid?", the answer is "Sometimes" (as water can be solid, liquid, or gas, though liquid is the most common state, "Sometimes" is technically more accurate).
+3.  **Answer Options:**
+    * **Yes** → if clearly and generally true in the real world.
+    * **No** → if clearly and generally false in the real world.
+    * **Sometimes** → only if the answer genuinely depends on context, state, or circumstance (use this extremely sparingly and only when ambiguity is inherent to the object, e.g., "water," "cloud," "money").
 
-- Yes → if clearly true
-- No → if clearly false  
-- Sometimes → only if it genuinely depends (extremely rare)
+Valid outputs: Yes | No | Sometimes
 
-Valid outputs: Yes   No   Sometimes
-
-Respond with only one of those three words.`,
+Respond with only one of those three words based on the secret word and the question.`,
         },
       ],
     },
