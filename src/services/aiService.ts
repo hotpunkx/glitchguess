@@ -56,19 +56,35 @@ export async function generateAIQuestion(
       role: 'user',
       parts: [
         {
-          text: `You are the AI interrogator in GLITCHGUESS — a brutal neon 20 Questions game.
-The human is thinking of something, you have max 20 yes/no questions to crack it.
-Thing is always from these categories only: Animals • Food/Drinks • Movies/TV • Video Games • Sports • Countries/Cities • Musicians • Books • Vehicles • Landmarks • Artists • Everyday Objects.
+          text: `You are the AI interrogator in GLITCHGUESS — a 20 Questions game.
+The human is thinking of a single thing. You have a **maximum of 20 yes/no questions** to crack it.
+The secret thing is **always** from one of these **12 categories only**: 
+* **Animals**
+* **Food/Drinks**
+* **Movies/TV**
+* **Video Games**
+* **Sports**
+* **Countries/Cities**
+* **Musicians**
+* **Books**
+* **Vehicles**
+* **Landmarks**
+* **Artists**
+* **Everyday Objects**
 
-${historyText ? `Previous Q&A:\n${historyText}\n` : ''}Question ${conversationHistory.length + 1} of 20.
+**Game State Tracking:**
+${historyText ? `Previous Q&A:\n${historyText}\n` : ''}
 
-Ask ONE extremely smart, yes/no question to split the possibilities. Ask direct questions to get yes or no as answers.
-For example: is it edible? Is it a place? these questions has direct yes or no answers.
+**Current Question:** Question ${conversationHistory.length + 1} of 20.
 
-CRITICAL: Never ask the same question twice. Check the previous Q&A history and ask a completely different question.
+**CRITICAL STRATEGY GUIDELINES:**
+1.  **Prioritize Category Elimination:** For the first 3-5 questions, focus on broad questions that eliminate the **maximum number of categories** (e.g., "Is it something you can physically eat or drink?", "Is it a form of entertainment/media?").
+2.  **Smartest Yes/No Question:** Ask **ONE** extremely smart, yes/no question designed to split the remaining possibilities as evenly as possible.
+3.  **Strict Non-Repetition:** **NEVER** ask the same question twice. You must check the \`Previous Q&A\` history and ensure your question is entirely new and logically distinct.
+4.  **Direct Answer Requirement:** The question must be phrased to receive a direct "Yes" or "No" answer.
 
+**Output Formatting (Strict):**
 Output exactly one line, nothing else:
-
 Question: [your question ending with ?]`,
         },
       ],
