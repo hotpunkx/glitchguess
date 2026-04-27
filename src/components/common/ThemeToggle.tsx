@@ -1,37 +1,34 @@
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Moon, Sun } from 'lucide-react';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     // Load theme from localStorage on mount
-    const savedTheme = localStorage.getItem('glitchguess-theme') as 'light' | 'dark' | null;
-    const initialTheme = savedTheme || 'light';
-    setTheme(initialTheme);
-    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    const initialDark = savedTheme === 'dark';
+    setIsDark(initialDark);
+    document.documentElement.classList.toggle('dark', initialDark);
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('glitchguess-theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    const newDark = !isDark;
+    setIsDark(newDark);
+    const themeStr = newDark ? 'dark' : 'light';
+    localStorage.setItem('theme', themeStr);
+    document.documentElement.classList.toggle('dark', newDark);
   };
 
   return (
-    <div className="fixed top-4 right-4 z-50">
-      <Button
+    <div className="fixed top-4 right-4 z-[100]">
+      <button
         onClick={toggleTheme}
-        className="h-12 w-12 p-0 brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all bg-card text-foreground"
-        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+        className="w-10 h-10 flex items-center justify-center neubrutal-border bg-white dark:bg-darkBg text-black dark:text-white shadow-neubrutal active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+        aria-label="Toggle Theme"
       >
-        {theme === 'light' ? (
-          <span className="text-2xl">🌙</span>
-        ) : (
-          <span className="text-2xl">☀️</span>
-        )}
-      </Button>
+        {isDark ? <Sun size={18} /> : <Moon size={18} />}
+      </button>
     </div>
   );
 }

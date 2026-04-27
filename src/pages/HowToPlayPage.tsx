@@ -11,7 +11,7 @@ export default function HowToPlayPage() {
           <h1 className="text-4xl xl:text-7xl font-black text-foreground animate-glitch max-sm:text-3xl">
             HOW TO PLAY
           </h1>
-          <p className="text-lg xl:text-2xl font-bold text-secondary max-sm:text-base">
+          <p className="text-lg xl:text-2xl font-bold text-secondary max-sm:text-lg">
             Master the art of GLITCHGUESS in 2 minutes!
           </p>
         </div>
@@ -25,7 +25,7 @@ export default function HowToPlayPage() {
               <p className="text-base xl:text-xl font-bold text-foreground leading-relaxed max-sm:text-sm">
                 GLITCHGUESS is a modern twist on the classic 20 Questions game. Play against AI or challenge real players in 1v1 multiplayer battles!
               </p>
-              <p className="text-sm xl:text-lg font-bold text-accent-dark max-sm:text-xs">
+              <p className="text-sm xl:text-lg font-bold text-accent-dark max-sm:text-sm">
                 ⚡ 20 questions maximum • Yes/No/Sometimes answers • Solo AI & Multiplayer modes
               </p>
             </div>
@@ -40,7 +40,7 @@ export default function HowToPlayPage() {
                 <p className="text-base xl:text-lg font-black text-secondary max-sm:text-sm">
                   🤖 SOLO MODE (vs AI)
                 </p>
-                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-sm">
                   Play against an intelligent AI opponent. Choose between "I Think" mode (AI guesses your word) or "AI Thinks" mode (you guess AI's word).
                 </p>
               </div>
@@ -48,7 +48,7 @@ export default function HowToPlayPage() {
                 <p className="text-base xl:text-lg font-black text-accent max-sm:text-sm">
                   👥 MULTIPLAYER MODE (1v1)
                 </p>
-                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-xs">
+                <p className="text-sm xl:text-base font-bold text-muted-foreground pl-4 max-sm:text-sm">
                   Challenge real players! Create a private game and share the link, or join public games from the lobby. Take turns thinking of words and guessing.
                 </p>
               </div>

@@ -9,84 +9,46 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --radius: 0.5rem;
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    --background: 0 0% 98%;
+    --foreground: 0 0% 4%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 0 0% 4%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 0 0% 0%;
+    --popover-foreground: 0 0% 4%;
+    --primary: 230 90% 50%; /* #0d33f2 */
     --primary-foreground: 0 0% 100%;
-    --secondary: 330 100% 50%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 96%;
+    --secondary: 330 86% 70%; /* #f472b6 */
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 90%;
     --muted-foreground: 0 0% 40%;
-    --accent: 75 100% 44%;
+    --accent: 82 84% 67%; /* #bef264 */
     --accent-foreground: 0 0% 0%;
-    --accent-dark: 75 80% 25%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 0 0% 98%;
     --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 0 0% 0%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 0%;
-    --sidebar-primary: 0 0% 0%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 0 0% 0%;
-    --sidebar-border: 0 0% 0%;
-    --sidebar-ring: 0 0% 0%;
-    --shadow-brutal: 8px 8px 0px 0px hsl(0 0% 0%);
-    --shadow-brutal-lg: 12px 12px 0px 0px hsl(0 0% 0%);
-    --shadow-brutal-pink: 8px 8px 0px 0px hsl(330 100% 50%);
-    --shadow-brutal-lime: 8px 8px 0px 0px hsl(75 100% 44%);
+    --input: 0 0% 100%;
+    --ring: 230 90% 50%;
+    --radius: 0px;
+
+    /* Custom Design Tokens */
+    --accent-dark: 82 84% 50%;
+    --border-color: #000000;
+    --shadow-color: rgba(0, 0, 0, 0.2);
   }
 
   .dark {
-    --background: 0 0% 0%;
+    --background: 0 0% 4%;
     --foreground: 0 0% 100%;
-    --card: 0 0% 0%;
+    --card: 0 0% 4%;
     --card-foreground: 0 0% 100%;
-    --popover: 0 0% 0%;
+    --popover: 0 0% 4%;
     --popover-foreground: 0 0% 100%;
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 330 100% 50%;
-    --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 75 100% 44%;
-    --accent-foreground: 0 0% 0%;
-    --accent-dark: 75 100% 70%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 100%;
+    --muted-foreground: 0 0% 70%;
     --border: 0 0% 100%;
-    --input: 0 0% 100%;
-    --ring: 0 0% 100%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 0 0% 0%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 0 0% 100%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 100%;
-    --sidebar-ring: 0 0% 100%;
-    --shadow-brutal: 8px 8px 0px 0px hsl(0 0% 100%);
-    --shadow-brutal-lg: 12px 12px 0px 0px hsl(0 0% 100%);
-    --shadow-brutal-pink: 8px 8px 0px 0px hsl(330 100% 50%);
-    --shadow-brutal-lime: 8px 8px 0px 0px hsl(75 100% 44%);
+    --input: 0 0% 4%;
+    --border-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 1);
   }
 }
 
@@ -97,17 +59,50 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-family: "Space Grotesk", sans-serif;
+    overflow-x: hidden;
   }
 }
 
 @layer utilities {
+  .neubrutal-border {
+    border: 3px solid var(--border-color);
+  }
+
+  .glitch-text {
+    text-shadow:
+      2px 0 var(--secondary),
+      -2px 0 var(--accent);
+    letter-spacing: -0.05em;
+  }
+
+  .category-card:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px 0px var(--border-color);
+  }
+
   .brutal-border {
-    border: 4px solid hsl(var(--border));
+    border: 3px solid var(--border-color);
   }
 
   .brutal-border-thick {
-    border: 6px solid hsl(var(--border));
+    border: 5px solid var(--border-color);
+  }
+
+  .shadow-neubrutal {
+    box-shadow: 6px 6px 0px 0px var(--border-color);
+  }
+
+  .shadow-neubrutal-pink {
+    box-shadow: 6px 6px 0px 0px #f472b6;
+  }
+
+  .shadow-neubrutal-green {
+    box-shadow: 6px 6px 0px 0px #bef264;
+  }
+
+  .shadow-neubrutal-blue {
+    box-shadow: 6px 6px 0px 0px #0d33f2;
   }
 
   .shadow-brutal {
@@ -139,6 +134,7 @@ All colors MUST be HSL.
       transform: translateY(-100vh) rotate(0deg);
       opacity: 1;
     }
+
     100% {
       transform: translateY(100vh) rotate(720deg);
       opacity: 0;
@@ -146,18 +142,23 @@ All colors MUST be HSL.
   }
 
   @keyframes glitch {
-    0%, 100% {
+    0%,
+    100% {
       transform: translate(0);
     }
+
     20% {
       transform: translate(-2px, 2px);
     }
+
     40% {
       transform: translate(-2px, -2px);
     }
+
     60% {
       transform: translate(2px, 2px);
     }
+
     80% {
       transform: translate(2px, -2px);
     }
@@ -169,5 +170,266 @@ All colors MUST be HSL.
 
   .animate-glitch {
     animation: glitch 0.3s ease-in-out;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+/* Blur Blob Background Effect */
+.blur-blob-bg {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.blur-blob-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    #0000 0,
+    #0000 2px,
+    hsl(0 0 4%) 2px
+  );
+  background-size: 8px 8px;
+  animation: 5s ease-in-out blur-hue-rotate infinite;
+  --f: blur(3em) brightness(9);
+}
+
+@keyframes blur-hue-rotate {
+  0% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  25% {
+    backdrop-filter: var(--f) hue-rotate(-25deg);
+  }
+
+  28% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  32% {
+    backdrop-filter: var(--f) hue-rotate(-20deg);
+  }
+
+  39% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  40% {
+    backdrop-filter: var(--f) hue-rotate(-20deg);
+  }
+
+  41% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  42% {
+    backdrop-filter: var(--f) hue-rotate(-25deg);
+  }
+
+  44% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  58% {
+    backdrop-filter: var(--f) hue-rotate(-20deg);
+  }
+
+  64% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+
+  80% {
+    backdrop-filter: var(--f) hue-rotate(-25deg);
+  }
+
+  to {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+}
+
+.blur-blob-bg::before {
+  content: "";
+  position: absolute;
+  inset: -145%;
+  rotate: -45deg;
+  --c: #fa0;
+  --c1: #f00;
+  background-image:
+    radial-gradient(4px 100px at 0px 235px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 235px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 117.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 252px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 252px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 126px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 150px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 150px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 75px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 253px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 253px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 126.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 204px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 204px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 102px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 134px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 134px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 67px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 179px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 179px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 89.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 299px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 299px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 149.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 215px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 215px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 107.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 281px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 281px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 140.5px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 158px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 158px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 79px, var(--c1) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 210px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 210px, var(--c), #0000),
+    radial-gradient(3px 4px at 150px 105px, var(--c1) 100%, #0000 150%);
+  background-size:
+    300px 235px,
+    300px 235px,
+    300px 235px,
+    300px 252px,
+    300px 252px,
+    300px 252px,
+    300px 150px,
+    300px 150px,
+    300px 150px,
+    300px 253px,
+    300px 253px,
+    300px 253px,
+    300px 204px,
+    300px 204px,
+    300px 204px,
+    300px 134px,
+    300px 134px,
+    300px 134px,
+    300px 179px,
+    300px 179px,
+    300px 179px,
+    300px 299px,
+    300px 299px,
+    300px 299px,
+    300px 215px,
+    300px 215px,
+    300px 215px,
+    300px 281px,
+    300px 281px,
+    300px 281px,
+    300px 158px,
+    300px 158px,
+    300px 158px,
+    300px 210px,
+    300px 210px,
+    300px 210px;
+  animation: blur-blob-move 150s linear infinite;
+}
+
+@keyframes blur-blob-move {
+  0% {
+    background-position:
+      0px 220px,
+      3px 220px,
+      151.5px 337.5px,
+      25px 24px,
+      28px 24px,
+      176.5px 150px,
+      50px 16px,
+      53px 16px,
+      201.5px 91px,
+      75px 224px,
+      78px 224px,
+      226.5px 350.5px,
+      100px 19px,
+      103px 19px,
+      251.5px 121px,
+      125px 120px,
+      128px 120px,
+      276.5px 187px,
+      150px 31px,
+      153px 31px,
+      301.5px 120.5px,
+      175px 235px,
+      178px 235px,
+      326.5px 384.5px,
+      200px 121px,
+      203px 121px,
+      351.5px 228.5px,
+      225px 224px,
+      228px 224px,
+      376.5px 364.5px,
+      250px 26px,
+      253px 26px,
+      401.5px 105px,
+      275px 75px,
+      278px 75px,
+      426.5px 180px;
+  }
+
+  to {
+    background-position:
+      0px 6800px,
+      3px 6800px,
+      151.5px 6917.5px,
+      25px 13632px,
+      28px 13632px,
+      176.5px 13758px,
+      50px 5416px,
+      53px 5416px,
+      201.5px 5491px,
+      75px 17175px,
+      78px 17175px,
+      226.5px 17301.5px,
+      100px 5119px,
+      103px 5119px,
+      251.5px 5221px,
+      125px 8428px,
+      128px 8428px,
+      276.5px 8495px,
+      150px 9876px,
+      153px 9876px,
+      301.5px 9965.5px,
+      175px 13391px,
+      178px 13391px,
+      326.5px 13540.5px,
+      200px 14741px,
+      203px 14741px,
+      351.5px 14848.5px,
+      225px 18770px,
+      228px 18770px,
+      376.5px 18910.5px,
+      250px 5082px,
+      253px 5082px,
+      401.5px 5161px,
+      275px 6375px,
+      278px 6375px,
+      426.5px 6480px;
   }
 }

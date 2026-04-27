@@ -8,51 +8,54 @@ interface QuestionHistoryProps {
 
 export function QuestionHistory({ history, questionCount }: QuestionHistoryProps) {
   return (
-    <div className="w-full max-w-2xl">
-      <div className="brutal-border bg-card p-4 xl:p-6 shadow-brutal">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl xl:text-3xl font-black text-foreground max-sm:text-xl">
-            QUESTION HISTORY
+    <div className="w-full h-full flex flex-col">
+      <div className="neubrutal-border bg-white text-black p-3 shadow-neubrutal flex flex-col h-full overflow-hidden">
+        <div className="flex items-center justify-between mb-2 border-b-2 border-black pb-1 shrink-0">
+          <h2 className="text-sm font-black uppercase tracking-tighter italic">
+            HISTORY log
           </h2>
-          <div className="text-xl xl:text-2xl font-black text-secondary max-sm:text-lg">
-            {questionCount}/20
+          <div className="text-[10px] font-black text-brand uppercase">
+            {questionCount} total
           </div>
         </div>
 
-        <ScrollArea className="h-64 xl:h-80 max-sm:h-48">
+        <ScrollArea className="flex-1 select-none">
           {history.length === 0 ? (
-            <p className="text-muted-foreground text-center py-8 font-bold">
-              No questions yet...
-            </p>
+            <div className="flex flex-col items-center justify-center py-4 opacity-30">
+              <span className="text-2xl mb-1">📼</span>
+              <p className="text-[8px] font-black uppercase italic">
+                Empty log...
+              </p>
+            </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2 pr-2">
               {[...history].reverse().map((item, reverseIndex) => {
                 const index = history.length - 1 - reverseIndex;
+                const isAI = item.asker === 'ai';
                 return (
                   <div
                     key={index}
-                    className="brutal-border bg-background p-3 xl:p-4 space-y-2"
+                    className="neubrutal-border bg-[#f8f8f8] p-2 space-y-1 relative shadow-neubrutal transform transition-all"
                   >
                     <div className="flex items-start gap-2">
-                      <span className="font-black text-secondary min-w-8">
-                        Q{index + 1}:
-                      </span>
-                      <p className="font-bold text-foreground flex-1">
+                      <div className={`px-1.5 py-0.5 text-[8px] font-black uppercase ${isAI ? 'bg-brand text-white' : 'bg-accentPink text-black'}`}>
+                        {isAI ? 'AI' : 'YOU'}
+                      </div>
+                      <p className="font-bold text-[10px] flex-1 leading-tight uppercase">
                         {item.question}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 pl-10">
-                      <span className="font-black text-accent-dark">A:</span>
+                    <div className="flex items-center gap-2 pl-8">
                       <span
-                        className={`font-black px-3 py-1 brutal-border text-sm ${
+                        className={`font-black px-2 py-0.5 neubrutal-border text-[8px] uppercase ${
                           item.answer === 'Yes'
-                            ? 'bg-accent text-accent-foreground'
+                            ? 'bg-accentGreen text-black'
                             : item.answer === 'No'
-                              ? 'bg-secondary text-secondary-foreground'
-                              : 'bg-muted text-foreground'
+                              ? 'bg-accentPink text-black'
+                              : 'bg-[#eeeeee] text-black'
                         }`}
                       >
-                        {item.answer.toUpperCase()}
+                        {item.answer}
                       </span>
                     </div>
                   </div>

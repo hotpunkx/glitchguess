@@ -7,6 +7,9 @@ import MultiplayerGamePage from './pages/MultiplayerGamePage';
 import MultiplayerJoinPage from './pages/MultiplayerJoinPage';
 import PublicLobbyPage from './pages/PublicLobbyPage';
 import PlayPage from './pages/PlayPage';
+import LeaderboardPage from './pages/LeaderboardPage';
+import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
 import type { ReactNode } from 'react';
 
 interface RouteConfig {
@@ -23,9 +26,24 @@ const routes: RouteConfig[] = [
     element: <GamePage />
   },
   {
+    name: 'Profile',
+    path: '/profile',
+    element: <ProfilePage />
+  },
+  {
+    name: 'Settings',
+    path: '/settings',
+    element: <SettingsPage />
+  },
+  {
     name: 'How to Play',
     path: '/how-to-play',
     element: <HowToPlayPage />
+  },
+  {
+    name: 'Leaderboard',
+    path: '/leaderboard',
+    element: <LeaderboardPage />
   },
   {
     name: 'Play Game',

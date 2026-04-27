@@ -1,25 +1,38 @@
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useRef } from 'react';
 import { QuestionHistory } from './QuestionHistory';
 import { Answer, QuestionAnswer } from '@/types/game';
 import { generateAIQuestion, generateAIGuess } from '@/services/aiService';
-import { Loader2 } from 'lucide-react';
-import { SavedGameState } from '@/hooks/use-game-storage';
+import { Loader2, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface HumanThinksModeProps {
   sessionId: string;
-  onGameEnd: (isWon: boolean, correctAnswer?: string, questionCount?: number) => void;
-  onSaveQuestion: (sessionId: string, questionNumber: number, questionText: string, answer: string) => Promise<void>;
-  initialState?: SavedGameState | null;
+  onGameEnd: (won: boolean, answer?: string, count?: number) => void;
+  onSaveQuestion: (
+    sessionId: string,
+    questionNumber: number,
+    questionText: string,
+    answer: string
+  ) => Promise<void>;
+  onBack: () => void;
+  initialState?: any;
 }
 
-export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialState }: HumanThinksModeProps) {
+export function HumanThinksMode({
+  sessionId,
+  onGameEnd,
+  onSaveQuestion,
+  onBack,
+  initialState,
+}: HumanThinksModeProps) {
   const [history, setHistory] = useState<QuestionAnswer[]>(initialState?.history || []);
   const [questionCount, setQuestionCount] = useState(initialState?.questionCount || 0);
   const [currentQuestion, setCurrentQuestion] = useState(initialState?.currentQuestion || '');
+  const [thinkingSnippet, setThinkingSnippet] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showInstruction, setShowInstruction] = useState(initialState?.showInstruction ?? true);
+  
+  const isAskingRef = useRef(false);
 
   useEffect(() => {
     if (!showInstruction && !currentQuestion && !isLoading) {
@@ -27,30 +40,50 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
     }
   }, [showInstruction]);
 
+  const parseAIResponse = (response: string) => {
+    const thinkingMatch = response.match(/Thinking:\s*(.*(?:\n(?!Question:|My final guess:).*)*)/i);
+    const questionMatch = response.match(/Question:\s*(.*)/i);
+    const guessMatch = response.match(/My final guess:\s*(.*)/i);
+
+    return {
+      thinking: thinkingMatch ? thinkingMatch[1].trim() : '',
+      question: questionMatch ? questionMatch[1].trim() : (guessMatch ? `My final guess: ${guessMatch[1].trim()}` : response.trim())
+    };
+  };
+
   const askNextQuestion = async () => {
+    if (isAskingRef.current) return;
     if (questionCount >= 20) {
       onGameEnd(false, undefined, questionCount);
       return;
     }
 
+    isAskingRef.current = true;
     setIsLoading(true);
+    setThinkingSnippet('');
     try {
-      if (questionCount > 0 && questionCount % 5 === 0 && Math.random() > 0.5) {
-        const guess = await generateAIGuess(history);
-        setCurrentQuestion(guess);
+      let rawResponse = '';
+      if (questionCount > 0 && questionCount % 5 === 0 && Math.random() > 0.4) {
+        rawResponse = await generateAIGuess(history);
       } else {
-        const question = await generateAIQuestion(history);
-        setCurrentQuestion(question);
+        rawResponse = await generateAIQuestion(history);
       }
+
+      const { thinking, question } = parseAIResponse(rawResponse);
+      setThinkingSnippet(thinking);
+      setCurrentQuestion(question);
     } catch (error) {
       toast.error('AI service error. Using fallback question.');
       setCurrentQuestion('Is it something you can hold in your hand?');
     } finally {
       setIsLoading(false);
+      isAskingRef.current = false;
     }
   };
 
   const handleAnswer = async (answer: Answer) => {
+    if (isLoading) return;
+
     const newHistory: QuestionAnswer = {
       question: currentQuestion,
       answer,
@@ -65,11 +98,10 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
 
     await onSaveQuestion(sessionId, updatedCount, currentQuestion, answer);
 
-    // Check if this is a final guess (not a regular question)
+    // Check if this is a final guess
     const isFinalGuess = currentQuestion.toLowerCase().includes('my final guess:');
     
     if (isFinalGuess && answer === 'Yes') {
-      // Extract the guessed answer from "My final guess: X" format
       const guessedAnswer = currentQuestion.replace(/^.*my final guess:\s*/i, '').replace(/\?$/, '').trim();
       onGameEnd(true, guessedAnswer, updatedCount);
       return;
@@ -80,80 +112,107 @@ export function HumanThinksMode({ sessionId, onGameEnd, onSaveQuestion, initialS
       return;
     }
 
+    setCurrentQuestion('');
     await askNextQuestion();
   };
 
   if (showInstruction) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
-        <div className="w-full max-w-2xl space-y-6 xl:space-y-8">
-          <h2 className="text-3xl xl:text-5xl font-black text-center text-foreground max-sm:text-2xl">
-            GET READY!
+      <div className="min-h-screen flex flex-col items-center justify-center p-5 bg-background text-foreground">
+        <div className="w-full max-w-2xl space-y-8 text-center">
+          <div className="inline-block px-4 py-2 neubrutal-border bg-accentGreen mb-4 rotate-[-2deg] shadow-neubrutal">
+            <span className="text-xs font-bold uppercase tracking-widest text-black">Human Thinks Mode</span>
+          </div>
+          <h2 className="text-6xl font-black italic uppercase glitch-text leading-none mb-2">
+            GET <br /> READY!
           </h2>
 
-          <div className="brutal-border-thick bg-card p-6 xl:p-8 shadow-brutal-pink space-y-4">
-            <p className="text-lg xl:text-2xl font-bold text-foreground leading-relaxed max-sm:text-base">
-              Perfect! Think of something from the <span className="text-secondary">fair game categories</span> shown on the home screen. Don't tell me what it is. I'll ask up to 20 yes/no questions.
+          <div className="neubrutal-border bg-white text-black p-8 shadow-neubrutal-pink space-y-4 text-left">
+            <p className="text-2xl font-black uppercase leading-tight">
+              Think of something from the fair game categories.
             </p>
-            <p className="text-sm xl:text-base font-bold text-accent-dark max-sm:text-xs">
-              💡 Remember: Choose from Animals, Food & Drinks, Movies & TV Shows, Video Games, Sports & Athletes, Countries & Cities, Musicians & Bands, Famous Books, Vehicles, Famous Landmarks, Famous Artists, or Common Objects!
+            <p className="text-sm font-bold opacity-70 uppercase">
+              I'll ask up to 20 questions to crack it. Don't blink.
             </p>
           </div>
 
-          <Button
+          <button
             onClick={() => setShowInstruction(false)}
-            className="w-full h-auto py-6 xl:py-8 text-xl xl:text-2xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground max-sm:text-lg max-sm:py-5"
+            className="w-full py-6 bg-brand text-white neubrutal-border shadow-neubrutal-green font-black text-2xl uppercase tracking-tighter hover:shadow-none transition-all active:translate-x-1 active:translate-y-1"
           >
-            I'M READY!
-          </Button>
+            I'M READY
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background gap-6 xl:gap-8">
-      <div className="w-full max-w-2xl space-y-6 xl:space-y-8">
-        <div className="brutal-border-thick bg-card p-6 xl:p-8 shadow-brutal-pink">
+    <div className="h-screen max-h-screen flex flex-col items-center justify-between p-4 bg-background overflow-hidden pb-8">
+      <div className="w-full max-w-2xl flex flex-col gap-4">
+        {/* Header & Progress Display */}
+        <div className="flex justify-between items-end shrink-0">
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={onBack}
+              className="neubrutal-border bg-white dark:bg-darkBg text-black dark:text-white p-1 shadow-neubrutal active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+              title="Back to menu"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div className="neubrutal-border bg-brand px-2 py-0.5 shadow-neubrutal">
+              <span className="text-[10px] font-black text-white uppercase tracking-widest">Q {questionCount + 1}/20</span>
+            </div>
+          </div>
+          {thinkingSnippet && !isLoading && (
+            <div className="text-accentGreen text-[8px] font-black uppercase italic animate-pulse max-w-[150px] truncate">
+              AI: {thinkingSnippet}
+            </div>
+          )}
+        </div>
+
+        <div className="neubrutal-border bg-white text-black p-6 shadow-neubrutal-pink min-h-[140px] flex items-center justify-center relative overflow-hidden shrink-0">
           {isLoading || !currentQuestion ? (
-            <div className="flex items-center justify-center gap-3 py-4">
-              <Loader2 className="animate-spin" size={32} />
-              <p className="text-xl xl:text-2xl font-black text-foreground max-sm:text-lg">
-                THINKING...
+            <div className="flex flex-col items-center gap-2 py-2">
+              <Loader2 className="animate-spin text-brand" size={32} />
+              <p className="text-xl font-black uppercase tracking-tighter italic glitch-text">
+                Deducing...
               </p>
             </div>
           ) : (
-            <p className="text-xl xl:text-3xl font-black text-foreground leading-relaxed max-sm:text-lg">
+            <p className="text-2xl font-black uppercase leading-tight tracking-tighter text-center">
               {currentQuestion}
             </p>
           )}
         </div>
 
         {!isLoading && currentQuestion && (
-          <div className="flex flex-col gap-3 xl:grid xl:grid-cols-3 xl:gap-4">
-            <Button
+          <div className="grid grid-cols-3 gap-2 shrink-0">
+            <button
               onClick={() => handleAnswer('Yes')}
-              className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground max-sm:text-base max-sm:py-3"
+              className="py-4 bg-accentGreen text-black neubrutal-border shadow-neubrutal hover:shadow-none transition-all active:translate-x-1 active:translate-y-1 font-black text-xl uppercase"
             >
               YES
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleAnswer('No')}
-              className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal-pink hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-secondary text-secondary-foreground max-sm:text-base max-sm:py-3"
+              className="py-4 bg-accentPink text-black neubrutal-border shadow-neubrutal hover:shadow-none transition-all active:translate-x-1 active:translate-y-1 font-black text-xl uppercase"
             >
               NO
-            </Button>
-            <Button
+            </button>
+            <button
               onClick={() => handleAnswer('Sometimes')}
-              className="h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-muted text-foreground max-sm:text-base max-sm:py-3"
+              className="py-4 bg-white text-black neubrutal-border shadow-neubrutal hover:shadow-none transition-all active:translate-x-1 active:translate-y-1 font-black text-xs uppercase"
             >
-              SOMETIMES
-            </Button>
+              MAYBE
+            </button>
           </div>
         )}
       </div>
 
-      <QuestionHistory history={history} questionCount={questionCount} />
+      <div className="w-full max-w-2xl flex-1 mt-4 overflow-hidden">
+        <QuestionHistory history={history} questionCount={questionCount} />
+      </div>
     </div>
   );
 }

@@ -57,35 +57,19 @@ export async function generateAIQuestion(
       parts: [
         {
           text: `You are the AI interrogator in GLITCHGUESS — a 20 Questions game.
-The human is thinking of a single thing. You have a **maximum of 20 yes/no questions** to crack it.
-The secret thing is **always** from one of these **12 categories only**: 
-* **Animals**
-* **Food/Drinks**
-* **Movies/TV**
-* **Video Games**
-* **Sports**
-* **Countries/Cities**
-* **Musicians**
-* **Books**
-* **Vehicles**
-* **Landmarks**
-* **Artists**
-* **Everyday Objects**
+The human is thinking of a single thing from Categories: Animals, Food, Movies, Games, Sports, Countries, Musicians, Books, Vehicles, Landmarks, Artists, Objects.
 
-**Game State Tracking:**
-${historyText ? `Previous Q&A:\n${historyText}\n` : ''}
+**Game State:**
+${historyText ? `Previous Q&A:\n${historyText}\n` : 'This is the start of the game.'}
+Question ${conversationHistory.length + 1} of 20.
 
-**Current Question:** Question ${conversationHistory.length + 1} of 20.
-
-**CRITICAL STRATEGY GUIDELINES:**
-1.  **Prioritize Category Elimination:** For the first 3-5 questions, focus on broad questions that eliminate the **maximum number of categories** (e.g., "Is it something you can physically eat or drink?", "Is it a form of entertainment/media?").
-2.  **Smartest Yes/No Question:** Ask **ONE** extremely smart, yes/no question designed to split the remaining possibilities as evenly as possible.
-3.  **Strict Non-Repetition:** **NEVER** ask the same question twice. You must check the \`Previous Q&A\` history and ensure your question is entirely new and logically distinct.
-4.  **Direct Answer Requirement:** The question must be phrased to receive a direct "Yes" or "No" answer.
-
-**Output Formatting (Strict):**
-Output exactly one line, nothing else:
-Question: [your question ending with ?]`,
+**STRATEGY:**
+1.  **Eliminate categories early.** Focus on broad traits (Living? Man-made? Entertainment? Physical?).
+2.  **Be Deductive.** Analyze EVERY previous answer.
+3.  **No Repetition.**
+4.  **Formatting.** Output EXACTLY: 
+Thinking: [Short internal monologue, max 10 words, e.g., "Ruling out man-made objects based on Q2."]
+Question: [One smart yes/no question ending with ?]`,
         },
       ],
     },
@@ -106,37 +90,13 @@ export async function generateAIGuess(
       role: 'user',
       parts: [
         {
-          text: `You are the AI in GLITCHGUESS — the final stage of the 20 Questions secret word guessing game.
-It is time for your single, final guess.
-
-The secret thing is real and **must belong** to one of these **12 categories only**:
-* **Animals**
-* **Food/Drinks**
-* **Movies/TV**
-* **Video Games**
-* **Sports**
-* **Countries/Cities**
-* **Musicians**
-* **Books**
-* **Vehicles**
-* **Landmarks**
-* **Artists**
-* **Everyday Objects**
-
-**CRITICAL GUIDELINE: FULL CONTEXT REVIEW**
-You must analyze the **entire conversation history** to derive the guess. Review every question and answer to:
-1.  **Eliminate Impossible Categories:** Determine which of the 12 categories are ruled out by the answers.
-2.  **Confirm Remaining Attributes:** Use the "Yes" and "No" answers to deduce the most specific remaining characteristics of the secret thing.
-3.  **Specificity Check:** Your guess must be a single, specific item (e.g., 'Eiffel Tower', not 'Landmark'; 'The Beatles', not 'Musicians').
-
-**Full Conversation History:**
+          text: `You are the AI in GLITCHGUESS. Time for your final, specific guess.
+Review history:
 ${historyText}
 
-Now make your single best, most specific guess based *only* on the history provided.
-
-**Output Formatting (Strict):**
-Output exactly one line, nothing else, no quotes, no explanation, no category names:
-My final guess: [the exact specific thing]`,
+**Formatting.** Output EXACTLY:
+Thinking: [Short internal monologue about your deduction.]
+My final guess: [Specific thing, e.g., Eiffel Tower]`,
         },
       ],
     },

@@ -24,6 +24,8 @@ export default function GamePage() {
   const [isWon, setIsWon] = useState(false);
   const [correctAnswer, setCorrectAnswer] = useState<string>();
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [category, setCategory] = useState('Animals');
+  const [error, setError] = useState<string | null>(null);
 
   // Load saved state on mount
   useEffect(() => {
@@ -32,8 +34,9 @@ export default function GamePage() {
     }
   }, [savedState, hasSavedGame]);
 
-  const handleSelectMode = async (mode: 'human-thinks' | 'ai-thinks') => {
+  const handleSelectMode = async (mode: 'human-thinks' | 'ai-thinks', selectedCategory: string) => {
     setCurrentMode(mode);
+    setCategory(selectedCategory);
     setGameMode(mode);
     setQuestionCount(0);
     setIsWon(false);
@@ -42,10 +45,15 @@ export default function GamePage() {
     
     // Create new session in database (secret word will be set later in AI mode)
     try {
+      setError(null);
       const newSessionId = await createNewSession(mode);
+      if (!newSessionId) throw new Error('No session ID returned');
       setSessionId(newSessionId);
     } catch (error) {
       console.error('Failed to create session:', error);
+      setError('Connection glitch! Please check your internet and try again.');
+      setGameMode('start');
+      toast.error('Failed to start game session. Please try again.');
     }
   };
 
@@ -94,17 +102,25 @@ export default function GamePage() {
     <>
       <Toaster position="top-center" />
       {gameMode === 'start' && (
-        <StartScreen 
-          onSelectMode={handleSelectMode}
-          onContinueGame={hasSavedGame ? handleContinueGame : undefined}
-          savedGameMode={savedState?.currentMode}
-        />
+        <div className="relative">
+          {error && (
+            <div className="fixed top-20 left-4 right-4 z-50 neubrutal-border bg-accentPink text-white p-3 shadow-neubrutal animate-glitch text-center">
+              <p className="text-[10px] font-black uppercase tracking-widest">{error}</p>
+            </div>
+          )}
+          <StartScreen 
+            onSelectMode={handleSelectMode}
+            onContinueGame={hasSavedGame ? handleContinueGame : undefined}
+            savedGameMode={savedState?.currentMode}
+          />
+        </div>
       )}
       {gameMode === 'human-thinks' && sessionId && (
         <HumanThinksMode 
           sessionId={sessionId}
           onGameEnd={handleGameEnd}
           onSaveQuestion={saveQuestion}
+          onBack={handlePlayAgain}
           initialState={savedState}
         />
       )}
@@ -113,6 +129,7 @@ export default function GamePage() {
           sessionId={sessionId}
           onGameEnd={handleGameEnd}
           onSaveQuestion={saveQuestion}
+          onBack={handlePlayAgain}
           initialState={savedState}
         />
       )}
@@ -122,6 +139,7 @@ export default function GamePage() {
           questionCount={questionCount}
           correctAnswer={correctAnswer}
           mode={currentMode}
+          category={category}
           onPlayAgain={handlePlayAgain}
         />
       )}

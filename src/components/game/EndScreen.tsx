@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Share2 } from 'lucide-react';
+import { useWriteContract, useAccount, useWaitForTransactionReceipt } from 'wagmi';
+import { Share2, RefreshCw, ArrowLeft, Trophy } from 'lucide-react';
 import { toast } from 'sonner';
+import { LEADERBOARD_ADDRESS, LEADERBOARD_ABI, VICTORY_NFT_ADDRESS, VICTORY_NFT_ABI } from '../../config/contracts';
 
 interface EndScreenProps {
   isWon: boolean;
   questionCount: number;
   correctAnswer?: string;
   mode: 'human-thinks' | 'ai-thinks';
+  category: string;
   onPlayAgain: () => void;
 }
 
@@ -24,14 +26,57 @@ export function EndScreen({
   questionCount,
   correctAnswer,
   mode,
+  category,
   onPlayAgain,
 }: EndScreenProps) {
   const [confetti, setConfetti] = useState<Confetti[]>([]);
+  const { address, isConnected } = useAccount();
+  const { writeContract, data: hash, isPending } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  const handleSubmitScore = () => {
+    if (!isConnected) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+
+    if (LEADERBOARD_ADDRESS === '0x0000000000000000000000000000000000000000') {
+      toast.error('Contract not deployed yet');
+      return;
+    }
+
+    writeContract({
+      address: LEADERBOARD_ADDRESS,
+      abi: LEADERBOARD_ABI,
+      functionName: 'submitScore',
+      args: [BigInt(questionCount), mode, category],
+    });
+  };
+
+  const handleMintNFT = () => {
+    if (!isConnected) {
+      toast.error('Connect wallet to mint NFT!');
+      return;
+    }
+    
+    writeContract({
+      address: VICTORY_NFT_ADDRESS,
+      abi: VICTORY_NFT_ABI,
+      functionName: 'safeMint',
+      args: [address!, BigInt(questionCount), category],
+    });
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('On-chain action successful!');
+    }
+  }, [isSuccess]);
 
   useEffect(() => {
     if (isWon) {
-      const colors = ['#FF006E', '#CCFF00', '#000000', '#FFFFFF'];
-      const newConfetti: Confetti[] = Array.from({ length: 50 }, (_, i) => ({
+      const colors = ['#0d33f2', '#bef264', '#f472b6', '#ffffff'];
+      const newConfetti: Confetti[] = Array.from({ length: 40 }, (_, i) => ({
         id: i,
         left: Math.random() * 100,
         delay: Math.random() * 0.5,
@@ -50,35 +95,38 @@ export function EndScreen({
 
     const shareText = `GLITCHGUESS 🎮\n${result}\n${correctAnswer ? `The answer was: ${correctAnswer}` : ''}\n\nPlay now:`;
     const shareUrl = window.location.href.split('?')[0];
-
     const fullShareText = `${shareText} ${shareUrl}`;
 
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: 'GLITCHGUESS',
-          text: fullShareText,
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-      }
+        await navigator.share({ title: 'GLITCHGUESS', text: fullShareText });
+      } catch (error) {}
     } else {
       try {
         await navigator.clipboard.writeText(fullShareText);
         toast.success('Copied to clipboard!');
       } catch (error) {
-        toast.error('Failed to copy to clipboard');
+        toast.error('Failed to copy');
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background relative overflow-hidden">
+    <div className="h-screen max-h-screen flex flex-col items-center justify-center p-4 bg-background relative overflow-hidden pb-8">
+      <div className="absolute top-4 left-4 z-20">
+        <button 
+          onClick={onPlayAgain}
+          className="neubrutal-border bg-white dark:bg-darkBg text-black dark:text-white p-1 shadow-neubrutal active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+          title="Back to menu"
+        >
+          <ArrowLeft size={20} />
+        </button>
+      </div>
       {isWon &&
         confetti.map((item) => (
           <div
             key={item.id}
-            className="absolute w-3 h-3 xl:w-4 xl:h-4 animate-confetti"
+            className="absolute w-3 h-3 animate-confetti z-0"
             style={{
               left: `${item.left}%`,
               backgroundColor: item.color,
@@ -89,57 +137,79 @@ export function EndScreen({
           />
         ))}
 
-      <div className="w-full max-w-2xl space-y-6 xl:space-y-8 relative z-10">
-        <div className="brutal-border-thick bg-card p-8 xl:p-12 shadow-brutal-lg text-center space-y-4 xl:space-y-6">
-          {isWon ? (
-            <>
-              <h2 className="text-4xl xl:text-6xl font-black text-accent animate-glitch max-sm:text-3xl">
-                {mode === 'human-thinks' ? 'I GOT IT!' : 'YOU GOT IT!'}
-              </h2>
-              <p className="text-2xl xl:text-4xl font-black text-foreground max-sm:text-xl">
-                IN {questionCount} QUESTION{questionCount !== 1 ? 'S' : ''}!
-              </p>
-            </>
-          ) : (
-            <>
-              <h2 className="text-4xl xl:text-6xl font-black text-secondary animate-glitch max-sm:text-3xl">
-                {mode === 'human-thinks' ? 'I SURRENDER!' : 'GAME OVER!'}
-              </h2>
-              <p className="text-xl xl:text-2xl font-black text-muted-foreground max-sm:text-lg">
-                {mode === 'human-thinks' ? 'WHAT WAS IT?' : "COULDN'T GUESS IT!"}
-              </p>
-            </>
-          )}
+      <div className="w-full max-w-2xl flex flex-col gap-6 relative z-10 text-center">
+        <header className="mb-2 shrink-0">
+          <div className={`inline-block px-3 py-1 neubrutal-border mb-3 rotate-[-1deg] shadow-neubrutal ${isWon ? 'bg-accentGreen' : 'bg-accentPink'}`}>
+            <span className="text-[10px] font-black uppercase tracking-widest text-black">
+              {isWon ? 'Mission Accomplished' : 'Transmission Lost'}
+            </span>
+          </div>
+          <h2 className="text-5xl xl:text-7xl font-black italic uppercase glitch-text leading-none">
+            {isWon ? (mode === 'human-thinks' ? 'AI WON!' : 'YOU WON!') : (mode === 'human-thinks' ? 'AI LOST!' : 'GAME OVER!')}
+          </h2>
+        </header>
 
+        <div className="neubrutal-border bg-white text-black p-6 shadow-neubrutal relative overflow-hidden shrink-0">
+          <p className="text-xl font-black uppercase tracking-tighter mb-4">
+            {isWon ? `Cracked in ${questionCount} questions` : `Out of time and data`}
+          </p>
+          
           {correctAnswer && (
-            <div className="brutal-border bg-background p-4 xl:p-6 mt-4">
-              <p className="text-base xl:text-lg font-bold text-muted-foreground mb-2 max-sm:text-sm">
-                THE ANSWER WAS:
-              </p>
-              <p className="text-2xl xl:text-4xl font-black text-foreground max-sm:text-xl">
-                {correctAnswer.toUpperCase()}
+            <div className="neubrutal-border bg-darkBg text-white p-4 shadow-neubrutal-pink rotate-[1deg]">
+              <p className="text-[8px] font-black uppercase opacity-60 mb-0.5">Source Detected:</p>
+              <p className="text-2xl font-black uppercase glitch-text tracking-widest leading-none">
+                {correctAnswer}
               </p>
             </div>
           )}
         </div>
 
-        <div className="space-y-3 xl:space-y-4">
-          <Button
-            onClick={onPlayAgain}
-            className="w-full h-auto py-6 xl:py-8 text-xl xl:text-3xl font-black brutal-border-thick shadow-brutal-lime hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:text-white transition-all bg-accent text-accent-foreground max-sm:text-lg max-sm:py-5"
-          >
-            PLAY AGAIN
-          </Button>
+        {isWon && mode === 'ai-thinks' && !isSuccess && (
+          <div className="shrink-0 flex gap-2">
+            <button
+              onClick={handleSubmitScore}
+              disabled={isPending || isConfirming}
+              className="flex-1 py-4 neubrutal-border bg-brand text-white shadow-neubrutal-blue font-black italic uppercase tracking-widest hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-50"
+            >
+              {isPending || isConfirming ? 'PROCESSING...' : 'SUBMIT TO LEADERBOARD'}
+            </button>
+            <button
+              onClick={handleMintNFT}
+              disabled={isPending || isConfirming}
+              className="flex-1 py-4 neubrutal-border bg-accentPink text-white shadow-neubrutal-pink font-black italic uppercase tracking-widest hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-50"
+            >
+              {isPending || isConfirming ? 'MINTING...' : 'MINT VICTORY NFT'}
+            </button>
+          </div>
+        )}
 
-          <Button
-            onClick={handleShare}
-            variant="outline"
-            className="w-full h-auto py-4 xl:py-6 text-lg xl:text-xl font-black brutal-border shadow-brutal hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all max-sm:text-base max-sm:py-4"
+        {isSuccess && (
+          <div className="shrink-0 p-4 neubrutal-border bg-accentGreen text-black font-black uppercase rotate-[-1deg] shadow-neubrutal">
+            🎉 Score Saved to Leaderboard!
+          </div>
+        )}
+
+        <div className="grid grid-cols-2 gap-3 shrink-0">
+          <button
+            onClick={onPlayAgain}
+            className="flex items-center justify-center gap-2 py-4 bg-accentGreen text-black neubrutal-border shadow-neubrutal-green font-black text-lg uppercase tracking-tighter hover:shadow-none transition-all active:translate-x-1 active:translate-y-1"
           >
-            <Share2 className="mr-2" />
-            SHARE RESULT
-          </Button>
+            <RefreshCw size={18} /> AGAIN
+          </button>
+          <button
+            onClick={handleShare}
+            className="flex items-center justify-center gap-2 py-4 bg-brand text-white neubrutal-border shadow-neubrutal-blue font-black text-lg uppercase tracking-tighter hover:shadow-none transition-all active:translate-x-1 active:translate-y-1"
+          >
+            <Share2 size={18} /> SHARE
+          </button>
         </div>
+
+        <button 
+          onClick={() => window.location.href = '/'}
+          className="text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity shrink-0"
+        >
+          Return to home base
+        </button>
       </div>
     </div>
   );
