@@ -4,7 +4,7 @@ import { HumanThinksMode } from '@/components/game/HumanThinksMode';
 import { AIThinksMode } from '@/components/game/AIThinksMode';
 import { EndScreen } from '@/components/game/EndScreen';
 import { GameMode } from '@/types/game';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 import { useGameStorage } from '@/hooks/use-game-storage';
 
 export default function GamePage() {
