@@ -2,10 +2,20 @@
   "name": "GLITCHGUESS",
   "short_name": "Glitch",
   "description": "AI 20 Questions Game - Free Multiplayer Guessing Game Online",
+  "tagline": "20 Questions. Infinite possibilities.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
+  "categories": ["games", "entertainment", "trivia"],
+  "builder_code": "",
+  "screenshots": [
+    {
+      "src": "https://glitchguess.vercel.app/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
   "icons": [
     {
       "src": "https://glitchguess.vercel.app/favicon.png",
