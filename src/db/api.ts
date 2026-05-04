@@ -11,19 +11,27 @@ export async function createGameSession(
   gameType: 'human-thinks' | 'ai-thinks',
   secretWord?: string
 ): Promise<string> {
-  const { data, error } = await supabase
-    .from('game_sessions')
-    .insert({
-      game_type: gameType,
-      secret_word: secretWord || null,
-    })
-    .select('id')
-    .maybeSingle();
+  try {
+    const { data, error } = await supabase
+      .from('game_sessions')
+      .insert({
+        game_type: gameType,
+        secret_word: secretWord || null,
+      })
+      .select('id')
+      .single();
 
-  if (error) throw error;
-  if (!data) throw new Error('Failed to create session');
-  
-  return data.id;
+    if (error) {
+      console.warn('Supabase session creation failed, using local fallback:', error.message);
+      return crypto.randomUUID();
+    }
+    if (!data) return crypto.randomUUID();
+    
+    return data.id;
+  } catch (err) {
+    console.warn('Network error in createGameSession, using local fallback:', err);
+    return crypto.randomUUID();
+  }
 }
 
 // Add a question to a session
@@ -34,20 +42,23 @@ export async function addQuestion(
   answer: string
 ): Promise<void> {
   if (!questionText || questionText.trim() === '') {
-    throw new Error('Question text cannot be empty');
+    return; // Don't throw, just skip
   }
   
-  const { error } = await supabase
-    .from('game_questions')
-    .insert({
-      session_id: sessionId,
-      question_number: questionNumber,
-      question_text: questionText,
-      answer: answer,
-    })
-    .select();
-  
-  if (error) throw error;
+  try {
+    const { error } = await supabase
+      .from('game_questions')
+      .insert({
+        session_id: sessionId,
+        question_number: questionNumber,
+        question_text: questionText,
+        answer: answer,
+      });
+    
+    if (error) console.warn('Failed to save question to Supabase:', error.message);
+  } catch (err) {
+    console.warn('Network error in addQuestion:', err);
+  }
 }
 
 // Update session when game ends
@@ -56,16 +67,20 @@ export async function endGameSession(
   isWon: boolean,
   questionCount: number
 ): Promise<void> {
-  const { error } = await supabase
-    .from('game_sessions')
-    .update({
-      is_won: isWon,
-      question_count: questionCount,
-      ended_at: new Date().toISOString(),
-    })
-    .eq('id', sessionId);
+  try {
+    const { error } = await supabase
+      .from('game_sessions')
+      .update({
+        is_won: isWon,
+        question_count: questionCount,
+        ended_at: new Date().toISOString(),
+      })
+      .eq('id', sessionId);
 
-  if (error) throw error;
+    if (error) console.warn('Failed to end session in Supabase:', error.message);
+  } catch (err) {
+    console.warn('Network error in endGameSession:', err);
+  }
 }
 
 // Get session by ID

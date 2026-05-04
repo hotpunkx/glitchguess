@@ -47,13 +47,12 @@ export default function GamePage() {
     try {
       setError(null);
       const newSessionId = await createNewSession(mode);
-      if (!newSessionId) throw new Error('No session ID returned');
       setSessionId(newSessionId);
     } catch (error) {
       console.error('Failed to create session:', error);
-      setError('Connection glitch! Please check your internet and try again.');
-      setGameMode('start');
-      toast.error('Failed to start game session. Please try again.');
+      // We don't block the game anymore, the API handles local fallback
+      // But we still set a temporary ID if for some reason it didn't return one
+      setSessionId(sessionId || crypto.randomUUID());
     }
   };
 
